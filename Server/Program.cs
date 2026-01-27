@@ -1,5 +1,6 @@
 
 using HotelBooking.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 
 namespace Server
 {
@@ -10,10 +11,10 @@ namespace Server
 
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            builder.Services.AddInfrastructure(builder.Configuration);
-
             builder.Services.AddControllers();
+
+            builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
+
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
 
