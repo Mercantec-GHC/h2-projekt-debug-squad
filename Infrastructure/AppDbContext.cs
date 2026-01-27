@@ -6,7 +6,7 @@ namespace HotelBooking.Infrastructure
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-
+            
         }
     }
 }

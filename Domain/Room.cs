@@ -11,6 +11,7 @@ namespace Domain
         public int Capacity { get; private set; }
         public decimal PricePerNight { get; private set; }
 
+        // Constructor
         // Parameterless constructor for EF Core
         private Room() { }
 
