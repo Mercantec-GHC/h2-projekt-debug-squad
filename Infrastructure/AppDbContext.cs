@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotelBooking.Infrastructure
 {
@@ -8,5 +9,6 @@ namespace HotelBooking.Infrastructure
         {
 
         }
+        public DbSet<Room> Rooms { get; set; }
     }
 }
