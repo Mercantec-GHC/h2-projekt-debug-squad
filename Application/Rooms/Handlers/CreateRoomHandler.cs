@@ -25,6 +25,7 @@ namespace Application.Rooms.Handlers
         // 1. Transforms input data (command) into a Domain entity.
         // 2. Delegates persistence to the repository.
         // Note: Business validation happens inside the Room entity, not here.
+        // Calls at server controller level
         public async Task Handle(CreateRoomCommand command)
         {
             // 1️. Create a new Room entity in the Domain.
