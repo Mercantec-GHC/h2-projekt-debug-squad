@@ -11,7 +11,6 @@ namespace Domain
         public int Capacity { get; private set; }
         public decimal PricePerNight { get; private set; }
 
-
         // Constructor
         public Room(string number, int capacity, decimal pricePerNight)
         {
@@ -47,5 +46,5 @@ namespace Domain
         }
     }
 }
-    
+
 
