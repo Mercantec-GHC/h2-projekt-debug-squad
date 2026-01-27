@@ -11,26 +11,26 @@ namespace Domain
         public int Capacity { get; private set; }
         public decimal PricePerNight { get; private set; }
 
+        // Parameterless constructor for EF Core
+        private Room() { }
 
-        // Constructor
         public Room(string number, int capacity, decimal pricePerNight)
         {
-            if (string.IsNullOrWhiteSpace(number))
-                throw new ArgumentException("Room number is required");
-
-            if (capacity <= 0)
-                throw new ArgumentException("Capacity must be greater than 0");
-
-            if (pricePerNight <= 0)
-                throw new ArgumentException("Price must be greater than 0");
-
+            Validate(number, capacity, pricePerNight);
             Number = number;
             Capacity = capacity;
             PricePerNight = pricePerNight;
         }
 
-        //  Update room details
         public void UpdateDetails(string number, int capacity, decimal pricePerNight)
+        {
+            Validate(number, capacity, pricePerNight); 
+            Number = number;
+            Capacity = capacity;
+            PricePerNight = pricePerNight;
+        }
+
+        private void Validate(string number, int capacity, decimal pricePerNight)
         {
             if (string.IsNullOrWhiteSpace(number))
                 throw new ArgumentException("Room number is required");
@@ -40,10 +40,6 @@ namespace Domain
 
             if (pricePerNight <= 0)
                 throw new ArgumentException("Price must be greater than 0");
-
-            Number = number;
-            Capacity = capacity;
-            PricePerNight = pricePerNight;
         }
     }
 }
