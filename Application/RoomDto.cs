@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Application.DTOs
+namespace Application
 {
     public class RoomDto   // DTO for sending room info to client
     {
