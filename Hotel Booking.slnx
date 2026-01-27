@@ -1,7 +1,1 @@
-<Solution>
-  <Project Path="Application/Application.csproj" />
-  <Project Path="Client/Client.csproj" Id="2a671776-e62e-4527-87eb-541b8c510ca6" />
-  <Project Path="Domain/Domain.csproj" />
-  <Project Path="Infrastructure/Infrastructure.csproj" />
-  <Project Path="Server/Server.csproj" Id="84d0ab5b-6d72-42f3-aa1e-bd09df086bf1" />
-</Solution>
+<Solution />
