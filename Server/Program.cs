@@ -13,7 +13,7 @@ namespace Server
 
             builder.Services.AddControllers();
 
-            builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+            builder.Services.AddScoped<IRoomRepository, EfRoomRepository>();
 
             builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 

@@ -6,7 +6,7 @@ namespace Infrastructure.Repositories
 {
     // Concrete implementation of IRoomRepository using EF Core
     // This class is part of the Infrastructure layer and knows how to persist Room entities to the database
-    public class RoomRepository : IRoomRepository
+    public class EfRoomRepository : IRoomRepository
     {
         // EF Core DbContext, injected via constructor
         // Provides access to the database and tracks entity changes
@@ -14,7 +14,7 @@ namespace Infrastructure.Repositories
 
         // Constructor receives the AppDbContext via Dependency Injection
         // This allows the repository to interact with the database without creating DbContext itself
-        public RoomRepository(AppDbContext dbContext)
+        public EfRoomRepository(AppDbContext dbContext)
         {
             _dbContext = dbContext;
         }
