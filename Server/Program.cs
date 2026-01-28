@@ -1,4 +1,5 @@
 using Application.Interfaces;
+using Application.Rooms.Handlers;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,18 @@ namespace Server
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllers();
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(policy =>
+                    policy.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader());
+            });
+
+
+
+            builder.Services.AddScoped<CreateRoomHandler>();
 
             builder.Services.AddScoped<IRoomRepository, EfRoomRepository>();
 
@@ -27,6 +40,8 @@ namespace Server
             {
                 app.MapOpenApi();
             }
+
+            app.UseCors();
 
             app.UseHttpsRedirection();
 

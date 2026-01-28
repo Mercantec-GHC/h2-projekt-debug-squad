@@ -1,5 +1,69 @@
-﻿<h3>Admin</h3>
+﻿@page "/admin"
+<h3>Admin - Create Room</h3>
+
+@if (!string.IsNullOrEmpty(_message))
+{
+    <p>@_message</p>
+}
+
+<div>
+    <label>Room Number:</label>
+    <input @bind="_roomNumber" placeholder="e.g. 101" />
+</div>
+
+<div>
+    <label>Capacity:</label>
+    <input type="number" @bind="_capacity" />
+</div>
+
+<div>
+    <label>Price per Night:</label>
+    <input type="number" step="0.01" @bind="_pricePerNight" />
+</div>
+
+<button @onclick="CreateRoom">Create Room</button>
 
 @code {
+    // Fields bound to the form
+    private string _roomNumber = string.Empty;
+    private int _capacity;
+    private decimal _pricePerNight;
+    private string _message = string.Empty;
 
+    // Inject HttpClient to call API
+    [Inject] private HttpClient Http { get; set; } = default!;
+
+    // Method triggered on button click
+    private async Task CreateRoom()
+    {
+        var command = new
+        {
+            Number = _roomNumber,
+            Capacity = _capacity,
+            PricePerNight = _pricePerNight
+        };
+
+        try
+        {
+            // Call the API
+            var response = await Http.PostAsJsonAsync("https://localhost:7270/api/rooms", command);
+
+            if (response.IsSuccessStatusCode)
+            {
+                _message = "Room created successfully!";
+                // Clear form
+                _roomNumber = string.Empty;
+                _capacity = 0;
+                _pricePerNight = 0;
+            }
+            else
+            {
+                _message = $"Error: {response.ReasonPhrase}";
+            }
+        }
+        catch (Exception ex)
+        {
+            _message = $"Exception: {ex.Message}";
+        }
+    }
 }
