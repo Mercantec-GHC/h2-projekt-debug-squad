@@ -7,7 +7,7 @@
     {
         // Unique identifier for the room.
         // Using Guid ensures a globally unique ID.
-        public Guid Id { get; private set; }
+        public int Id { get; private set; }
 
         // Room number (human-readable). 
         // It's a string because it may contain letters, leading zeros, or codes like "A101".
