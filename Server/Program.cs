@@ -1,5 +1,6 @@
-
-using HotelBooking.Infrastructure;
+using Application.Interfaces;
+using Infrastructure.Data;
+using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Server
@@ -8,10 +9,11 @@ namespace Server
     {
         public static void Main(string[] args)
         {
-
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllers();
+
+            builder.Services.AddScoped<IRoomRepository, EfRoomRepository>();
 
             builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 
