@@ -22,8 +22,6 @@ namespace Server
                           .AllowAnyHeader());
             });
 
-
-
             builder.Services.AddScoped<CreateRoomHandler>();
 
             builder.Services.AddScoped<IRoomRepository, EfRoomRepository>();

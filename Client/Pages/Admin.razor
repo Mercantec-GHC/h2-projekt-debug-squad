@@ -46,7 +46,8 @@
         try
         {
             // Call the API
-            var response = await Http.PostAsJsonAsync("https://localhost:7270/api/rooms", command);
+            //var response = await Http.PostAsJsonAsync("https://localhost:7270/api/rooms", command);
+            var response = await Http.PostAsJsonAsync("api/rooms", command);
 
             if (response.IsSuccessStatusCode)
             {

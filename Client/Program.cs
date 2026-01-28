@@ -11,7 +11,18 @@ namespace Client
             builder.RootComponents.Add<App>("#app");
             builder.RootComponents.Add<HeadOutlet>("head::after");
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
+            builder.Services.AddScoped(sp =>
+            {
+                var baseUrl = builder.Configuration["Api:BaseUrl"];
+                if (string.IsNullOrEmpty(baseUrl))
+                    throw new InvalidOperationException("Api:BaseUrl is not configured in appsettings.json");
+
+                return new HttpClient { BaseAddress = new Uri(baseUrl) };
+            });
+
+            //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
             await builder.Build().RunAsync();
         }
