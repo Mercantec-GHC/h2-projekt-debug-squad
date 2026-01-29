@@ -20,22 +20,19 @@
     <label>Price per Night:</label>
     <input type="number" step="0.01" @bind="_pricePerNight" />
 </div>
- 
+
 <button @onclick="CreateRoom" class="btn btn-success">Create</button>
-<button @onclick="EditRoom">Edit</button>
-<button @onclick="DeleteRoom">Delete</button>
+<button @onclick="EditRoom" class="btn btn-warning">Edit</button>
+<button @onclick="DeleteRoom" class="btn btn-danger">Delete</button>
 
 @code {
-    // Fields bound to the form
     private string _roomNumber = string.Empty;
     private int _capacity;
     private decimal _pricePerNight;
     private string _message = string.Empty;
 
-    // Inject HttpClient to call API
     [Inject] private HttpClient Http { get; set; } = default!;
 
-    // Method triggered on button click
     private async Task CreateRoom()
     {
         var command = new
@@ -79,7 +76,4 @@
     {
 
     }
-
-     
-
 }
