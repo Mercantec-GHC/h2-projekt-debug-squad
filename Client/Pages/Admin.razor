@@ -22,6 +22,9 @@
 </div>
 
 <button @onclick="CreateRoom">Create Room</button>
+<button @onclick="EditRoom">Edit</button>
+<button @onclick="DeleteRoom">Delete</button>
+
 
 @code {
     // Fields bound to the form
@@ -67,4 +70,15 @@
             _message = $"Exception: {ex.Message}";
         }
     }
+
+    private async Task EditRoom()
+    {
+
+    }
+
+    private async Task DeleteRoom()
+    {
+        
+    }
+
 }
