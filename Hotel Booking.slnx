@@ -1,7 +1,17 @@
 <Solution>
-  <Project Path="Application/Application.csproj" />
-  <Project Path="Client/Client.csproj" />
-  <Project Path="Domain/Domain.csproj" />
-  <Project Path="Infrastructure/Infrastructure.csproj" />
-  <Project Path="Server/Server.csproj" />
+  <Project Path="Application/Application.csproj">
+    <Build Solution="Debug|*" Project="false" />
+  </Project>
+  <Project Path="Client/Client.csproj">
+    <Build Solution="Debug|*" Project="false" />
+  </Project>
+  <Project Path="Domain/Domain.csproj">
+    <Build Solution="Debug|*" Project="false" />
+  </Project>
+  <Project Path="Infrastructure/Infrastructure.csproj">
+    <Build Solution="Debug|*" Project="false" />
+  </Project>
+  <Project Path="Server/Server.csproj">
+    <Build Solution="Debug|*" Project="false" />
+  </Project>
 </Solution>
