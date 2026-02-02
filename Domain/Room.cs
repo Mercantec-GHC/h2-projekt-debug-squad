@@ -14,7 +14,7 @@
 
         private Room() { }
 
-        public Room(string number, int capacity, decimal pricePerNight, bool isAvailable=true)
+        public Room(string number, int capacity, decimal pricePerNight, bool isAvailable = true)
         {
             Validate(number, capacity, pricePerNight);
 
