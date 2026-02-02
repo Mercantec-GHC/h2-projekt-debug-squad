@@ -10,6 +10,8 @@
 
         public decimal PricePerNight { get; private set; }
 
+        public bool IsAvailable { get; private set; }
+
         private Room() { }
 
         public Room(string number, int capacity, decimal pricePerNight)
@@ -19,6 +21,17 @@
             Number = number;
             Capacity = capacity;
             PricePerNight = pricePerNight;
+            IsAvailable = true;
+        }
+
+        public void MarkAsUnavailable()
+        {
+            if (!IsAvailable) throw new InvalidOperationException("Room is already unavailable");
+        }
+
+        public void MarkAsAvailable()
+        {
+            if (IsAvailable) throw new InvalidOperationException("Room is already available");
         }
 
         private static void Validate(string number, int capacity, decimal pricePerNight)
