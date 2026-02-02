@@ -2,6 +2,13 @@
 
 <h3 class="mb-4 text-center">Admin Panel</h3>
 
+@if (!string.IsNullOrEmpty(_message))
+{
+    <div class="alert alert-success text-center">
+        @_message
+    </div>
+}
+
 <!-- Top cards row -->
 <div class="row justify-content-center mb-4 g-3">
     <!-- Manage Rooms Card -->
@@ -74,7 +81,7 @@
 
         <!-- Show all rooms inside room management -->
         <div class="d-grid mt-3">
-            <button class="btn btn-primary" @onclick="ShowAllRooms">
+            <button class="btn btn-primary" @onclick="ShowRooms">
                 <i class="bi bi-list-ul me-1"></i>Show All Rooms
             </button>
         </div>
@@ -125,26 +132,63 @@
     private string _roomNumber = string.Empty;
     private int _capacity;
     private decimal _pricePerNight;
+    private string _message = string.Empty;
+
+    [Inject] private HttpClient Http { get; set; } = default!;
 
     private async Task GoToRoomManagement()
     {
         _showRoomManagement = true;
-        await Task.CompletedTask;
     }
 
     private async Task GoToUserManagement()
     {
         // placeholder for future user management
-        await Task.CompletedTask;
     }
 
-    private async Task ShowAllRooms()
+    private async Task ShowRooms()
     {
         _showAllRooms = true;
-        await Task.CompletedTask;
     }
 
-    private async Task CreateRoom() { await Task.CompletedTask; }
-    private async Task EditRoom() { await Task.CompletedTask; }
-    private async Task DeleteRoom() { await Task.CompletedTask; }
+    private async Task CreateRoom()
+    {
+        var command = new
+        {
+            Number = _roomNumber,
+            Capacity = _capacity,
+            PricePerNight = _pricePerNight
+        };
+
+        try
+        {
+            var response = await Http.PostAsJsonAsync("api/rooms", command);
+
+            if (response.IsSuccessStatusCode)
+            {
+                _message = "Room created successfully!";
+                _roomNumber = string.Empty;
+                _capacity = 0;
+                _pricePerNight = 0;
+            }
+            else
+            {
+                _message = $"Error: {response.ReasonPhrase}";
+            }
+        }
+        catch (Exception ex)
+        {
+            _message = $"Exception: {ex.Message}";
+        }
+    }
+
+    private async Task EditRoom()
+    {
+        // implement later
+    }
+
+    private async Task DeleteRoom()
+    {
+        // implement later
+    }
 }
