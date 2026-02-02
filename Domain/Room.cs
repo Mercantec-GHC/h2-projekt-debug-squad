@@ -14,14 +14,14 @@
 
         private Room() { }
 
-        public Room(string number, int capacity, decimal pricePerNight)
+        public Room(string number, int capacity, decimal pricePerNight, bool isAvailable=true)
         {
             Validate(number, capacity, pricePerNight);
 
             Number = number;
             Capacity = capacity;
             PricePerNight = pricePerNight;
-            IsAvailable = true;
+            IsAvailable = isAvailable;
         }
 
         public void MarkAsUnavailable()

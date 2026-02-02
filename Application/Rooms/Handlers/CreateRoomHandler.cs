@@ -15,7 +15,7 @@ namespace Application.Rooms.Handlers
 
         public async Task Handle(CreateRoomCommand command)
         {
-            var room = new Room(command.Number, command.Capacity, command.PricePerNight);
+            var room = new Room(command.Number, command.Capacity, command.PricePerNight, command.IsAvailable);
 
             await _repository.AddAsync(room);
         }
