@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Domain;
 using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
@@ -18,6 +19,11 @@ namespace Infrastructure.Repositories
             await _dbContext.Rooms.AddAsync(room);
 
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<IReadOnlyList<Room>> GetAllAsync()
+        {
+            return await _dbContext.Rooms.ToListAsync();
         }
     }
 }

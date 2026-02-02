@@ -1,25 +1,32 @@
-﻿@using Client.Models;
+﻿@using Application.Rooms.Commands;
 @using Client.Components;
+@inject HttpClient http
 
 @page "/admin/rooms"
 
 <h3>Rooms</h3>
-@if (rooms != null)
-{
-    <RoomComponent Rooms="rooms"/>
-}
 
+<RoomComponent Rooms="rooms"/>
+
+<p>@message</p>
 
 @code {
     List<RoomDto>? rooms = new List<RoomDto>();
 
+    private string message = string.Empty;
 
-
-    // override protected Task OnAfterRenderAsync(bool firstRender)
-    // {
-    //     if (firstRender)
-    //     {
-    //         rooms = await 
-    //     }
-    // }
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            rooms = await http.GetFromJsonAsync<List<RoomDto>>("api/rooms")
+                    ?? new List<RoomDto>();
+            
+            message = "Room created successfully!";
+        }
+        catch (Exception ex)
+        {
+            message = $"Error: {ex.Message}";
+        }
+    }
 }
