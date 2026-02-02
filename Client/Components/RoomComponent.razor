@@ -1,10 +1,12 @@
-﻿<div class="rooms-grid">
+﻿@using Client.Models;
+
+<div class="rooms-grid">
     @if (Rooms != null)
     {
         foreach (var room in Rooms)
         {
             <div class="room-card">
-                <p>Room Number: @room.RoomNumber</p>
+                <a href="RoomDetails">@room.RoomNumber</a>
                 <p>Capacity: @room.Capacity</p>
                 <p>Price per Night: $@room.PricePerNight</p>
             </div>
@@ -18,12 +20,5 @@
 
 @code {
     [Parameter]
-    public List<RoomDetails> Rooms { get; set; }
-
-    public class RoomDetails
-    {
-        public int RoomNumber { get; set; }
-        public int Capacity { get; set; }
-        public decimal PricePerNight { get; set; }
-    }
+    public List<RoomDto> Rooms { get; set; }
 }
