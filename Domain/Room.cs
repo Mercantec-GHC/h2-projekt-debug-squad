@@ -27,8 +27,7 @@
 
             if (capacity <= 0) throw new ArgumentException("Capacity must be greater than 0");
 
-            if (pricePerNight <= 0)
-                throw new ArgumentException("Price must be greater than 0");
+            if (pricePerNight <= 0) throw new ArgumentException("Price must be greater than 0");
         }
     }
 }
