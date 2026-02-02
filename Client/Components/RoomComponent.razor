@@ -1,4 +1,4 @@
-﻿@using Client.Models;
+﻿@using Application.Rooms.Commands;
 
 <div class="rooms-grid">
     @if (Rooms != null)
@@ -6,9 +6,14 @@
         foreach (var room in Rooms)
         {
             <div class="room-card">
-                <a href="RoomDetails">@room.RoomNumber</a>
+                <a href="RoomDetails">@room.Number</a>
                 <p>Capacity: @room.Capacity</p>
                 <p>Price per Night: $@room.PricePerNight</p>
+
+                @if (room.IsAvailable)
+                {
+                    <p>Available</p>
+                }
             </div>
         }
     }

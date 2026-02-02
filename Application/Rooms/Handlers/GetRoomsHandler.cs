@@ -1,7 +1,10 @@
 ﻿using Application.Interfaces;
+using Domain;
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using Application.Rooms.Queries;
 
 namespace Application.Rooms.Handlers
 {
@@ -14,8 +17,9 @@ namespace Application.Rooms.Handlers
             _repository = repository;
         }
 
-
-
-
+        public async Task<IReadOnlyList<Room>> Handle(GetAllRoomsQuery query)
+        {
+            return await _repository.GetAllAsync();
+        }
     }
 }

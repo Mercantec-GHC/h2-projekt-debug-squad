@@ -23,6 +23,7 @@ namespace Server
             });
 
             builder.Services.AddScoped<CreateRoomHandler>();
+            builder.Services.AddScoped<GetRoomsHandler>();
 
             builder.Services.AddScoped<IRoomRepository, EfRoomRepository>();
 
