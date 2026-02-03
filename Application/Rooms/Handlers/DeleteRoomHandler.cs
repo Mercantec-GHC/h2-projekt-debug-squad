@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Application.Rooms.Commands;
 using Application.Rooms.Queries;
 using Domain;
 using System;
@@ -7,18 +8,18 @@ using System.Text;
 
 namespace Application.Rooms.Handlers
 {
-    public class GetRoomByIdHandler
+    public class DeleteRoomHandler
     {
         private readonly IRoomRepository _repository;
 
-        public GetRoomByIdHandler(IRoomRepository repository)
+        public DeleteRoomHandler(IRoomRepository repository)
         {
             _repository = repository;
         }
 
-        public async Task<Room> Handle(RoomByIdQuery query)
+        public async Task Handle(RoomByIdQuery query)
         {
-            return await _repository.GetByIdAsync(query.Id);
+            await _repository.DeleteByIdAsync(query.Id);
         }
     }
 }

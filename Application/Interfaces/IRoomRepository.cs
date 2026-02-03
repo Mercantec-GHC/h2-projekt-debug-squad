@@ -7,5 +7,6 @@ namespace Application.Interfaces
         Task AddAsync(Room room);
         Task<IReadOnlyList<Room>> GetAllAsync();
         Task<Room> GetByIdAsync(int id);
+        Task DeleteByIdAsync(int id);
     }
 }

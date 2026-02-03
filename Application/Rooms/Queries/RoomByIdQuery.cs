@@ -4,10 +4,10 @@ using System.Text;
 
 namespace Application.Rooms.Queries
 {
-    public class GetRoomByIdQuery
+    public class RoomByIdQuery
     {
         public int Id { get; set; }
 
-        public GetRoomByIdQuery(int id) { Id = id; }
+        public RoomByIdQuery(int id) { Id = id; }
     }
 }
