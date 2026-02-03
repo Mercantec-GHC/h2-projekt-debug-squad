@@ -11,11 +11,13 @@ namespace Server.Controllers
     {
         private readonly CreateRoomHandler _createRoomHandler;
         private readonly GetRoomsHandler _getRoomsHandler;
+        private readonly GetRoomByIdHandler _getRoomByIdHandler;
 
-        public RoomsController(CreateRoomHandler createRoomHandler, GetRoomsHandler getRoomsHandler)
+        public RoomsController(CreateRoomHandler createRoomHandler, GetRoomsHandler getRoomsHandler, GetRoomByIdHandler getRoomByIdHandler)
         {
             _createRoomHandler = createRoomHandler;
             _getRoomsHandler = getRoomsHandler;
+            _getRoomByIdHandler = getRoomByIdHandler;
         }
 
         [HttpPost]
@@ -27,10 +29,21 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAll()
         {
             var rooms = await _getRoomsHandler.Handle(new GetAllRoomsQuery());
             return Ok(rooms);
+        }
+
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var room = await _getRoomByIdHandler.Handle(new GetRoomByIdQuery(id));
+            if (room == null)
+                return NotFound();
+
+            return Ok(room);
         }
     }
 }
