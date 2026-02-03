@@ -12,12 +12,19 @@ namespace Server.Controllers
         private readonly CreateRoomHandler _createRoomHandler;
         private readonly GetRoomsHandler _getRoomsHandler;
         private readonly GetRoomByIdHandler _getRoomByIdHandler;
+        private readonly DeleteRoomHandler _deleteRoomHandler;
 
-        public RoomsController(CreateRoomHandler createRoomHandler, GetRoomsHandler getRoomsHandler, GetRoomByIdHandler getRoomByIdHandler)
+        public RoomsController(
+            CreateRoomHandler createRoomHandler, 
+            GetRoomsHandler getRoomsHandler, 
+            GetRoomByIdHandler getRoomByIdHandler,
+            DeleteRoomHandler deleteRoomHandler
+            )
         {
             _createRoomHandler = createRoomHandler;
             _getRoomsHandler = getRoomsHandler;
             _getRoomByIdHandler = getRoomByIdHandler;
+            _deleteRoomHandler = deleteRoomHandler;
         }
 
         [HttpPost]
@@ -39,11 +46,19 @@ namespace Server.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var room = await _getRoomByIdHandler.Handle(new GetRoomByIdQuery(id));
+            var room = await _getRoomByIdHandler.Handle(new RoomByIdQuery(id));
             if (room == null)
                 return NotFound();
 
             return Ok(room);
         }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _deleteRoomHandler.Handle(new RoomByIdQuery(id));
+            return Ok("Room deleted successfully");
+        }
+
+
     }
 }
