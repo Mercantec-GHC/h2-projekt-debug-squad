@@ -1,9 +1,16 @@
 ﻿@page "/manage/rooms"
 @inject HttpClient Http
-@inject NavigationManager Nav
 
 
 <h3 class="mb-4 text-center">Manage Rooms</h3>
+
+@if (!string.IsNullOrEmpty(_message))
+{
+    <div class="alert alert-success text-center">
+        @_message
+    </div>
+}
+
 <div class="card p-4 shadow-sm mb-4">
     <div class="d-flex gap-2 mb-3">
         <button class="btn btn-success flex-grow-1"
@@ -21,11 +28,11 @@
     {
         <div class="card p-3 mb-3 shadow-sm">
             <h6>Create Room</h6>
-            <input class="form-control mb-2" placeholder="Room Number" />
-            <input class="form-control mb-2" type="number" placeholder="Capacity" />
-            <input class="form-control mb-2" type="number" step="0.01" placeholder="Price" />
+            <input class="form-control mb-2" placeholder="Room Number" @bind="_roomNumber" />
+            <input class="form-control mb-2" type="number" placeholder="Capacity" @bind="_capacity" />
+            <input class="form-control mb-2" type="number" step="0.01" placeholder="Price" @bind="_pricePerNight" />
 
-            <button class="btn btn-success w-100">Save</button>
+            <button class="btn btn-success w-100" @onclick="CreateRoom">Save</button>
         </div>
     }
 
@@ -58,5 +65,42 @@
     private bool _showEditForm = false;
     private bool _showAllRooms = false;
 
+    private string _roomNumber = string.Empty;
+    private int _capacity;
+    private decimal _pricePerNight;
+    private string _message = string.Empty;
+
     private void ShowRooms() => _showAllRooms = true;
+
+    private async Task CreateRoom()
+    {
+        // Prepare the room data
+        var command = new
+        {
+            Number = _roomNumber,
+            Capacity = _capacity,
+            PricePerNight = _pricePerNight
+        };
+
+        try
+        {
+            var response = await Http.PostAsJsonAsync("api/rooms", command);
+
+            if (response.IsSuccessStatusCode)
+            {
+                _message = "Room created successfully!";
+                _roomNumber = string.Empty;
+                _capacity = 0;
+                _pricePerNight = 0;
+            }
+            else
+            {
+                _message = $"Error: {response.ReasonPhrase}";
+            }
+        }
+        catch (Exception ex)
+        {
+            _message = $"Exception: {ex.Message}";
+        }
+    }
 }
