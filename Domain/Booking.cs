@@ -34,10 +34,8 @@ namespace Domain
             CheckInDate = checkInDate.Date;
             CheckOutDate = checkOutDate.Date;
 
-            // Обновляем статус комнаты
             room.MarkAsUnavailable();
 
-            // Добавляем бронирование в гостя
             guest.Bookings?.Add(this);
         }
     }
