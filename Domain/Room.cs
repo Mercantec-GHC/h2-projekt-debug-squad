@@ -27,11 +27,13 @@
         public void MarkAsUnavailable()
         {
             if (!IsAvailable) throw new InvalidOperationException("Room is already unavailable");
+            IsAvailable = false;
         }
 
         public void MarkAsAvailable()
         {
             if (IsAvailable) throw new InvalidOperationException("Room is already available");
+            IsAvailable = true;
         }
 
         private static void Validate(string number, int capacity, decimal pricePerNight)

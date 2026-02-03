@@ -16,18 +16,16 @@ namespace Domain
 
         public DateTime CheckOutDate { get; private set; }
 
+        // calculated property
+        // result of CheckOutDate - CheckInDate) = timespan
+        // timespan.TotalDays = number of days
         public decimal TotalPrice => Room.PricePerNight * (decimal)(CheckOutDate - CheckInDate).TotalDays;
 
-        private Booking() { }  
+        private Booking() { }
 
         public Booking(Guest guest, Room room, DateTime checkInDate, DateTime checkOutDate)
         {
-            if (guest == null) throw new ArgumentNullException(nameof(guest));
-            if (room == null) throw new ArgumentNullException(nameof(room));
-            if (checkInDate.Date >= checkOutDate.Date)
-                throw new ArgumentException("Check-out date must be after check-in date");
-            if (!room.IsAvailable)
-                throw new InvalidOperationException("Room is not available");
+            Validate(guest, room, checkInDate, checkOutDate);
 
             Guest = guest;
             Room = room;
@@ -37,6 +35,22 @@ namespace Domain
             room.MarkAsUnavailable();
 
             guest.Bookings?.Add(this);
+        }
+
+        private static void Validate(Guest guest, Room room, DateTime checkInDate, DateTime checkOutDate)
+        {
+            if (guest == null) throw new ArgumentNullException(nameof(guest));
+            if (room == null) throw new ArgumentNullException(nameof(room));
+            if (checkInDate.Date >= checkOutDate.Date)
+                throw new ArgumentException("Check-out date must be after check-in date");
+            if (!room.IsAvailable)
+                throw new InvalidOperationException("Room is not available");
+        }
+
+        public void Cancel()
+        {
+            Room.MarkAsAvailable();
+            Guest.Bookings?.Remove(this);
         }
     }
 }
