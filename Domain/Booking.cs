@@ -8,9 +8,9 @@ namespace Domain
     {
         public int Id { get; private set; }
 
-        public Guest Guest { get; private set; }
+        public Guest Guest { get; private set; } = null!;
 
-        public Room Room { get; private set; }
+        public Room Room { get; private set; } = null!;
 
         public DateTime CheckInDate { get; private set; }
 
@@ -39,8 +39,9 @@ namespace Domain
 
         private static void Validate(Guest guest, Room room, DateTime checkInDate, DateTime checkOutDate)
         {
-            if (guest == null) throw new ArgumentNullException(nameof(guest));
-            if (room == null) throw new ArgumentNullException(nameof(room));
+            ArgumentNullException.ThrowIfNull(guest, nameof(guest));
+            ArgumentNullException.ThrowIfNull(room, nameof(room));
+
             if (checkInDate.Date >= checkOutDate.Date)
                 throw new ArgumentException("Check-out date must be after check-in date");
             if (!room.IsAvailable)

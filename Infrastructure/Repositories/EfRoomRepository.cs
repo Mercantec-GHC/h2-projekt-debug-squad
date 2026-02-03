@@ -40,7 +40,7 @@ namespace Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task EditAsync(Room room)
+        /*public async Task EditAsync(Room room)
         {
             var existingRoom = await _dbContext.Rooms.FindAsync(room.Id);
             if (existingRoom == null)
@@ -51,6 +51,6 @@ namespace Infrastructure.Repositories
             // update only what you allow
 
             await _dbContext.SaveChangesAsync();
-        }
+        }*/
     }
 }
