@@ -1,26 +1,20 @@
 ﻿@page "/admin"
+@inject NavigationManager Nav
 
 <h3 class="mb-4 text-center">Admin Panel</h3>
 
-@if (!string.IsNullOrEmpty(_message))
-{
-    <div class="alert alert-success text-center">
-        @_message
-    </div>
-}
-
-<!-- Top cards row -->
-<div class="row justify-content-center mb-4 g-3">
+<div class="row justify-content-center g-4 mb-4">
     <!-- Manage Rooms Card -->
-    <div class="col-md-3">
-        <div class="card shadow-lg text-center h-100">
+    <div class="col-md-4 col-lg-3">
+        <div class="card shadow-lg text-center h-100 admin-card">
             <div class="card-body d-flex flex-column justify-content-between">
                 <div>
-                    <i class="bi bi-building display-3 mb-3 text-primary"></i>
+                    <i class="bi bi-building display-2 mb-3 text-primary"></i>
                     <h5 class="card-title">Manage Rooms</h5>
                     <p class="card-text">Create, edit, and delete rooms.</p>
                 </div>
-                <button class="btn btn-primary mt-3 w-100" @onclick="GoToRoomManagement">
+                <button class="btn btn-primary mt-3 w-100"
+                        @onclick='() => Nav.NavigateTo("/manage/rooms")'>
                     Open Room Management
                 </button>
             </div>
@@ -28,15 +22,16 @@
     </div>
 
     <!-- Manage Users Card -->
-    <div class="col-md-3">
-        <div class="card shadow-lg text-center h-100">
+    <div class="col-md-4 col-lg-3">
+        <div class="card shadow-lg text-center h-100 admin-card">
             <div class="card-body d-flex flex-column justify-content-between">
                 <div>
-                    <i class="bi bi-person-badge-fill display-3 mb-3 text-secondary"></i>
+                    <i class="bi bi-person-badge-fill display-2 mb-3 text-secondary"></i>
                     <h5 class="card-title">Manage Users</h5>
                     <p class="card-text">View and manage user accounts.</p>
                 </div>
-                <button class="btn btn-secondary mt-3 w-100" @onclick="GoToUserManagement">
+                <button class="btn btn-secondary mt-3 w-100"
+                        @onclick='() => Nav.NavigateTo("/manage/users")'>
                     Open User Management
                 </button>
             </div>
@@ -44,214 +39,20 @@
     </div>
 </div>
 
-<!-- Room Management section -->
-@if (_showRoomManagement)
-{
-    <div class="card p-4 shadow-sm mb-4">
-        <h5 class="mb-3"><i class="bi bi-pencil-square me-2"></i>Room Management</h5>
+<style>
+    /* Make cards bigger and add hover effect */
+    .admin-card {
+        transition: transform 0.3s, box-shadow 0.3s;
+        cursor: pointer;
+    }
 
-        <div class="d-flex gap-2 mb-3">
-            <button class="btn btn-success flex-grow-1"
-                    @onclick="() => { _showCreateForm = true; _showEditForm = false; }">
-                <i class="bi bi-plus-circle me-1"></i>Create Room
-            </button>
-
-            <button class="btn btn-warning flex-grow-1"
-                    @onclick="() => { _showEditForm = true; _showCreateForm = false; }">
-                <i class="bi bi-pencil me-1"></i>Edit Room
-            </button>
-            <button class="btn btn-danger flex-grow-1"
-                    @onclick="() => { /* TODO: implement delete logic */ }">
-                <i class="bi bi-trash me-1"></i>Delete Room
-            </button>
-        </div>
-
-        <!-- Create Room Form -->
-        @if (_showCreateForm)
-        {
-            <div class="card p-3 mb-3 shadow-sm">
-                <h6 class="mb-3"><i class="bi bi-plus-circle me-2"></i>Create Room</h6>
-                <div class="row mb-3">
-                    <div class="col-md-4">
-                        <label class="form-label">Room Number</label>
-                        <input @bind="_roomNumber" placeholder="e.g. 101" class="form-control" />
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Capacity</label>
-                        <input type="number" @bind="_capacity" class="form-control" />
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Price per Night</label>
-                        <input type="number" step="0.01" @bind="_pricePerNight" class="form-control" />
-                    </div>
-                </div>
-                <button class="btn btn-success w-100" @onclick="CreateRoom">
-                    <i class="bi bi-check-circle me-1"></i>Save
-                </button>
-            </div>
+        .admin-card:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
         }
 
-        <!-- Edit Room Form -->
-        @if (_showEditForm)
-        {
-            <div class="card p-3 mb-3 shadow-sm">
-                <h6 class="mb-3"><i class="bi bi-pencil me-2"></i>Edit Room</h6>
-                <div class="row mb-3">
-                    <div class="col-md-4">
-                        <label class="form-label">Room Number</label>
-                        <input @bind="_roomNumber" placeholder="e.g. 101" class="form-control" />
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Capacity</label>
-                        <input type="number" @bind="_capacity" class="form-control" />
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Price per Night</label>
-                        <input type="number" step="0.01" @bind="_pricePerNight" class="form-control" />
-                    </div>
-                </div>
-                <button class="btn btn-warning w-100" @onclick="EditRoom">
-                    <i class="bi bi-pencil me-1"></i>Edit
-                </button>
-            </div>
+        /*make the icon bigger */
+        .admin-card i {
+            font-size: 3rem; 
         }
-
-        <!-- Show all rooms -->
-        <div class="d-grid mt-3">
-            <button class="btn btn-primary" @onclick="ShowRooms">
-                <i class="bi bi-list-ul me-1"></i>Show All Rooms
-            </button>
-        </div>
-    </div>
-
-    <!-- Rooms Table -->
-    @if (_showAllRooms)
-    {
-        <div class="card p-3 shadow-sm">
-            <h5 class="mb-3"><i class="bi bi-table me-2"></i>All Rooms</h5>
-            <table class="table table-striped table-hover table-bordered align-middle">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Room Number</th>
-                        <th>Capacity</th>
-                        <th>Price per Night</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var room in _rooms)
-                    {
-                        <tr>
-                            <td>@room.Number</td>
-                            <td>@room.Capacity</td>
-                            <td>@room.PricePerNight</td>
-                            <td>
-                                <button class="btn btn-sm btn-warning me-1"
-                                        @onclick="() => OpenEditForm(room)">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                                <button class="btn btn-sm btn-danger"
-                                        @onclick="() => DeleteRoom(room.Number)">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    }
-}
-
-@code {
-    private bool _showRoomManagement = false;
-    private bool _showAllRooms = false;
-    private bool _showCreateForm = false;
-    private bool _showEditForm = false;
-
-    private string _roomNumber = string.Empty;
-    private int _capacity;
-    private decimal _pricePerNight;
-    private string _message = string.Empty;
-
-    private List<Room> _rooms = new() // Example data; replace with API call
-    {
-        new Room { Number = "101", Capacity = 2, PricePerNight = 120 },
-        new Room { Number = "102", Capacity = 4, PricePerNight = 200 }
-    };
-
-    [Inject] private HttpClient Http { get; set; } = default!;
-
-    private async Task GoToRoomManagement()
-    {
-        _showRoomManagement = true;
-    }
-
-    private async Task GoToUserManagement()
-    {
-        // placeholder
-    }
-
-    private void ShowRooms()
-    {
-        _showAllRooms = true;
-    }
-
-    private void OpenEditForm(Room room)
-    {
-        _roomNumber = room.Number;
-        _capacity = room.Capacity;
-        _pricePerNight = room.PricePerNight;
-
-        _showEditForm = true;
-        _showCreateForm = false;
-    }
-
-    private async Task CreateRoom()
-    {
-        var command = new
-        {
-            Number = _roomNumber,
-            Capacity = _capacity,
-            PricePerNight = _pricePerNight
-        };
-
-        try
-        {
-            var response = await Http.PostAsJsonAsync("api/rooms", command);
-
-            if (response.IsSuccessStatusCode)
-            {
-                _message = "Room created successfully!";
-                _roomNumber = string.Empty;
-                _capacity = 0;
-                _pricePerNight = 0;
-            }
-            else
-            {
-                _message = $"Error: {response.ReasonPhrase}";
-            }
-        }
-        catch (Exception ex)
-        {
-            _message = $"Exception: {ex.Message}";
-        }
-    }
-
-    private async Task EditRoom()
-    {
-        // implement later
-    }
-
-    private async Task DeleteRoom(string roomNumber)
-    {
-        // implement later
-    }
-
-    public class Room
-    {
-        public string Number { get; set; } = string.Empty;
-        public int Capacity { get; set; }
-        public decimal PricePerNight { get; set; }
-    }
-}
+</style>
