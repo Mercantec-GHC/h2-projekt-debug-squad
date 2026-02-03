@@ -22,7 +22,6 @@
             rooms = await http.GetFromJsonAsync<List<RoomDto>>("api/rooms")
                     ?? new List<RoomDto>();
             
-            message = "Room created successfully!";
         }
         catch (Exception ex)
         {
