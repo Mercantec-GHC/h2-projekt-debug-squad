@@ -42,7 +42,6 @@ namespace Server.Controllers
             return Ok(rooms);
         }
 
-
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
