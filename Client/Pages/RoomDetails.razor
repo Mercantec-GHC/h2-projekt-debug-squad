@@ -1,0 +1,56 @@
+﻿@using Client.Models;
+@inject HttpClient http
+
+@page "/room-details/{Id:int}"
+
+
+<h3>RoomDetails</h3>
+
+@if (room != null)
+{
+    <div>
+        <h3>@room.Number</h3>
+
+        <p>Room ID: @room.Id</p>
+        <p>Capacity: @room.Capacity</p>
+        <p>Price per Night: $@room.PricePerNight</p>
+
+        @if (room.IsAvailable)
+        {
+            <p>Available</p>
+        }
+    </div>
+}
+else {
+    <p>Page is loading...</p>
+}
+
+<p>@message</p>
+
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private RoomDto? room;
+    private string message = string.Empty;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            room = await http.GetFromJsonAsync<RoomDto>($"api/rooms/{Id}");
+        }
+        catch (Exception ex)
+        {
+            message = $"Error: {ex.Message}";
+        }
+    }
+
+
+
+
+
+
+}

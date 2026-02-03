@@ -5,16 +5,19 @@
     {
         foreach (var room in Rooms)
         {
-            <div class="room-card">
-                <a href="RoomDetails">@room.Number</a>
-                <p>Capacity: @room.Capacity</p>
-                <p>Price per Night: $@room.PricePerNight</p>
+            <a href="/room-details/@room.Id">
+                <div class="room-card">
+                    <h4>@room.Number</h4>
+                    <p>Room ID: @room.Id</p>
+                    <p>Capacity: @room.Capacity</p>
+                    <p>Price per Night: $@room.PricePerNight</p>
 
-                @if (room.IsAvailable)
-                {
-                    <p>Available</p>
-                }
-            </div>
+                    @if (room.IsAvailable)
+                    {
+                        <p>Available</p>
+                    }
+                </div>
+            </a>
         }
     }
     else
