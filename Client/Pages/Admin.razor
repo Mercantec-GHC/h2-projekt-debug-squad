@@ -1,4 +1,5 @@
 ﻿@page "/admin"
+@inject HttpClient Http
 
 <h3 class="mb-4 text-center">Admin Panel</h3>
 
@@ -180,7 +181,7 @@
         new Room { Number = "102", Capacity = 4, PricePerNight = 200 }
     };
 
-    [Inject] private HttpClient Http { get; set; } = default!;
+    //[Inject] private HttpClient Http { get; set; } = default!;
 
     private async Task GoToRoomManagement()
     {

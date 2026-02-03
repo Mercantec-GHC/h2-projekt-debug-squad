@@ -16,13 +16,11 @@ namespace Server
 
             builder.Services.AddCors(options =>
             {
-                options.AddDefaultPolicy(policy =>
-                    policy.AllowAnyOrigin()
-                          .AllowAnyMethod()
-                          .AllowAnyHeader());
+                options.AddDefaultPolicy(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
 
             builder.Services.AddScoped<CreateRoomHandler>();
+
             builder.Services.AddScoped<GetRoomsHandler>();
 
             builder.Services.AddScoped<IRoomRepository, EfRoomRepository>();
