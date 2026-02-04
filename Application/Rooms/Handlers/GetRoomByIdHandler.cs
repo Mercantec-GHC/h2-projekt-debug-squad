@@ -16,9 +16,15 @@ namespace Application.Rooms.Handlers
             _repository = repository;
         }
 
-        public async Task<Room> Handle(int id)
+        public async Task<RoomDto> Handle(int id)
         {
-            return await _repository.GetByIdAsync(id);
+            Room room = await _repository.GetByIdAsync(id);
+            if (room == null)
+            {
+                return null;
+            }
+
+            return new RoomDto(room.Id, room.Number, room.Capacity, room.PricePerNight, room.IsAvailable);
         }
     }
 }

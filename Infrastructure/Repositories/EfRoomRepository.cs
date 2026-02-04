@@ -21,7 +21,7 @@ namespace Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<IReadOnlyList<Room>> GetAllAsync()
+        public async Task<List<Room>> GetAllAsync()
         {
             return await _dbContext.Rooms.ToListAsync();
         }
