@@ -9,53 +9,35 @@ namespace Server.Controllers
     [Route("api/[controller]")]
     public class RoomsController : ControllerBase
     {
-        private readonly CreateRoomHandler _createRoomHandler;
-        private readonly GetRoomsHandler _getRoomsHandler;
-        private readonly GetRoomByIdHandler _getRoomByIdHandler;
-        private readonly DeleteRoomHandler _deleteRoomHandler;
-
-        public RoomsController(
-            CreateRoomHandler createRoomHandler,
-            GetRoomsHandler getRoomsHandler,
-            GetRoomByIdHandler getRoomByIdHandler,
-            DeleteRoomHandler deleteRoomHandler
-            )
-        {
-            _createRoomHandler = createRoomHandler;
-            _getRoomsHandler = getRoomsHandler;
-            _getRoomByIdHandler = getRoomByIdHandler;
-            _deleteRoomHandler = deleteRoomHandler;
-        }
-
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateRoomCommand command)
+        public async Task<IActionResult> Create([FromServices] CreateRoomHandler createRoomHandler, [FromBody] CreateRoomCommand command)
         {
-            await _createRoomHandler.Handle(command);
+            await createRoomHandler.Handle(command);
 
             return Ok("Room created successfully");
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromServices] GetRoomsHandler getRoomsHandler)
         {
-            var rooms = await _getRoomsHandler.Handle();
+            var rooms = await getRoomsHandler.Handle();
 
             return Ok(rooms);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById([FromServices] GetRoomByIdHandler getRoomByIdHandler, int id)
         {
-            var room = await _getRoomByIdHandler.Handle(id);
+            var room = await getRoomByIdHandler.Handle(id);
             if (room == null)
                 return NotFound();
 
             return Ok(room);
         }
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete([FromServices] DeleteRoomHandler deleteRoomHandler, int id)
         {
-            await _deleteRoomHandler.Handle(id);
+            await deleteRoomHandler.Handle(id);
             return Ok("Room deleted successfully");
         }
     }
