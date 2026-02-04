@@ -1,0 +1,24 @@
+﻿@using Client.Models
+
+<div class="guests-grid">
+    @if (Guests != null)
+    {
+        foreach (var guest in Guests)
+        {
+            <div class="guest-card">
+                <h4>@guest.FullName</h4>
+                <p>Phone: @guest.PhoneNumber</p>
+                <p>Email: @guest.Email</p>
+            </div>
+        }
+    }
+    else
+    {
+        <p>No guests available.</p>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public List<GuestDto> Guests { get; set; }
+}
