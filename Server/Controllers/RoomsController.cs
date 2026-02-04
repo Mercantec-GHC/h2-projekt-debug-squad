@@ -38,7 +38,7 @@ namespace Server.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var rooms = await _getRoomsHandler.Handle(new GetAllRoomsQuery());
+            var rooms = await _getRoomsHandler.Handle();
 
             return Ok(rooms);
         }
@@ -46,7 +46,7 @@ namespace Server.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var room = await _getRoomByIdHandler.Handle(new RoomByIdQuery(id));
+            var room = await _getRoomByIdHandler.Handle(id);
             if (room == null)
                 return NotFound();
 
@@ -55,7 +55,7 @@ namespace Server.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _deleteRoomHandler.Handle(new RoomByIdQuery(id));
+            await _deleteRoomHandler.Handle(id);
             return Ok("Room deleted successfully");
         }
     }

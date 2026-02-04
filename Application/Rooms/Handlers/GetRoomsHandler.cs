@@ -17,7 +17,7 @@ namespace Application.Rooms.Handlers
             _repository = repository;
         }
 
-        public async Task<IReadOnlyList<Room>> Handle(GetAllRoomsQuery query)
+        public async Task<IReadOnlyList<Room>> Handle()
         {
             return await _repository.GetAllAsync();
         }
