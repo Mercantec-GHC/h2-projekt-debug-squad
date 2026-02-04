@@ -23,6 +23,7 @@ namespace Server
             builder.Services.AddScoped<GetRoomsHandler>();
             builder.Services.AddScoped<GetRoomByIdHandler>();
             builder.Services.AddScoped<DeleteRoomHandler>();
+            builder.Services.AddScoped<EditRoomHandler>();
             builder.Services.AddScoped<IRoomRepository, EfRoomRepository>();
 
             builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));

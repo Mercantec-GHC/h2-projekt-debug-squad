@@ -38,17 +38,15 @@ namespace Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        //public async Task EditAsync(Room room)
-        //{
-        //    var existingRoom = await _dbContext.Rooms.FindAsync(room.Id);
-        //    if (existingRoom == null)
-        //        throw new Exception("Room not found");
+        public async Task EditAsync(Room room, int id)
+        {
+            var existingRoom = await _dbContext.Rooms.FindAsync(id);
+            if (existingRoom == null)
+                throw new Exception("Room not found");
 
-        //    existingRoom.Number = room.Number;
-        //    existingRoom.Capacity = room.Capacity;
-        //    // update only what you allow
+            existingRoom.Change(room);
 
-        //    await _dbContext.SaveChangesAsync();
-        //}
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

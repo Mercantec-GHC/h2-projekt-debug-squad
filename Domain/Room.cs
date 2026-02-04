@@ -36,6 +36,14 @@
             IsAvailable = true;
         }
 
+        public void Change(Room room)
+        {
+            Number = room.Number;
+            Capacity = room.Capacity;
+            PricePerNight = room.PricePerNight;
+            IsAvailable = room.IsAvailable;
+        }
+
         private static void Validate(string number, int capacity, decimal pricePerNight)
         {
             if (string.IsNullOrWhiteSpace(number)) throw new ArgumentException("Room number is required");

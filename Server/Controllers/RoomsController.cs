@@ -34,11 +34,20 @@ namespace Server.Controllers
 
             return Ok(room);
         }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromServices] DeleteRoomHandler deleteRoomHandler, int id)
         {
             await deleteRoomHandler.Handle(id);
             return Ok("Room deleted successfully");
+        }
+
+        [HttpPost("edit")]
+        public async Task<IActionResult> Edit([FromServices] EditRoomHandler editRoomHandler, [FromBody] RoomDto room)
+        {
+            await editRoomHandler.Handle(room);
+
+            return Ok("Room updated successfully");
         }
     }
 }
