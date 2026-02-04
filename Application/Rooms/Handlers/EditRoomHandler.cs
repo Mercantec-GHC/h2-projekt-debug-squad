@@ -16,6 +16,9 @@ namespace Application.Rooms.Handlers
 
         public async Task Handle(RoomDto roomDto)
         {
+            // kan vi måske prøve at hente den eksisterende room og arbejde med den...
+            // var room = await _repository.GetByIdAsync(roomDto.Id); bla-bla-bla
+
             var room = new Room(roomDto.Number, roomDto.Capacity, roomDto.PricePerNight, roomDto.IsAvailable);
 
             await _repository.EditAsync(room, roomDto.Id);

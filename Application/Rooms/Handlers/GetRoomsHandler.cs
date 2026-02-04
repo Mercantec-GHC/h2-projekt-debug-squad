@@ -21,10 +21,7 @@ namespace Application.Rooms.Handlers
         {
             List<Room> rooms = await _repository.GetAllAsync();
 
-            return rooms
-                .Select(room => new RoomDto(room.Id, room.Number, 
-                room.Capacity, room.PricePerNight, room.IsAvailable))
-                .ToList();
+            return rooms.Select(room => new RoomDto(room.Id, room.Number, room.Capacity, room.PricePerNight, room.IsAvailable)).ToList();
         }
     }
 }
