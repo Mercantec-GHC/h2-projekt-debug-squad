@@ -33,9 +33,7 @@ namespace Infrastructure.Repositories
 
         public async Task DeleteByIdAsync(int id)
         {
-            await _dbContext.Rooms
-                .Where(r => r.Id == id)
-                .ExecuteDeleteAsync();
+            await _dbContext.Rooms.Where(r => r.Id == id).ExecuteDeleteAsync();
 
             await _dbContext.SaveChangesAsync();
         }

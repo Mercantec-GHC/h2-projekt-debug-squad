@@ -15,8 +15,8 @@ namespace Server.Controllers
         private readonly DeleteRoomHandler _deleteRoomHandler;
 
         public RoomsController(
-            CreateRoomHandler createRoomHandler, 
-            GetRoomsHandler getRoomsHandler, 
+            CreateRoomHandler createRoomHandler,
+            GetRoomsHandler getRoomsHandler,
             GetRoomByIdHandler getRoomByIdHandler,
             DeleteRoomHandler deleteRoomHandler
             )
@@ -39,6 +39,7 @@ namespace Server.Controllers
         public async Task<IActionResult> GetAll()
         {
             var rooms = await _getRoomsHandler.Handle(new GetAllRoomsQuery());
+
             return Ok(rooms);
         }
 
@@ -57,7 +58,5 @@ namespace Server.Controllers
             await _deleteRoomHandler.Handle(new RoomByIdQuery(id));
             return Ok("Room deleted successfully");
         }
-
-
     }
 }
