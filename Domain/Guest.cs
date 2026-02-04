@@ -10,7 +10,7 @@ namespace Domain
         public string FullName { get; private set; } = string.Empty;
         public string PhoneNumber { get; private set; } = string.Empty;
         public string Email { get; private set; } = string.Empty;
-        public List<Booking> Bookings { get; private set; } = new List<Booking>();
+        public List<Booking> Bookings { get; private set; } = new();
 
         private Guest() { }
         public Guest(string fullName, string phoneNumber, string email)
