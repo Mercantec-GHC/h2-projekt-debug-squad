@@ -48,7 +48,7 @@ else
 
     private async Task Save()
     {
-        var response = await Http.PutAsJsonAsync($"api/rooms/{Id}", _room);
+        var response = await Http.PostAsJsonAsync($"api/rooms/edit", _room);
 
         if (response.IsSuccessStatusCode)
         {

@@ -15,7 +15,7 @@
     <div class="d-flex justify-content-center mb-3">
         <button class="btn btn-success"
                 style="min-width: 200px;"
-                @onclick="() => { _showCreateForm = true; _showEditForm = false; }">
+                @onclick="() => { _showCreateForm = true; }">
             <i class="bi bi-plus-circle me-1"></i>Create Room
         </button>
     </div>
@@ -78,7 +78,6 @@
 
 @code {
     private bool _showCreateForm = false;
-    private bool _showEditForm = false;
     private bool _showAllRooms = false;
 
     private string _roomNumber = string.Empty;
