@@ -29,10 +29,27 @@
     </div>
 </div>
 
+<div class="row justify-content-center g-4">
+    <div class="col-md-5 col-lg-4">
+        <div class="card shadow-lg h-100 p-4 hover-shadow text-center d-flex flex-column">
+            <i class="bi bi-calendar-check display-1 mb-3 text-success"></i>
+            <h5 class="card-title fs-4">Manage Bookings</h5>
+            <p class="card-text fs-5">View and manage all bookings.</p>
+            <button class="btn btn-success w-100 mt-auto"
+                    @onclick='() => Nav.NavigateTo("/booking")'>
+                Open Booking Management
+            </button>
+        </div>
+    </div>
+</div>
 
 <style>
-    .hover-shadow:hover {
-        transform: translateY(-10px);
-        transition: transform 0.3s;
+    .hover-shadow {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
+
+        .hover-shadow:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 1rem 2rem rgba(0,0,0,0.15);
+        }
 </style>
