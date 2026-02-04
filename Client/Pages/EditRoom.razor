@@ -1,0 +1,63 @@
+﻿@page "/manage/rooms/edit/{Id:int}"
+@inject HttpClient Http
+@inject NavigationManager Nav
+
+<h3>Edit Room</h3>
+
+@if (_room == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="card p-4 shadow-sm">
+        <div class="mb-3">
+            <label class="form-label">Room number</label>
+            <input class="form-control" @bind="_room.Number" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Capacity</label>
+            <input class="form-control" type="number" @bind="_room.Capacity" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Price per night</label>
+            <input class="form-control" type="number" step="0.01" @bind="_room.PricePerNight" />
+        </div>
+
+        <button class="btn btn-warning w-100" @onclick="Save">
+            Save
+        </button>
+
+        <button class="btn btn-secondary w-100 mt-2" @onclick="Cancel">
+            Cancel
+        </button>
+    </div>
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private Client.Models.RoomDto? _room;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _room = await Http.GetFromJsonAsync<Client.Models.RoomDto>($"api/rooms/{Id}");
+    }
+
+    private async Task Save()
+    {
+        var response = await Http.PutAsJsonAsync($"api/rooms/{Id}", _room);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Nav.NavigateTo("/manage/rooms");
+        }
+    }
+
+    private void Cancel()
+    {
+        Nav.NavigateTo("/manage/rooms");
+    }
+}
