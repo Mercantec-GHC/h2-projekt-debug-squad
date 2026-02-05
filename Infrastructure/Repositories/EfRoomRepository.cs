@@ -26,7 +26,7 @@ namespace Infrastructure.Repositories
             return await _dbContext.Rooms.ToListAsync();
         }
 
-        public async Task<Room> GetByIdAsync(int id)
+        public async Task<Room?> GetByIdAsync(int id)
         {
             return await _dbContext.Rooms.SingleOrDefaultAsync(r => r.Id == id);
         }
@@ -44,7 +44,7 @@ namespace Infrastructure.Repositories
             if (existingRoom == null)
                 throw new Exception("Room not found");
 
-            existingRoom.Change(room);
+            existingRoom.Change(room.Number, room.Capacity, room.PricePerNight, room.IsAvailable);
 
             await _dbContext.SaveChangesAsync();
         }

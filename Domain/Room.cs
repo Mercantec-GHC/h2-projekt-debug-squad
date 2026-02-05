@@ -36,12 +36,12 @@
             IsAvailable = true;
         }
 
-        public void Change(Room room)
+        public void Change(string number, int capacity, decimal pricePerNight, bool isAvailable)
         {
-            Number = room.Number;
-            Capacity = room.Capacity;
-            PricePerNight = room.PricePerNight;
-            IsAvailable = room.IsAvailable;
+            Number = number;
+            Capacity = capacity;
+            PricePerNight = pricePerNight;
+            IsAvailable = isAvailable;
         }
 
         private static void Validate(string number, int capacity, decimal pricePerNight)

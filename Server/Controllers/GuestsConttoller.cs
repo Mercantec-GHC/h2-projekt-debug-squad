@@ -27,10 +27,8 @@ namespace Server.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(
-            [FromServices] GetGuestByIdHandler getGuestByIdHandler,
-         int id)
-        {  
+        public async Task<IActionResult> GetById([FromServices] GetGuestByIdHandler getGuestByIdHandler, int id)
+        {
             var guest = await getGuestByIdHandler.Handle(new GuestByIdQuery(id));
 
             if (guest == null)
@@ -41,9 +39,7 @@ namespace Server.Controllers
 
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(
-            [FromServices] DeleteGuestHandler deleteGuestHandler,
-            int id)
+        public async Task<IActionResult> Delete([FromServices] DeleteGuestHandler deleteGuestHandler, int id)
         {
             await deleteGuestHandler.Handle(id);
             return Ok("Guest deleted successfully");
