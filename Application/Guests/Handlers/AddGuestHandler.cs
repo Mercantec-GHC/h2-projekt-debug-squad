@@ -15,11 +15,7 @@ namespace Application.Guests.Handlers
 
         public async Task Handle(AddGuestCommand command)
         {
-            var guest = new Guest(
-                command.FullName,
-                command.PhoneNumber,
-                command.Email
-            );
+            var guest = new Guest(command.FullName, command.PhoneNumber, command.Email);
 
             await _repository.AddAsync(guest);
         }
