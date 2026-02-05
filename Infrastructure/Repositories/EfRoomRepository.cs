@@ -44,7 +44,7 @@ namespace Infrastructure.Repositories
             if (existingRoom == null)
                 throw new Exception("Room not found");
 
-            existingRoom.Change(room);
+            existingRoom.Change(room.Number, room.Capacity, room.PricePerNight, room.IsAvailable);
 
             await _dbContext.SaveChangesAsync();
         }
