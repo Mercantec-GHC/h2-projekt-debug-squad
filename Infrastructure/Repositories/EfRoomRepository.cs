@@ -26,7 +26,7 @@ namespace Infrastructure.Repositories
             return await _dbContext.Rooms.ToListAsync();
         }
 
-        public async Task<Room> GetByIdAsync(int id)
+        public async Task<Room?> GetByIdAsync(int id)
         {
             return await _dbContext.Rooms.SingleOrDefaultAsync(r => r.Id == id);
         }
