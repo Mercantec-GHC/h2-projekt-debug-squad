@@ -1,6 +1,7 @@
 ﻿@page "/manage/rooms"
 @inject HttpClient Http
 @inject NavigationManager Navigation
+@inject IJSRuntime JsRuntime
 @using Client.Models
 
 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -150,5 +151,19 @@
     private void NavigateToEdit(int roomId)
     {
         Navigation.NavigateTo($"/manage/rooms/edit/{roomId}");
+    }
+
+    async Task DeleteConfirm(int roomId)
+    {
+        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
+        if (confirmed)
+        {
+            var response = await Http.DeleteAsync($"api/rooms/{roomId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                _message = "Room succesfully Deleted";
+            }
+        }
     }
 }
