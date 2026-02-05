@@ -21,7 +21,7 @@ namespace Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<IReadOnlyList<Room>> GetAllAsync()
+        public async Task<List<Room>> GetAllAsync()
         {
             return await _dbContext.Rooms.ToListAsync();
         }
@@ -38,17 +38,15 @@ namespace Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        /*public async Task EditAsync(Room room)
+        public async Task EditAsync(Room room, int id)
         {
-            var existingRoom = await _dbContext.Rooms.FindAsync(room.Id);
+            var existingRoom = await _dbContext.Rooms.FindAsync(id);
             if (existingRoom == null)
                 throw new Exception("Room not found");
 
-            existingRoom.Name = room.Name;
-            existingRoom.Capacity = room.Capacity;
-            // update only what you allow
+            existingRoom.Change(room);
 
             await _dbContext.SaveChangesAsync();
-        }*/
+        }
     }
 }

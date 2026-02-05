@@ -17,9 +17,9 @@ namespace Application.Rooms.Handlers
             _repository = repository;
         }
 
-        public async Task Handle(RoomByIdQuery query)
+        public async Task Handle(int id)
         {
-            await _repository.DeleteByIdAsync(query.Id);
+            await _repository.DeleteByIdAsync(id);
         }
     }
 }
