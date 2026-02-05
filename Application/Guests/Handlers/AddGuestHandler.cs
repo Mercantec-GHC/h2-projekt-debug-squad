@@ -1,7 +1,6 @@
 ﻿using Application.Interfaces;
-using Domain;
 using Application.Guests.Commands;
-
+using Domain;
 
 namespace Application.Guests.Handlers
 {
@@ -14,9 +13,13 @@ namespace Application.Guests.Handlers
             _repository = repository;
         }
 
-        public async Task Handle(string fullName, string phoneNumber, string email)
+        public async Task Handle(AddGuestCommand command)
         {
-            var guest = new Guest(fullName, phoneNumber, email);
+            var guest = new Guest(
+                command.FullName,
+                command.PhoneNumber,
+                command.Email
+            );
 
             await _repository.AddAsync(guest);
         }

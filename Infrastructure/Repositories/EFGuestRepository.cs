@@ -20,7 +20,7 @@ namespace Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<IReadOnlyList<Guest>> GetAllAsync()
+        public async Task<List<Guest>> GetAllAsync()
         {
             return await _dbContext.Guests.ToListAsync();
         }

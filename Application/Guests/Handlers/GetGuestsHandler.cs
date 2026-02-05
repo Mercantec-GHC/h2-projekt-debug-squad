@@ -1,9 +1,10 @@
-﻿using Application.Interfaces;
+﻿using Application.Guests.Queries;
+using Application.Interfaces;
+using Application.Guests.Queries;
 using Domain;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Application.Guests.Queries;
 
 namespace Application.Guests.Handlers
 {
@@ -16,9 +17,11 @@ namespace Application.Guests.Handlers
             _repository = repository;
         }
 
-        public async Task<IReadOnlyList<Guest>> Handle(GetAllGuestsQuery query)
+        public async Task<List<GuestDto>> Handle()
         {
-            return await _repository.GetAllAsync();
+            List<Guest> guests = await _repository.GetAllAsync();
+            return guests.Select(guest => new GuestDto(guest.Id, guest.FullName, guest.PhoneNumber, guest.Email)).ToList();
         }
     }
 }
+
