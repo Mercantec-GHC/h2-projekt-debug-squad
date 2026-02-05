@@ -1,5 +1,6 @@
 using Application.Interfaces;
 using Application.Rooms.Handlers;
+using Application.Guests.Handlers;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,14 @@ namespace Server
             builder.Services.AddScoped<DeleteRoomHandler>();
             builder.Services.AddScoped<EditRoomHandler>();
             builder.Services.AddScoped<IRoomRepository, EfRoomRepository>();
+            builder.Services.AddScoped<IGuestRepository, EfGuestRepository>();
+            builder.Services.AddScoped<AddGuestHandler>();
+            builder.Services.AddScoped<GetGuestsHandler>();
+            builder.Services.AddScoped<GetGuestByIdHandler>();
+            builder.Services.AddScoped<DeleteGuestHandler>();
+
+
+
 
             builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 
