@@ -2,6 +2,8 @@
 using Domain;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace Infrastructure.Repositories
 {
@@ -47,6 +49,22 @@ namespace Infrastructure.Repositories
             existingRoom.Change(room.Number, room.Capacity, room.PricePerNight, room.IsAvailable);
 
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<Room>> GetFilteredAsync(
+            Expression<Func<Room, object>> orderBy,
+            int roomAmount = 50,
+            bool showOnlyAvailable = true,
+            bool orderDescending = true)
+        {
+            var query = _dbContext.Rooms
+                .Where(r => r.IsAvailable == showOnlyAvailable).Take(roomAmount);
+
+            query = orderDescending
+                ? query.OrderByDescending(orderBy)
+                : query.OrderBy(orderBy);
+
+            return await query.ToListAsync();
         }
     }
 }
