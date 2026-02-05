@@ -1,6 +1,7 @@
 ﻿@page "/manage/rooms"
 @inject HttpClient Http
 @inject NavigationManager Navigation
+@inject IJSRuntime JsRuntime
 
 <h3 class="mb-4 text-center">Manage Rooms</h3>
 
@@ -61,7 +62,7 @@
                         <td>@room.PricePerNight</td>
                         <td>
                             <button class="btn btn-sm btn-warning me-1" @onclick="() => NavigateToEdit(room.Id)"><i class="bi bi-pencil"></i></button>
-                            <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                            <button class="btn btn-sm btn-danger" @onclick="() => DeleteConfirm(room.Id)"><i class="bi bi-trash"></i></button>
                         </td>
                     </tr>
                 }
@@ -144,5 +145,19 @@
     private void NavigateToEdit(int roomId)
     {
         Navigation.NavigateTo($"/manage/rooms/edit/{roomId}");
+    }
+
+    async Task DeleteConfirm(int roomId)
+    {
+        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
+        if (confirmed)
+        {
+            var response = await Http.DeleteAsync($"api/rooms/{roomId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                _message = "Room succesfully Deleted";
+            }
+        }
     }
 }
