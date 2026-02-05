@@ -36,6 +36,18 @@ namespace Infrastructure.Repositories
             await _dbContext.Guests.Where(g => g.Id == id).ExecuteDeleteAsync();
             await _dbContext.SaveChangesAsync();
         }
+
+        public async Task EditAsync(Guest guest, int id)
+        {
+            var existingGuest = await _dbContext.Guests.FindAsync(id);
+            if (existingGuest == null)
+                throw new KeyNotFoundException($"Guest with ID {id} not found.");
+
+            // Use the domain method to update
+            existingGuest.Change(guest.FullName, guest.PhoneNumber, guest.Email);
+
+            await _dbContext.SaveChangesAsync();
+        }
+
     }
 }
-

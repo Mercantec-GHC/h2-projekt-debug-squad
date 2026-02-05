@@ -22,6 +22,14 @@ namespace Domain
             Email = email;
         }
 
+        public void Change(string fullName, string phoneNumber, string email)
+        {
+            Validate(fullName, phoneNumber, email);
+
+            FullName = fullName;
+            PhoneNumber = phoneNumber;
+            Email = email;
+        }
         private static void Validate(string fullName, string phoneNumber, string email)
         {
             if (string.IsNullOrWhiteSpace(fullName)) throw new ArgumentException("Full name is required", nameof(fullName));
