@@ -1,10 +1,18 @@
 ﻿@page "/manage/rooms"
 @inject HttpClient Http
 @inject NavigationManager Navigation
+@inject IJSRuntime JsRuntime
+@using Client.Models
 
-<h3 class="mb-4 text-center">
-    <i class="bi bi-building-fill me-2 text-primary"></i> Manage Rooms
-</h3>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="mb-0">Manage Rooms</h3>
+
+    <button class="btn btn-success"
+            @onclick="() => _showCreateForm = !_showCreateForm">
+        <i class="bi bi-plus-circle me-1"></i>
+        @(_showCreateForm ? "Cancel" : "Create Room")
+    </button>
+</div>
 
 @if (!string.IsNullOrEmpty(_message))
 {
@@ -13,91 +21,96 @@
     </div>
 }
 
-<div class="card p-4 shadow-sm mb-4">
-    <div class="d-flex justify-content-center mb-3">
-        <button class="btn btn-success"
-                style="min-width: 200px;"
-                @onclick="() => { _showCreateForm = true; }">
-            <i class="bi bi-plus-circle me-1"></i>Create Room
-        </button>
-    </div>
-
-    @if (_showCreateForm)
-    {
-        <div class="card p-3 mb-3 shadow-sm">
-            <h6>Create Room</h6>
-            <input class="form-control mb-2" placeholder="Room Number" @bind="_roomNumber" />
-            <input class="form-control mb-2" type="number" placeholder="Capacity" @bind="_capacity" />
-            <input class="form-control mb-2" type="number" step="0.01" placeholder="Price" @bind="_pricePerNight" />
-
-            <button class="btn btn-success w-100" @onclick="CreateRoom">Save</button>
-        </div>
-    }
-
-    <button class="btn btn-primary w-100" @onclick="ShowRooms">
-        Show All Rooms
-    </button>
-</div>
-
-@if (_showAllRooms)
+@if (_showCreateForm)
 {
-    <table class="table table-striped table-hover">
-        <thead class="table-dark">
-            <tr>
-                <th>Number</th>
-                <th>Capacity</th>
-                <th>Price</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (rooms != null && rooms.Any())
-            {
-                @foreach (var room in rooms)
-                {
-                    <tr>
-                        <td>
-                            <a href="/room-details/@room.Id">@room.Number</a>
-                        </td>
-                        <td>@room.Capacity</td>
-                        <td>@room.PricePerNight</td>
-                        <td>
-                            <button class="btn btn-sm btn-warning me-1" @onclick="() => NavigateToEdit(room.Id)"><i class="bi bi-pencil"></i></button>
-                            <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
-                        </td>
-                    </tr>
-                }
-            }
-            else
-            {
-                <tr>
-                    <td colspan="4" class="text-center">No rooms to display</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div class="card p-3 mb-4 shadow-sm">
+
+        <div class="mb-3">
+            <label class="form-label">Room number</label>
+            <input class="form-control mb-2"
+                   type="text"
+                   placeholder="Enter room number"
+                   @bind="_roomNumber" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Capacity</label>
+            <input class="form-control mb-2"
+                   type="number"
+                   placeholder="Enter capacity"
+                   @bind="_capacity" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Price per night</label>
+            <input class="form-control mb-3"
+                   type="number"
+                   step="0.01"
+                   placeholder="Enter price"
+                   @bind="_pricePerNight" />
+        </div>
+
+        <button class="btn btn-success w-100" @onclick="CreateRoom">Save</button>
+    </div>
 }
 
-@code {
-    private bool _showCreateForm = false;
-    private bool _showAllRooms = false;
+<table class="table table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Number</th>
+            <th>Capacity</th>
+            <th>Price</th>
+            <th style="width: 140px;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (rooms != null && rooms.Any())
+        {
+            @foreach (var room in rooms)
+            {
+                <tr>
+                    <td>
+                        <a href="/room-details/@room.Id">@room.Number</a>
+                    </td>
+                    <td>@room.Capacity</td>
+                    <td>@room.PricePerNight</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning me-1" @onclick="() => NavigateToEdit(room.Id)">   <i class="bi bi-pencil"></i>  </button>
+                        <button class="btn btn-sm btn-danger" @onclick="()=>DeleteConfirm(room.Id)"><i class="bi bi-trash"></i></button>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4" class="text-center text-muted">
+                    No rooms found
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 
+@code {
+    private bool _showCreateForm;
     private string _roomNumber = string.Empty;
-    private int _capacity;
-    private decimal _pricePerNight;
+    private int? _capacity;
+    private decimal? _pricePerNight;
     private string _message = string.Empty;
 
-    // List to hold rooms fetched from API
-    private List<Client.Models.RoomDto>? rooms = new();
+    private List<Client.Models.RoomDto> rooms = new();
 
-    // Fetch rooms when "Show All Rooms" button is clicked
-    private async Task ShowRooms()
+    protected override async Task OnInitializedAsync()
     {
-        _showAllRooms = true;
+        await LoadRooms();
+    }
 
+    private async Task LoadRooms()
+    {
         try
         {
-            rooms = await Http.GetFromJsonAsync<List<Client.Models.RoomDto>>("api/rooms") ?? new List<Client.Models.RoomDto>();
+            rooms = await Http.GetFromJsonAsync<List<RoomDto>>("api/rooms") ?? new List<RoomDto>();
         }
         catch (Exception ex)
         {
@@ -124,17 +137,9 @@
                 _roomNumber = string.Empty;
                 _capacity = 0;
                 _pricePerNight = 0;
+                _showCreateForm = false;
 
-                // Refresh list if table is visible
-                if (_showAllRooms)
-                {
-                    rooms = await Http.GetFromJsonAsync<List<Client.Models.RoomDto>>("api/rooms")
-                            ?? new List<Client.Models.RoomDto>();
-                }
-            }
-            else
-            {
-                _message = $"Error: {response.ReasonPhrase}";
+                await LoadRooms();
             }
         }
         catch (Exception ex)
@@ -146,5 +151,20 @@
     private void NavigateToEdit(int roomId)
     {
         Navigation.NavigateTo($"/manage/rooms/edit/{roomId}");
+    }
+
+    async Task DeleteConfirm(int roomId)
+    {
+        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
+        if (confirmed)
+        {
+            var response = await Http.DeleteAsync($"api/rooms/{roomId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                _message = "Room succesfully Deleted";
+            }
+            await LoadRooms();
+        }
     }
 }
