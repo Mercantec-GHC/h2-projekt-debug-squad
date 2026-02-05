@@ -1,0 +1,96 @@
+﻿@page "/manage/guests/edit/{Id:int}"
+@inject HttpClient Http
+@inject NavigationManager Nav
+
+<h3>Edit Guest</h3>
+
+@if (!string.IsNullOrEmpty(_message))
+{
+    <div class="alert @(_isError ? "alert-danger" : "alert-success") text-center">
+        @_message
+    </div>
+}
+
+@if (_guest == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="card p-4 shadow-sm">
+        <div class="mb-3">
+            <label class="form-label">Full Name</label>
+            <input class="form-control" @bind="_guest.FullName" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Phone Number</label>
+            <input class="form-control" @bind="_guest.PhoneNumber" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input class="form-control" type="email" @bind="_guest.Email" />
+        </div>
+
+        <button class="btn btn-warning w-100" @onclick="Save">
+            Save
+        </button>
+
+        <button class="btn btn-secondary w-100 mt-2" @onclick="Cancel">
+            Cancel
+        </button>
+    </div>
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private Client.Models.GuestDto? _guest;
+    private string _message = string.Empty;
+    private bool _isError = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _guest = await Http.GetFromJsonAsync<Client.Models.GuestDto>($"api/guests/{Id}");
+        }
+        catch (Exception ex)
+        {
+            _isError = true;
+            _message = $"Error loading guest: {ex.Message}";
+        }
+    }
+
+    private async Task Save()
+    {
+        if (_guest == null) return;
+
+        try
+        {
+            var response = await Http.PutAsJsonAsync("api/guests/edit", _guest);
+
+            if (response.IsSuccessStatusCode)
+            {
+                _isError = false;
+                _message = "Guest updated successfully!";
+            }
+            else
+            {
+                _isError = true;
+                _message = $"Error updating guest: {response.ReasonPhrase}";
+            }
+        }
+        catch (Exception ex)
+        {
+            _isError = true;
+            _message = $"Exception: {ex.Message}";
+        }
+    }
+
+    private void Cancel()
+    {
+        Nav.NavigateTo("/manage/guests");
+    }
+}
