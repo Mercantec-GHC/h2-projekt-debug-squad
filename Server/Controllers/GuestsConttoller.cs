@@ -43,6 +43,23 @@ namespace Server.Controllers
             await deleteGuestHandler.Handle(id);
             return Ok("Guest deleted successfully");
         }
+
+
+        [HttpPut("edit")]
+        public async Task<IActionResult> Edit( [FromServices] EditGuestHandler editGuestHandler,[FromBody] EditGuestCommand command)
+        {
+            try
+            {
+                await editGuestHandler.Handle(command);
+                return Ok("Guest updated successfully");
+            }
+            catch (Exception ex)
+            {
+                // Return detailed info for debugging
+                return BadRequest(new { ex.Message, ex.StackTrace });
+            }
+        }
+
     }
 }
 

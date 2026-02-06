@@ -25,12 +25,14 @@ namespace Server
             builder.Services.AddScoped<GetRoomByIdHandler>();
             builder.Services.AddScoped<DeleteRoomHandler>();
             builder.Services.AddScoped<EditRoomHandler>();
+            builder.Services.AddScoped<GetRoomsFilteredHandler>();
             builder.Services.AddScoped<IRoomRepository, EfRoomRepository>();
             builder.Services.AddScoped<IGuestRepository, EfGuestRepository>();
             builder.Services.AddScoped<AddGuestHandler>();
             builder.Services.AddScoped<GetGuestsHandler>();
             builder.Services.AddScoped<GetGuestByIdHandler>();
             builder.Services.AddScoped<DeleteGuestHandler>();
+            builder.Services.AddScoped<EditGuestHandler>();
 
 
 

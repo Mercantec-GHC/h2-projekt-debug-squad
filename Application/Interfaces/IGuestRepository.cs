@@ -8,5 +8,6 @@ namespace Application.Interfaces
         Task<List<Guest>> GetAllAsync();
         Task<Guest> GetByIdAsync(int id);
         Task DeleteByIdAsync(int id);
+        Task EditAsync(Guest guest, int id);
     }
 }
