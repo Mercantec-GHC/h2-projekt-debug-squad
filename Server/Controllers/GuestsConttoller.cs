@@ -19,8 +19,7 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll(
-            [FromServices] GetGuestsHandler getGuestsHandler)
+        public async Task<IActionResult> GetAll([FromServices] GetGuestsHandler getGuestsHandler)
         {
             var guests = await getGuestsHandler.Handle();
             return Ok(guests);
