@@ -10,6 +10,14 @@ namespace Domain
         public string FullName { get; private set; } = string.Empty;
         public string PhoneNumber { get; private set; } = string.Empty;
         public string Email { get; private set; } = string.Empty;
+        public string Password { get; private set; } = string.Empty;
+
+        public void SetPassword(string password)
+        {
+            //  hash the password here
+            Password = password;
+        }
+
         public List<Booking> Bookings { get; private set; } = new();
 
         private Guest() { }
