@@ -1,10 +1,20 @@
 ﻿@page "/manage/guests"
 @inject HttpClient Http
 @inject NavigationManager Navigation
+@inject IJSRuntime JsRuntime
 
 
-<h3 class="mb-4 text-center">
-    <i class="bi bi-people-fill me-2 text-secondary"></i> Manage Guests
+<h3 class="mb-4 d-flex justify-content-between align-items-center">
+    <span>
+        <i class="bi bi-people-fill me-2 text-secondary"></i>
+        Manage Guests
+    </span>
+
+    <button class="btn btn-success"
+            @onclick="() => _showCreateForm = !_showCreateForm">
+        <i class="bi bi-plus-circle me-1"></i>
+        @(_showCreateForm ? "Cancel" : "Add Guest")
+    </button>
 </h3>
 
 @if (!string.IsNullOrEmpty(_message))
@@ -14,90 +24,82 @@
     </div>
 }
 
-<div class="card p-4 shadow-sm mb-4">
-    <div class="d-flex justify-content-center mb-3">
-        <button class="btn btn-success"
-                style="min-width: 200px;"
-                @onclick="() => { _showCreateForm = true; }">
-            <i class="bi bi-plus-circle me-1"></i>Add Guest
-        </button>
-    </div>
-
-    @if (_showCreateForm)
-    {
-        <div class="card p-3 mb-3 shadow-sm">
-            <h6>Add Guest</h6>
-            <input class="form-control mb-2" placeholder="Full Name" @bind="_fullName" />
-            <input class="form-control mb-2" placeholder="Phone Number" @bind="_phoneNumber" />
-            <input class="form-control mb-2" placeholder="Email" @bind="_email" />
-
-            <button class="btn btn-success w-100" @onclick="AddGuest">Save</button>
-        </div>
-    }
-
-    <button class="btn btn-primary w-100" @onclick="ShowGuests">
-        Show All Guests
-    </button>
-</div>
-
-@if (_showAllGuests)
+@if (_showCreateForm)
 {
-    <table class="table table-striped table-hover">
-        <thead class="table-dark">
-            <tr>
-                <th>Full Name</th>
-                <th>Phone Number</th>
-                <th>Email</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (guests != null && guests.Any())
-            {
-                @foreach (var guest in guests)
-                {
-                    <tr>
-                        <td>@guest.FullName</td>
-                        <td>@guest.PhoneNumber</td>
-                        <td>@guest.Email</td>
-                        <td>
-                            <button class="btn btn-sm btn-warning me-1" @onclick="() => NavigateToEdit(guest.Id)">
-                                <i class="bi bi-pencil"></i>
-                            </button>
-                            <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
-                        </td>
-                    </tr>
-                }
-            }
-            else
-            {
-                <tr>
-                    <td colspan="4" class="text-center">No guests to display</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div class="card p-3 mb-4 shadow-sm">
+        <h6>Add Guest</h6>
+
+        <input class="form-control mb-2" placeholder="Full Name" @bind="_fullName" />
+        <input class="form-control mb-2" placeholder="Phone Number" @bind="_phoneNumber" />
+        <input class="form-control mb-2" placeholder="Email" @bind="_email" />
+
+        <button class="btn btn-success w-100" @onclick="AddGuest">Save</button>
+    </div>
 }
 
+<table class="table table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Full Name</th>
+            <th>Phone Number</th>
+            <th>Email</th>
+            <th style="width:140px;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (guests != null && guests.Any())
+        {
+            @foreach (var guest in guests)
+            {
+                <tr>
+                    <td>@guest.FullName</td>
+                    <td>@guest.PhoneNumber</td>
+                    <td>@guest.Email</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning me-1"
+                                @onclick="() => NavigateToEdit(guest.Id)">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger"
+                                @onclick="() => DeleteConfirm(guest.Id)">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4" class="text-center text-muted">
+                    No guests found
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
 @code {
-    private bool _showCreateForm = false;
-    private bool _showAllGuests = false;
+    private bool _showCreateForm;
 
     private string _fullName = string.Empty;
     private string _phoneNumber = string.Empty;
     private string _email = string.Empty;
     private string _message = string.Empty;
 
-    private List<Client.Models.GuestDto>? guests = new();
+    private List<Client.Models.GuestDto> guests = new();
 
-    // Fetch guests when "Show All Guests" button is clicked
-    private async Task ShowGuests()
+    protected override async Task OnInitializedAsync()
     {
-        _showAllGuests = true;
+        await LoadGuests();
+    }
 
+    private async Task LoadGuests()
+    {
         try
         {
-            guests = await Http.GetFromJsonAsync<List<Client.Models.GuestDto>>("api/guests") ?? new List<Client.Models.GuestDto>();
+            guests = await Http.GetFromJsonAsync<List<Client.Models.GuestDto>>("api/guests")
+                     ?? new List<Client.Models.GuestDto>();
         }
         catch (Exception ex)
         {
@@ -124,15 +126,9 @@
                 _fullName = string.Empty;
                 _phoneNumber = string.Empty;
                 _email = string.Empty;
+                _showCreateForm = false;
 
-                if (_showAllGuests)
-                {
-                    guests = await Http.GetFromJsonAsync<List<Client.Models.GuestDto>>("api/guests") ?? new List<Client.Models.GuestDto>();
-                }
-            }
-            else
-            {
-                _message = $"Error: {response.ReasonPhrase}";
+                await LoadGuests();
             }
         }
         catch (Exception ex)
@@ -144,6 +140,29 @@
     private void NavigateToEdit(int guestId)
     {
         Navigation.NavigateTo($"/manage/guests/edit/{guestId}");
+    }
+
+    private async Task DeleteConfirm(int guestId)
+    {
+        bool confirmed = await JsRuntime.InvokeAsync<bool>(
+            "confirm",
+            "Are you sure you want to delete this guest?"
+        );
+
+        if (confirmed)
+        {
+            var response = await Http.DeleteAsync($"api/guests/{guestId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                _message = "Guest successfully deleted";
+                await LoadGuests();
+            }
+            else
+            {
+                _message = "Error deleting guest";
+            }
+        }
     }
 
 }
