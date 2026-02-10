@@ -60,6 +60,21 @@ namespace Server.Controllers
             }
         }
 
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(
+           [FromServices] RegisterGuestHandler handler,
+           [FromBody] RegisterGuestCommand command)
+        {
+            try
+            {
+                await handler.Handle(command);
+                return Ok("Guest registered successfully");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { ex.Message });
+            }
+        }
     }
 }
 
