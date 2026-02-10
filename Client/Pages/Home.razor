@@ -19,7 +19,6 @@
 <!-- Room List -->
 <div class="room-list container mt-4">
     @if (filteredRooms != null && filteredRooms.Any())
-
     {
         <div class="row">
             @foreach (var room in filteredRooms)
@@ -30,7 +29,13 @@
                             <h5 class="card-title">Room @room.Number</h5>
                             <p class="card-text">Capacity: @room.Capacity</p>
                             <p class="card-text">Price per night: $@room.PricePerNight</p>
-                            <button class="btn btn-success w-100" @onclick="() => BookRoom(room.Id)">Book Now</button>
+
+                            
+                            <!-- Navigate to dedicated room page -->
+                            <button class="btn btn-outline-primary w-100"
+                                    @onclick="() => ViewRoomDetails(room.Id)">
+                                Read More
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -55,18 +60,13 @@
         await LoadRooms();
     }
 
-   
-    
-        private async Task LoadRooms()
+    private async Task LoadRooms()
     {
         rooms = await Http.GetFromJsonAsync<List<Client.Models.RoomDto>>("api/rooms")
                 ?? new List<Client.Models.RoomDto>();
 
         filteredRooms = new List<Client.Models.RoomDto>(rooms);
     }
-
-
-    
 
     private void ApplyFilters()
     {
@@ -78,7 +78,10 @@
             .ToList();
     }
 
-
+    private void ViewRoomDetails(int roomId)
+    {
+        Navigation.NavigateTo($"/room-details/{roomId}");
+    }
 
     private void BookRoom(int roomId)
     {
