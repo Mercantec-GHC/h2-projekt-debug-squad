@@ -1,4 +1,4 @@
-﻿using Application.Interfaces;  // <-- use repository interface
+﻿using Application.Interfaces;  // use repository interface
 using Domain;
 using Application.Guests.Commands;
 
@@ -6,20 +6,17 @@ namespace Application.Guests.Handlers
 {
     public class RegisterGuestHandler
     {
-        private readonly IGuestRepository _repository;
+        private readonly IGuestRepository _guestRepository;
 
-        public RegisterGuestHandler(IGuestRepository repository)
+        public RegisterGuestHandler(IGuestRepository guestRepository)
         {
-            _repository = repository;
+            _guestRepository = guestRepository;
         }
 
         public async Task Handle(RegisterGuestCommand command)
         {
             var guest = new Guest(command.FullName, command.PhoneNumber, command.Email);
-
-            guest.SetPassword(command.Password);
-
-            await _repository.AddAsync(guest); // uses repository, no DbContext here
+            await _guestRepository.AddAsync(guest);
         }
     }
 }
