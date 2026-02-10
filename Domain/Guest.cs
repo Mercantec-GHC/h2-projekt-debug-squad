@@ -30,6 +30,10 @@ namespace Domain
             PhoneNumber = phoneNumber;
             Email = email;
         }
+        public void AddBooking(Booking booking)
+        {
+            Bookings.Add(booking);
+        }
         private static void Validate(string fullName, string phoneNumber, string email)
         {
             if (string.IsNullOrWhiteSpace(fullName)) throw new ArgumentException("Full name is required", nameof(fullName));

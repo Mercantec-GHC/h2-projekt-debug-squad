@@ -4,6 +4,7 @@ using Application.Guests.Handlers;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Application.Bookings.Handlers;
 
 namespace Server
 {
@@ -33,6 +34,7 @@ namespace Server
             builder.Services.AddScoped<GetGuestByIdHandler>();
             builder.Services.AddScoped<DeleteGuestHandler>();
             builder.Services.AddScoped<EditGuestHandler>();
+            builder.Services.AddScoped<CreateBookingHandler>();
 
 
 

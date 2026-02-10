@@ -13,6 +13,10 @@ namespace Infrastructure.Repositories
         {
             _dbContext = dbContext;
         }
+        public async Task SaveChangesAsync()
+        {
+            await _dbContext.SaveChangesAsync();
+        }
 
         public async Task AddAsync(Guest guest)
         {
@@ -22,7 +26,9 @@ namespace Infrastructure.Repositories
 
         public async Task<List<Guest>> GetAllAsync()
         {
-            return await _dbContext.Guests.ToListAsync();
+            return await _dbContext.Guests
+                .Include(g => g.Bookings)
+                .ToListAsync();
         }
 
         public async Task<Guest> GetByIdAsync(int id)

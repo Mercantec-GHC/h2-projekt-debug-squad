@@ -1,6 +1,7 @@
-﻿using Application.Guests.Queries;
-using Application.Interfaces;
+﻿using Application.Bookings;
 using Application.Guests.Queries;
+using Application.Guests.Queries;
+using Application.Interfaces;
 using Domain;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,18 @@ namespace Application.Guests.Handlers
         public async Task<List<GuestDto>> Handle()
         {
             List<Guest> guests = await _repository.GetAllAsync();
-            return guests.Select(guest => new GuestDto(guest.Id, guest.FullName, guest.PhoneNumber, guest.Email)).ToList();
+            return guests.Select(g => new GuestDto(
+                g.Id,
+                g.FullName,
+                g.PhoneNumber,
+                g.Email,
+                g.Bookings.Select(b => new BookingDto(
+                    b.Id,
+                    b.Room,
+                    b.CheckInDate,
+                    b.CheckOutDate
+                )).ToList()
+            )).ToList();
         }
     }
 }

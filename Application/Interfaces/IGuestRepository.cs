@@ -4,6 +4,7 @@ namespace Application.Interfaces
 {
     public interface IGuestRepository
     {
+        Task SaveChangesAsync();
         Task AddAsync(Guest guest);
         Task<List<Guest>> GetAllAsync();
         Task<Guest> GetByIdAsync(int id);

@@ -7,9 +7,7 @@ namespace Domain
     public class Booking
     {
         public int Id { get; private set; }
-
         public Guest Guest { get; private set; } = null!;
-
         public Room Room { get; private set; } = null!;
 
         public DateTime CheckInDate { get; private set; }
