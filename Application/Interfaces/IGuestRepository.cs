@@ -9,5 +9,7 @@ namespace Application.Interfaces
         Task<Guest> GetByIdAsync(int id);
         Task DeleteByIdAsync(int id);
         Task EditAsync(Guest guest, int id);
+
+        Task<bool> ExistsByEmailAsync(string email);
     }
 }

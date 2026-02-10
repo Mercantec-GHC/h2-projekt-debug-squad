@@ -49,5 +49,13 @@ namespace Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
+
+        public async Task<bool> ExistsByEmailAsync(string email)
+        {
+            return await _dbContext.Guests.AnyAsync(g => g.Email == email);
+        }
+
     }
+
+
 }
