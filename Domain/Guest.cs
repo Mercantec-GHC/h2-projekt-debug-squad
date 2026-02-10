@@ -39,6 +39,10 @@ namespace Domain
         {
             Bookings.Add(booking);
         }
+        public void RemoveBooking(Booking booking)
+        {
+            Bookings.Remove(booking);
+        }
         private static void Validate(string fullName, string phoneNumber, string email)
         {
             if (string.IsNullOrWhiteSpace(fullName)) throw new ArgumentException("Full name is required", nameof(fullName));
