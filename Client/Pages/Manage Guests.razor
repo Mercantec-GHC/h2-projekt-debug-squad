@@ -52,7 +52,9 @@
             @foreach (var guest in guests)
             {
                 <tr>
-                    <td>@guest.FullName</td>
+                    <td>
+                        <a href="/guest-details/@guest.Id">@guest.FullName</a>
+                    </td>
                     <td>@guest.PhoneNumber</td>
                     <td>@guest.Email</td>
                     <td>
@@ -78,6 +80,7 @@
         }
     </tbody>
 </table>
+
 
 @code {
     private bool _showCreateForm;

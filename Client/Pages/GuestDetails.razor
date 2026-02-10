@@ -1,0 +1,38 @@
+﻿@page "/guest-details/{GuestId:int}"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+<h3>Guest Details</h3>
+
+@if (guest == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="card p-3 shadow-sm">
+        <p><strong>Guest ID:</strong> @guest.Id</p>
+        <p><strong>Full Name:</strong> @guest.FullName</p>
+        <p><strong>Email:</strong> @guest.Email</p>
+        <p><strong>Phone Number:</strong> @guest.PhoneNumber</p>
+    </div>
+}
+
+@code {
+    [Parameter] public int GuestId { get; set; }
+
+    private Client.Models.GuestDto? guest;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            guest = await Http.GetFromJsonAsync<Client.Models.GuestDto>($"api/guests/{GuestId}");
+        }
+        catch (Exception)
+        {
+            Navigation.NavigateTo("/manage/guests"); // go back if error
+        }
+    }
+}
+
