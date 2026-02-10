@@ -1,7 +1,87 @@
 ﻿@page "/"
+@inject HttpClient Http
+@inject NavigationManager Navigation
 
-<PageTitle>Home</PageTitle>
+<!-- Hero Section with Hotel Name -->
+<div class="hero text-center py-5 bg-beige">
+    <h1 class="display-3 text-gold">Grand Horizon</h1>
+    <p class="lead">Experience luxury like never before</p>
+</div>
 
-<h1>Hello, world!</h1>
+<!-- Room Filters -->
+<div class="filters mt-4 mb-3 d-flex gap-3 justify-content-center">
+    <input type="number" placeholder="Capacity" @bind="_filterCapacity" class="form-control w-auto" />
+    <input type="number" placeholder="Max Price" @bind="_filterMaxPrice" class="form-control w-auto" />
+    <button class="btn btn-primary" @onclick="ApplyFilters">Search</button>
+</div>
 
-Welcome to your new app.
+
+<!-- Room List -->
+<div class="room-list container mt-4">
+    @if (filteredRooms != null && filteredRooms.Any())
+
+    {
+        <div class="row">
+            @foreach (var room in filteredRooms)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Room @room.Number</h5>
+                            <p class="card-text">Capacity: @room.Capacity</p>
+                            <p class="card-text">Price per night: $@room.PricePerNight</p>
+                            <button class="btn btn-success w-100" @onclick="() => BookRoom(room.Id)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="text-center text-muted">No rooms available.</p>
+    }
+</div>
+
+@code {
+    private List<Client.Models.RoomDto> rooms = new();
+    private List<Client.Models.RoomDto> filteredRooms = new();
+
+    private int? _filterCapacity;
+    private decimal? _filterMaxPrice;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadRooms();
+    }
+
+   
+    
+        private async Task LoadRooms()
+    {
+        rooms = await Http.GetFromJsonAsync<List<Client.Models.RoomDto>>("api/rooms")
+                ?? new List<Client.Models.RoomDto>();
+
+        filteredRooms = new List<Client.Models.RoomDto>(rooms);
+    }
+
+
+    
+
+    private void ApplyFilters()
+    {
+        filteredRooms = rooms
+            .Where(r =>
+                (!_filterCapacity.HasValue || r.Capacity >= _filterCapacity.Value) &&
+                (!_filterMaxPrice.HasValue || r.PricePerNight <= _filterMaxPrice.Value)
+            )
+            .ToList();
+    }
+
+
+
+    private void BookRoom(int roomId)
+    {
+        Navigation.NavigateTo($"/booking?roomId={roomId}");
+    }
+}
