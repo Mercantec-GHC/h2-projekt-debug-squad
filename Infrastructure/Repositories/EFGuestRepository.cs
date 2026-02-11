@@ -33,7 +33,9 @@ namespace Infrastructure.Repositories
 
         public async Task<Guest> GetByIdAsync(int id)
         {
-            return await _dbContext.Guests.SingleOrDefaultAsync(g => g.Id == id)
+            return await _dbContext.Guests
+                .Include(g => g.Bookings)
+                .SingleOrDefaultAsync(g => g.Id == id)
                    ?? throw new KeyNotFoundException($"Guest with ID {id} not found.");
         }
 

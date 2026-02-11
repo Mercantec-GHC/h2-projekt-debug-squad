@@ -18,10 +18,10 @@ namespace Server.Controllers
             return Ok("Booking created successfully");
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete([FromServices] DeleteBookingHandler deleteBookingHandler, int guestId, int bookingId)
+        [HttpDelete()]
+        public async Task<IActionResult> Delete([FromServices] DeleteBookingHandler deleteBookingHandler, [FromBody] DeleteBookingCommand command)
         {
-            if (await deleteBookingHandler.Handle(guestId, bookingId)) return Ok("Booking deleted successfully");
+            if (await deleteBookingHandler.Handle(command)) return Ok("Booking deleted successfully");
 
             return BadRequest("One of the IDs was invalid");
         }

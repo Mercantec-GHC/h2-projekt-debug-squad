@@ -34,7 +34,7 @@ namespace Application.Bookings.Handlers
 
         public async Task? Handle(CreateBookingCommand command)
         {
-            Room? room = await _roomRepository.GetByIdAsync(command.RoomID);
+            Room? room = await _roomRepository.GetByIdAsync(command.RoomId);
             //if (room == null) return null;
             Guest guest = await _guestRepository.GetByIdAsync(command.GuestId);
 

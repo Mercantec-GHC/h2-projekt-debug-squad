@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Application.Bookings.Commands;
 using Domain;
 
 
@@ -13,12 +14,12 @@ namespace Application.Bookings.Handlers
             _guestRepository = repository;
         }
 
-        public async Task<bool> Handle(int guestId, int bookingId)
+        public async Task<bool> Handle(DeleteBookingCommand command)
         {
-            Guest guest = await _guestRepository.GetByIdAsync(guestId);
+            Guest guest = await _guestRepository.GetByIdAsync(command.GuestId);
 
             Booking? booking = guest.Bookings
-                .FirstOrDefault(x => x.Id == bookingId);
+                .FirstOrDefault(x => x.Id == command.BookingId);
 
             if (booking is null)
                 return false;

@@ -38,7 +38,7 @@ namespace Server
            
 
             builder.Services.AddScoped<CreateBookingHandler>();
-
+            builder.Services.AddScoped<DeleteBookingHandler>();
 
 
 
