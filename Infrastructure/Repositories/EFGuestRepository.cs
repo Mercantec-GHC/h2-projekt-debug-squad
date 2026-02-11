@@ -28,6 +28,7 @@ namespace Infrastructure.Repositories
         {
             return await _dbContext.Guests
                 .Include(g => g.Bookings)
+                .ThenInclude(b => b.Room)
                 .ToListAsync();
         }
 
@@ -35,6 +36,7 @@ namespace Infrastructure.Repositories
         {
             return await _dbContext.Guests
                 .Include(g => g.Bookings)
+                .ThenInclude(b => b.Room)
                 .SingleOrDefaultAsync(g => g.Id == id)
                    ?? throw new KeyNotFoundException($"Guest with ID {id} not found.");
         }
