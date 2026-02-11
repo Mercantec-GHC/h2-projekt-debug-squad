@@ -20,8 +20,27 @@ namespace Server.Controllers
             return Ok("Booking created successfully");
         }
 
+        [HttpGet()]
+        public async Task<IActionResult> GetAll([FromServices] GetAllBookingsHandler getAllBookingsHandler)
+        {
+            var bookings = await getAllBookingsHandler.Handle();
+
+            return Ok(bookings);
+        }
+
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById([FromServices] GetBookingsByGuestIdHandler getBookingsByGuestIdHandler, int id)
+        public async Task<IActionResult> GetById([FromServices] GetBookingByIdHandler getBookingByIdHandler, int id)
+        {
+            var booking = await getBookingByIdHandler.Handle(id);
+
+            if (booking == null)
+                return NotFound("The booking ID is invalid");
+
+            return Ok(booking);
+        }
+
+        [HttpGet("guest/{id}")]
+        public async Task<IActionResult> GetByGuestId([FromServices] GetBookingsByGuestIdHandler getBookingsByGuestIdHandler, int id)
         {
             var bookings = await getBookingsByGuestIdHandler.Handle(id);
 

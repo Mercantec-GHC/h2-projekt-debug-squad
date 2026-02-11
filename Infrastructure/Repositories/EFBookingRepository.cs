@@ -6,23 +6,42 @@ using System.Linq.Expressions;
 
 namespace Infrastructure.Repositories
 {
-    public class EFBookingRepository : IBookingRepository
+    public class EfBookingRepository : IBookingRepository
     {
         private readonly AppDbContext _dbContext;
 
-        public EFBookingRepository(AppDbContext dbContext)
+        public EfBookingRepository(AppDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public async Task AddAsync(Booking booking, int guestId)
+        //public async Task AddAsync(Booking booking, int guestId)
+        //{
+        //    Guest? guest = await _dbContext.Guests.SingleOrDefaultAsync(r => r.Id == guestId);
+        //    if (guest == null) return;
+
+        //    guest.AddBooking(booking);
+
+        //    await _dbContext.SaveChangesAsync();
+        //}
+
+        public async Task SaveChangesAsync()
         {
-            Guest? guest = await _dbContext.Guests.SingleOrDefaultAsync(r => r.Id == guestId);
-            if (guest == null) return;
-
-            guest.AddBooking(booking);
-
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<Booking>> GetAllAsync()
+        {
+            return await _dbContext.Bookings
+                .Include(b => b.Room)
+                .ToListAsync();
+        }
+
+        public async Task<Booking?> GetByIdAsync(int id)
+        {
+            return await _dbContext.Bookings
+                .Include(b => b.Room)
+                .SingleOrDefaultAsync(r => r.Id == id);
         }
     }
 }

@@ -29,7 +29,5 @@ namespace Application.Bookings.Handlers
             await _guestRepository.SaveChangesAsync();
             return true;
         }
-
-
     }
 }
