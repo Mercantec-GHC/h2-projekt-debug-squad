@@ -15,9 +15,9 @@ namespace Server.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromServices] CreateBookingHandler createBookingHandler, [FromBody] CreateBookingCommand command)
         {
-            var response = await createBookingHandler.Handle(command);
+            await createBookingHandler.Handle(command);
 
-            if (response) return BadRequest("Either the guest id or room id is invalid");
+           
 
             return Ok("Booking created successfully");
         }
