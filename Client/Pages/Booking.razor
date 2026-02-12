@@ -14,7 +14,7 @@
     <p><strong>Price per night:</strong> $@SelectedRoom.PricePerNight</p>
 
     <label>Check-in Date:</label>
-    <input type="date" @bind="CheckInDate" class="form-control mb-2" />
+    <input type="date" @bind="CheckInDate" min="@DateTime.Today.ToString("yyyy-MM-dd")" class="form-control mb-2" />
 
     <label>Check-out Date:</label>
     <input type="date" @bind="CheckOutDate" min="@CheckInDate.AddDays(1).ToString("yyyy-MM-dd")" class="form-control mb-2" />
@@ -80,10 +80,10 @@ else
     private string GuestEmail = string.Empty;
     private string Message = string.Empty;
 
-    // 🔹 Calculate number of nights
+    // Calculate number of nights
     private int NumberOfNights => (CheckOutDate - CheckInDate).Days;
 
-    // 🔹 Calculate total price
+    // Calculate total price
     private decimal TotalPrice => SelectedRoom != null ? SelectedRoom.PricePerNight * NumberOfNights : 0;
 
     protected override async Task OnInitializedAsync()
