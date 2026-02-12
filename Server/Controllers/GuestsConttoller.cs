@@ -75,6 +75,36 @@ namespace Server.Controllers
                 return BadRequest(new { ex.Message });
             }
         }
+
+        [HttpGet("check")]
+        public async Task<IActionResult> CheckGuest([FromServices] GetGuestsHandler getGuestsHandler, [FromQuery] string email)
+        {
+            if (string.IsNullOrEmpty(email))
+                return BadRequest("Email is required");
+
+            var guests = await getGuestsHandler.Handle();
+            var exists = guests.Any(g => g.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+
+            return Ok(exists); // returns true or false
+        }
+
+
+        [HttpGet("byemail")]
+        public async Task<IActionResult> GetByEmail([FromServices] GetGuestsHandler getGuestsHandler, [FromQuery] string email)
+        {
+            if (string.IsNullOrEmpty(email))
+                return BadRequest("Email is required");
+
+            var guests = await getGuestsHandler.Handle();
+            var guest = guests.FirstOrDefault(g => g.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+
+            if (guest == null)
+                return NotFound("Guest not found");
+
+            return Ok(guest); // returns full guest object including Id
+        }
+
     }
+
 }
 
