@@ -27,6 +27,7 @@ namespace Server
             builder.Services.AddScoped<DeleteRoomHandler>();
             builder.Services.AddScoped<EditRoomHandler>();
             builder.Services.AddScoped<GetRoomsFilteredHandler>();
+            builder.Services.AddScoped<GetAvailableRoomsHandler>();
             builder.Services.AddScoped<IRoomRepository, EfRoomRepository>();
 
             builder.Services.AddScoped<AddGuestHandler>();

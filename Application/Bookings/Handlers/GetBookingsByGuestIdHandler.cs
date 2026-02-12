@@ -20,7 +20,7 @@ namespace Application.Bookings.Handlers
 
         public async Task<List<BookingDto>?> Handle(int guestId)
         {
-            Guest guest = await _guestRepository.GetByIdAsync(guestId);
+            Guest? guest = await _guestRepository.GetByIdAsync(guestId);
 
             if (guest is null)
                 return null;
