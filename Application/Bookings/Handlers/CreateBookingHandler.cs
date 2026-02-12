@@ -18,22 +18,13 @@ namespace Application.Bookings.Handlers
         }
 
         public async Task<bool> Handle(CreateBookingCommand command)
-        public async Task Handle(CreateBookingCommand command)
         {
             Room? room = await _roomRepository.GetByIdAsync(command.RoomId);
             if (room == null) return false;
 
             Guest? guest = await _guestRepository.GetByIdAsync(command.GuestId);
             if (guest == null) return false;
-            //  Get the Room
-            var room = await _roomRepository.GetByIdAsync(command.RoomId);
-            if (room == null)
-                throw new ArgumentException("Room not found");
 
-            //  Get the Guest
-            var guest = await _guestRepository.GetByIdAsync(command.GuestId);
-            if (guest == null)
-                throw new ArgumentException("Guest not found");
 
             //  Validate dates
             if (command.CheckOutDate <= command.CheckInDate)
