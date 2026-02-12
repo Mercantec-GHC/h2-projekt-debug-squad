@@ -24,7 +24,7 @@ namespace Application.Bookings.Handlers
 
             Guest? guest = await _guestRepository.GetByIdAsync(command.GuestId);
             if (guest == null) return false;
-
+            
 
             //  Validate dates
             if (command.CheckOutDate <= command.CheckInDate)
