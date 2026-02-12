@@ -32,11 +32,13 @@ namespace Application.Bookings.Handlers
             _roomRepository = roomRepository;
         }
 
-        public async Task? Handle(CreateBookingCommand command)
+        public async Task<bool> Handle(CreateBookingCommand command)
         {
             Room? room = await _roomRepository.GetByIdAsync(command.RoomId);
-            //if (room == null) return null;
-            Guest guest = await _guestRepository.GetByIdAsync(command.GuestId);
+            if (room == null) return false;
+
+            Guest? guest = await _guestRepository.GetByIdAsync(command.GuestId);
+            if (guest == null) return false;
 
             Booking booking = new Booking(guest, room, command.CheckInDate, command.CheckOutDate);
 
@@ -44,6 +46,7 @@ namespace Application.Bookings.Handlers
             guest.AddBooking(booking);
 
             await _guestRepository.SaveChangesAsync();
+            return true;
         }
     }
 }
