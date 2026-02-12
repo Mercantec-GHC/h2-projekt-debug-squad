@@ -32,13 +32,16 @@ namespace Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Guest> GetByIdAsync(int id)
+        public async Task<Guest?> GetByIdAsync(int id)
         {
-            return await _dbContext.Guests
+            Guest? guest = await _dbContext.Guests
                 .Include(g => g.Bookings)
                 .ThenInclude(b => b.Room)
-                .SingleOrDefaultAsync(g => g.Id == id)
-                   ?? throw new KeyNotFoundException($"Guest with ID {id} not found.");
+                .SingleOrDefaultAsync(g => g.Id == id);
+
+            if (guest == null) return null;
+
+            return guest;
         }
 
         public async Task DeleteByIdAsync(int id)
