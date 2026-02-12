@@ -30,7 +30,7 @@ namespace Domain
             CheckInDate = checkInDate.Date;
             CheckOutDate = checkOutDate.Date;
 
-            room.MarkAsUnavailable();
+            //room.MarkAsUnavailable();
 
             guest.Bookings?.Add(this);
         }

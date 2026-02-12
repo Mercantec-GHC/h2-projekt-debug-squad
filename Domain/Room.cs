@@ -24,11 +24,11 @@
             IsAvailable = isAvailable;
         }
 
-        public void MarkAsUnavailable()
-        {
-            if (!IsAvailable) throw new InvalidOperationException("Room is already unavailable");
-            IsAvailable = false;
-        }
+        //public void MarkAsUnavailable()
+        //{
+        //    if (!IsAvailable) throw new InvalidOperationException("Room is already unavailable");
+        //    IsAvailable = false;
+        //}
 
         public void MarkAsAvailable()
         {
