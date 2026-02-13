@@ -9,7 +9,7 @@ namespace Application.Bookings.Commands
     {
         public int GuestId { get; init; }
 
-        public int RoomID { get; init; }
+        public int RoomId { get; init; }
 
         public DateTime CheckInDate { get; init; }
 

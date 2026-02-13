@@ -2,7 +2,7 @@
 @inject HttpClient Http
 @inject NavigationManager Navigation
 
-<!-- Hero Section with Hotel Name -->
+<!-- Hero Section -->
 <div class="hero text-center py-5 bg-beige">
     <h1 class="display-3 text-gold">Grand Horizon</h1>
     <p class="lead">Experience luxury like never before</p>
@@ -14,7 +14,6 @@
     <input type="number" placeholder="Max Price" @bind="_filterMaxPrice" class="form-control w-auto" />
     <button class="btn btn-primary" @onclick="ApplyFilters">Search</button>
 </div>
-
 
 <!-- Room List -->
 <div class="room-list container mt-4">
@@ -30,11 +29,16 @@
                             <p class="card-text">Capacity: @room.Capacity</p>
                             <p class="card-text">Price per night: $@room.PricePerNight</p>
 
-                            
-                            <!-- Navigate to dedicated room page -->
-                            <button class="btn btn-outline-primary w-100"
+                            <!-- Navigate to room details -->
+                            <button class="btn btn-outline-primary w-100 mb-2"
                                     @onclick="() => ViewRoomDetails(room.Id)">
                                 Read More
+                            </button>
+
+                            <!-- Book Now -->
+                            <button class="btn btn-success w-100"
+                                    @onclick="() => BookRoom(room.Id)">
+                                Book Now
                             </button>
                         </div>
                     </div>
@@ -85,6 +89,7 @@
 
     private void BookRoom(int roomId)
     {
-        Navigation.NavigateTo($"/booking?roomId={roomId}");
+        // Navigate to booking page with selected room
+        Navigation.NavigateTo($"/booking/{roomId}");
     }
 }

@@ -1,5 +1,6 @@
 ﻿@using Client.Models;
 @inject HttpClient http
+@inject NavigationManager Navigation
 
 @page "/room-details/{Id:int}"
 
@@ -15,10 +16,11 @@
         <p>Capacity: @room.Capacity</p>
         <p>Price per Night: $@room.PricePerNight</p>
 
-        @if (room.IsAvailable)
-        {
-            <p>Available</p>
-        }
+      
+            <button class="btn btn-success w-100" @onclick="() => NavigateToBooking(room.Id)">
+                Book Now
+            </button>
+     
     </div>
 }
 else {
@@ -47,6 +49,13 @@ else {
             message = $"Error: {ex.Message}";
         }
     }
+
+    private void NavigateToBooking(int roomId)
+    {
+        // Go to booking page with roomId
+        Navigation.NavigateTo($"/booking/{roomId}");
+    }
+
 
 
 

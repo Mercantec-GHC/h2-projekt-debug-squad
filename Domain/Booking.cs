@@ -30,7 +30,7 @@ namespace Domain
             CheckInDate = checkInDate.Date;
             CheckOutDate = checkOutDate.Date;
 
-            room.MarkAsUnavailable();
+            //room.MarkAsUnavailable();
 
             guest.Bookings?.Add(this);
         }
@@ -42,8 +42,8 @@ namespace Domain
 
             if (checkInDate.Date >= checkOutDate.Date)
                 throw new ArgumentException("Check-out date must be after check-in date");
-            if (!room.IsAvailable)
-                throw new InvalidOperationException("Room is not available");
+            //if (!room.IsAvailable)
+            //    throw new InvalidOperationException("Room is not available");
         }
 
         public void Cancel()

@@ -2,6 +2,7 @@
 using Application.Guests.Queries;
 using Application.Guests.Queries;
 using Application.Interfaces;
+using Application.Rooms.Queries;
 using Domain;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,13 @@ namespace Application.Guests.Handlers
                 g.Email,
                 g.Bookings.Select(b => new BookingDto(
                     b.Id,
-                    b.Room,
+                    new RoomDto(
+                        b.Room.Id,
+                        b.Room.Number,
+                        b.Room.Capacity,
+                        b.Room.PricePerNight,
+                        b.Room.IsAvailable
+                    ),
                     b.CheckInDate,
                     b.CheckOutDate
                 )).ToList()

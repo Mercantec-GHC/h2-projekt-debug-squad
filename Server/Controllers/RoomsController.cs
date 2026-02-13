@@ -35,6 +35,14 @@ namespace Server.Controllers
             return Ok(room);
         }
 
+        [HttpPost("available")]
+        public async Task<IActionResult> GetAvailable([FromServices] GetAvailableRoomsHandler getAvailableRoomsHandler, [FromBody] GetAvailableRoomsCommand command)
+        {
+            var rooms = await getAvailableRoomsHandler.Handle(command);
+
+            return Ok(rooms);
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromServices] DeleteRoomHandler deleteRoomHandler, int id)
         {

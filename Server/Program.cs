@@ -27,18 +27,23 @@ namespace Server
             builder.Services.AddScoped<DeleteRoomHandler>();
             builder.Services.AddScoped<EditRoomHandler>();
             builder.Services.AddScoped<GetRoomsFilteredHandler>();
+            builder.Services.AddScoped<GetAvailableRoomsHandler>();
             builder.Services.AddScoped<IRoomRepository, EfRoomRepository>();
-            builder.Services.AddScoped<IGuestRepository, EfGuestRepository>();
+
             builder.Services.AddScoped<AddGuestHandler>();
             builder.Services.AddScoped<GetGuestsHandler>();
             builder.Services.AddScoped<GetGuestByIdHandler>();
             builder.Services.AddScoped<DeleteGuestHandler>();
             builder.Services.AddScoped<EditGuestHandler>();
             builder.Services.AddScoped<RegisterGuestHandler>();
-           
+            builder.Services.AddScoped<IGuestRepository, EfGuestRepository>();
 
+            builder.Services.AddScoped<GetBookingsByGuestIdHandler>();
             builder.Services.AddScoped<CreateBookingHandler>();
-
+            builder.Services.AddScoped<DeleteBookingHandler>();
+            builder.Services.AddScoped<GetAllBookingsHandler>();
+            builder.Services.AddScoped<GetBookingByIdHandler>();
+            builder.Services.AddScoped<IBookingRepository, EfBookingRepository>();
 
 
 

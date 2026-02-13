@@ -1,9 +1,187 @@
-﻿@page "/booking"
+﻿@page "/booking/{RoomId:int}"
+@using Client.Models
 @inject HttpClient Http
+@inject NavigationManager Navigation
 
+<h3>Booking Page</h3>
 
-<h3 class="mb-4 text-center">Manage Bookings</h3>
+@if (SelectedRoom != null && !Step1Completed)
+{
+    <!-- Step 1: Select Dates & Guests -->
+    <h4>Step 1: Enter Dates & Guests</h4>
+
+    <p><strong>Room:</strong> @SelectedRoom.Number</p>
+    <p><strong>Price per night:</strong> $@SelectedRoom.PricePerNight</p>
+
+    <label>Check-in Date:</label>
+    <input type="date" @bind="CheckInDate" min="@DateTime.Today.ToString("yyyy-MM-dd")" class="form-control mb-2" />
+
+    <label>Check-out Date:</label>
+    <input type="date" @bind="CheckOutDate" min="@CheckInDate.AddDays(1).ToString("yyyy-MM-dd")" class="form-control mb-2" />
+
+    <label>Number of Guests:</label>
+    <input type="number" @bind="SelectedCapacity" min="1" class="form-control mb-2" />
+
+    <button class="btn btn-primary w-100" @onclick="NextStep">Next</button>
+
+    @if (!string.IsNullOrEmpty(Message))
+    {
+        <div class="alert alert-danger mt-2">@Message</div>
+    }
+}
+else if (!GuestExists)
+{
+    <!-- Step 2: Enter Guest Email -->
+    <h4>Step 2: Guest Info Required</h4>
+    <input type="email" @bind="GuestEmail" placeholder="Enter your email" class="form-control mb-2" />
+
+    <button class="btn btn-success w-100" @onclick="CheckGuest" disabled="@string.IsNullOrWhiteSpace(GuestEmail)">
+        Next
+    </button>
+
+    @if (!string.IsNullOrEmpty(Message))
+    {
+        <div class="alert alert-danger mt-2">@Message</div>
+    }
+}
+else
+{
+    <!-- Step 3: Confirm Booking -->
+    <h4>Step 3: Confirm Booking</h4>
+
+    <p><strong>Room:</strong> @SelectedRoom.Number</p>
+    <p><strong>Check-in:</strong> @CheckInDate.ToShortDateString()</p>
+    <p><strong>Check-out:</strong> @CheckOutDate.ToShortDateString()</p>
+    <p><strong>Nights:</strong> @NumberOfNights</p>
+    <p><strong>Guests:</strong> @SelectedCapacity</p>
+    <p><strong>Price per night:</strong> $@SelectedRoom.PricePerNight</p>
+    <p><strong>Total Price:</strong> $@TotalPrice</p>
+
+    <button class="btn btn-primary w-100" @onclick="FinishBooking">Confirm Booking</button>
+
+    @if (!string.IsNullOrEmpty(Message))
+    {
+        <div class="alert alert-info mt-2">@Message</div>
+    }
+}
 
 @code {
+    [Parameter] public int RoomId { get; set; }
 
+    private RoomDto? SelectedRoom;
+    private DateTime CheckInDate = DateTime.Today;
+    private DateTime CheckOutDate = DateTime.Today.AddDays(1);
+    private int SelectedCapacity = 1;
+
+    private bool Step1Completed = false;
+    private bool GuestExists = false;
+    private int GuestId;
+
+    private string GuestEmail = string.Empty;
+    private string Message = string.Empty;
+
+    // Calculate number of nights
+    private int NumberOfNights => (CheckOutDate - CheckInDate).Days;
+
+    // Calculate total price
+    private decimal TotalPrice => SelectedRoom != null ? SelectedRoom.PricePerNight * NumberOfNights : 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var roomList = await Http.GetFromJsonAsync<List<RoomDto>>("api/rooms");
+        SelectedRoom = roomList?.FirstOrDefault(r => r.Id == RoomId);
+
+        if (SelectedRoom == null)
+            Message = "Room not found";
+    }
+
+    private void NextStep()
+    {
+        if (SelectedCapacity < 1)
+        {
+            Message = "Please enter a valid number of guests";
+            return;
+        }
+
+        if (CheckOutDate <= CheckInDate)
+        {
+            Message = "Check-out date must be after check-in date";
+            return;
+        }
+
+        Step1Completed = true;
+        Message = string.Empty;
+    }
+
+    private async Task CheckGuest()
+    {
+        if (string.IsNullOrWhiteSpace(GuestEmail))
+        {
+            Message = "Please enter your email";
+            return;
+        }
+
+        try
+        {
+            var guest = await Http.GetFromJsonAsync<GuestDto>(
+                $"api/guests/byemail?email={Uri.EscapeDataString(GuestEmail)}");
+
+            if (guest == null)
+            {
+                Navigation.NavigateTo("/signup");
+                return;
+            }
+
+            GuestId = guest.Id;
+            GuestExists = true;
+            Message = string.Empty;
+        }
+        catch
+        {
+            Navigation.NavigateTo("/signup");
+        }
+    }
+
+    private async Task FinishBooking()
+    {
+        if (SelectedRoom == null) return;
+
+        // Convert to UTC for backend
+        var checkInUtc = CheckInDate.ToUniversalTime();
+        var checkOutUtc = CheckOutDate.ToUniversalTime();
+
+        var bookingDto = new
+        {
+            RoomId = SelectedRoom.Id,
+            GuestId,
+            CheckInDate = checkInUtc,
+            CheckOutDate = checkOutUtc,
+            Capacity = SelectedCapacity
+        };
+
+        try
+        {
+            var response = await Http.PostAsJsonAsync("api/bookings", bookingDto);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Message = "Booking completed successfully!";
+                Step1Completed = false;
+                GuestExists = false;
+                GuestEmail = string.Empty;
+                SelectedCapacity = 1;
+                CheckInDate = DateTime.Today;
+                CheckOutDate = DateTime.Today.AddDays(1);
+            }
+            else
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                Message = $"Error: {error}";
+            }
+        }
+        catch (Exception ex)
+        {
+            Message = $"Something went wrong: {ex.Message}";
+        }
+    }
 }

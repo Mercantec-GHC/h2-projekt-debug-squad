@@ -2,13 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Application.Rooms.Queries;
 
 namespace Application.Bookings
 {
     public class BookingDto
     {
         public int Id { get; set; }
-        public Room Room { get; set; } = null!;
+        public RoomDto Room { get; set; } = null!;
 
         public DateTime CheckInDate { get; set; }
 
@@ -16,7 +17,7 @@ namespace Application.Bookings
 
         private BookingDto() { }
 
-        public BookingDto(int id, Room room, DateTime checkInDate, DateTime checkOutDate)
+        public BookingDto(int id, RoomDto room, DateTime checkInDate, DateTime checkOutDate)
         {
             Id = id;
             Room = room;
