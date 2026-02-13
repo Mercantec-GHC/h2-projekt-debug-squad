@@ -12,9 +12,6 @@ namespace Domain
         public string PhoneNumber { get; private set; } = string.Empty;
         public string Email { get; private set; } = string.Empty;
         
-
-
-        
         public List<Booking> Bookings { get; private set; } = new();
 
         private Guest() { }

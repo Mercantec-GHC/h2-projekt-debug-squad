@@ -17,8 +17,7 @@ namespace Application.Bookings.Handlers
         {
             Guest guest = await _guestRepository.GetByIdAsync(guestId);
 
-            Booking? booking = guest.Bookings
-                .FirstOrDefault(x => x.Id == bookingId);
+            Booking? booking = guest.Bookings.FirstOrDefault(x => x.Id == bookingId);
 
             if (booking is null)
                 return false;
@@ -28,7 +27,5 @@ namespace Application.Bookings.Handlers
             await _guestRepository.SaveChangesAsync();
             return true;
         }
-
-
     }
 }
