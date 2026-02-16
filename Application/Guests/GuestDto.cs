@@ -16,6 +16,7 @@ namespace Application.Guests.Queries
 
         private GuestDto() { }
 
+
         public GuestDto(int id, string fullName, string phoneNumber, string email, List<BookingDto> bookings)
         {
             Id = id;

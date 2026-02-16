@@ -1,4 +1,6 @@
-﻿namespace Client.Models
+﻿using Application.Bookings;
+
+namespace Client.Models
 {
     public class GuestDto
     {
@@ -7,6 +9,6 @@
         public string PhoneNumber { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
 
-        
+        public List<BookingDto> Bookings { get; set; } = new List<BookingDto>();
     }
 }

@@ -11,19 +11,48 @@
 }
 else
 {
-    <div class="card p-3 shadow-sm">
+    <!-- Guest Info -->
+    <div class="card p-3 mb-3 shadow-sm">
         <p><strong>Guest ID:</strong> @guest.Id</p>
         <p><strong>Full Name:</strong> @guest.FullName</p>
         <p><strong>Email:</strong> @guest.Email</p>
         <p><strong>Phone Number:</strong> @guest.PhoneNumber</p>
     </div>
+
+    <!-- Booking History -->
+    <h4>Booking History</h4>
+    @if (guest.Bookings != null && guest.Bookings.Count > 0)
+    {
+        <div class="row g-3">
+            @foreach (var booking in guest.Bookings)
+            {
+                <div class="col-md-4">
+                    <div class="card p-3 shadow-sm">
+                        <p><strong>Room:</strong> @booking.Room.Number</p>
+                        <p><strong>Capacity:</strong> @booking.Room.Capacity</p>
+                        <p><strong>Price per Night:</strong> $@booking.Room.PricePerNight</p>
+                        <p><strong>Check-in:</strong> @booking.CheckInDate.ToShortDateString()</p>
+                        <p><strong>Check-out:</strong> @booking.CheckOutDate.ToShortDateString()</p>
+
+                        <!-- Optional: Book Again Button -->
+                        <button class="btn btn-success w-100 mt-2" @onclick="() => NavigateToBooking(booking.Room.Id)">
+                            Book Again
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p>This guest has no bookings.</p>
+    }
 }
 
-<p>@message</p>
+<p class="text-danger">@message</p>
 
 @code {
-    [Parameter]
-    public int GuestId { get; set; }
+    [Parameter] public int GuestId { get; set; }
 
     private GuestDto? guest;
     private string message = string.Empty;
@@ -38,5 +67,10 @@ else
         {
             message = $"Error: {ex.Message}";
         }
+    }
+
+    private void NavigateToBooking(int roomId)
+    {
+        Navigation.NavigateTo($"/booking/{roomId}");
     }
 }
