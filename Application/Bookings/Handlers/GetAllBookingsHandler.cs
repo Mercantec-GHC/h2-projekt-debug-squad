@@ -26,8 +26,8 @@ namespace Application.Bookings.Handlers
                         b.Room.Id,
                         b.Room.Number,
                         b.Room.Capacity,
-                        b.Room.PricePerNight,
-                        b.Room.IsAvailable
+                        b.Room.PricePerNight
+                        
                     ),
                     b.CheckInDate,
                     b.CheckOutDate

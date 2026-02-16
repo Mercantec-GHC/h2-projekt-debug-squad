@@ -38,8 +38,8 @@ namespace Application.Rooms.Handlers
                     r.Id, 
                     r.Number, 
                     r.Capacity, 
-                    r.PricePerNight, 
-                    r.IsAvailable
+                    r.PricePerNight
+                   
                     )).ToList();
 
             return availableRooms;

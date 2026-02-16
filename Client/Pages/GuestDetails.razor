@@ -1,4 +1,5 @@
 ﻿@page "/guest-details/{GuestId:int}"
+@using Client.Models
 @inject HttpClient Http
 @inject NavigationManager Navigation
 
@@ -18,21 +19,24 @@ else
     </div>
 }
 
+<p>@message</p>
+
 @code {
-    [Parameter] public int GuestId { get; set; }
+    [Parameter]
+    public int GuestId { get; set; }
 
-    private Client.Models.GuestDto? guest;
+    private GuestDto? guest;
+    private string message = string.Empty;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
         try
         {
-            guest = await Http.GetFromJsonAsync<Client.Models.GuestDto>($"api/guests/{GuestId}");
+            guest = await Http.GetFromJsonAsync<GuestDto>($"api/guests/{GuestId}");
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            Navigation.NavigateTo("/manage/guests"); // go back if error
+            message = $"Error: {ex.Message}";
         }
     }
 }
-

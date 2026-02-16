@@ -19,7 +19,7 @@ namespace Application.Rooms.Handlers
             // kan vi måske prøve at hente den eksisterende room og arbejde med den...
             // var room = await _repository.GetByIdAsync(roomDto.Id); bla-bla-bla
 
-            var room = new Room(roomDto.Number, roomDto.Capacity, roomDto.PricePerNight, roomDto.IsAvailable);
+            var room = new Room(roomDto.Number, roomDto.Capacity, roomDto.PricePerNight);
 
             await _repository.EditAsync(room, roomDto.Id);
         }
