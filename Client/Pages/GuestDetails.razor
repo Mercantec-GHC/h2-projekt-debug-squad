@@ -2,6 +2,7 @@
 @using Client.Models
 @inject HttpClient Http
 @inject NavigationManager Navigation
+@inject IJSRuntime JsRuntime
 
 <h3>Guest Details</h3>
 
@@ -38,6 +39,11 @@ else
                         <button class="btn btn-success w-100 mt-2" @onclick="() => NavigateToBooking(booking.Room.Id)">
                             Book Again
                         </button>
+
+                        <!-- Cancel Booking Button -->
+                        <button class="btn btn-danger w-100 mt-2" @onclick="() => CancelBooking(booking.Id)">
+                            <i class="bi bi-x-circle me-1"></i> Cancel Booking
+                        </button>
                     </div>
                 </div>
             }
@@ -49,6 +55,11 @@ else
     }
 }
 
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success mt-2">@successMessage</div>
+}
+
 <p class="text-danger">@message</p>
 
 @code {
@@ -56,6 +67,7 @@ else
 
     private GuestDto? guest;
     private string message = string.Empty;
+    private string successMessage = string.Empty;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -72,5 +84,40 @@ else
     private void NavigateToBooking(int roomId)
     {
         Navigation.NavigateTo($"/booking/{roomId}");
+    }
+
+    private async Task CancelBooking(int bookingId)
+    {
+        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to cancel this booking?");
+        if (!confirmed) return;
+
+        try
+        {
+            var command = new { GuestId, BookingId = bookingId };
+
+            var request = new HttpRequestMessage(HttpMethod.Delete, "api/bookings")
+            {
+                Content = JsonContent.Create(command)
+            };
+
+            var response = await Http.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                successMessage = "Booking cancelled successfully!";
+                message = string.Empty;
+                // Reload guest data to refresh the booking list
+                guest = await Http.GetFromJsonAsync<GuestDto>($"api/guests/{GuestId}");
+            }
+            else
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                message = $"Failed to cancel booking: {error}";
+            }
+        }
+        catch (Exception ex)
+        {
+            message = $"Error: {ex.Message}";
+        }
     }
 }
