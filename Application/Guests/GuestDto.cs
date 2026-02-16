@@ -1,8 +1,4 @@
-﻿using Domain;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Application.Bookings;
+﻿using Application.Bookings;
 
 namespace Application.Guests.Queries
 {
@@ -16,7 +12,6 @@ namespace Application.Guests.Queries
 
         private GuestDto() { }
 
-
         public GuestDto(int id, string fullName, string phoneNumber, string email, List<BookingDto> bookings)
         {
             Id = id;
@@ -27,4 +22,3 @@ namespace Application.Guests.Queries
         }
     }
 }
-

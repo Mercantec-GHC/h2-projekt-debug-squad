@@ -36,7 +36,6 @@ namespace Server.Controllers
             return Ok(guest);
         }
 
-
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromServices] DeleteGuestHandler deleteGuestHandler, int id)
         {
@@ -88,7 +87,6 @@ namespace Server.Controllers
             return Ok(exists); // returns true or false
         }
 
-
         [HttpGet("byemail")]
         public async Task<IActionResult> GetByEmail([FromServices] GetGuestsHandler getGuestsHandler, [FromQuery] string email)
         {
@@ -103,8 +101,6 @@ namespace Server.Controllers
 
             return Ok(guest); // returns full guest object including Id
         }
-
     }
-
 }
 

@@ -1,5 +1,4 @@
 ﻿using Application.Interfaces;
-using Application.Guests.Queries;
 
 namespace Application.Guests.Handlers
 {

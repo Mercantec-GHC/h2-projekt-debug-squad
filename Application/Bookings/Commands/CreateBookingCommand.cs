@@ -1,9 +1,4 @@
-﻿using Domain;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Application.Bookings.Commands
+﻿namespace Application.Bookings.Commands
 {
     public class CreateBookingCommand
     {

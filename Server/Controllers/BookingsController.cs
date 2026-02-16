@@ -1,9 +1,5 @@
 ﻿using Application.Bookings.Commands;
 using Application.Bookings.Handlers;
-using Application.Guests.Handlers;
-using Application.Guests.Queries;
-using Application.Rooms.Handlers;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Server.Controllers
@@ -16,8 +12,6 @@ namespace Server.Controllers
         public async Task<IActionResult> Create([FromServices] CreateBookingHandler createBookingHandler, [FromBody] CreateBookingCommand command)
         {
             await createBookingHandler.Handle(command);
-
-           
 
             return Ok("Booking created successfully");
         }

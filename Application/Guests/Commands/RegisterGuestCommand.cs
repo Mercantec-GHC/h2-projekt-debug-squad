@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Application.Guests.Commands
+﻿namespace Application.Guests.Commands
 {
     public class RegisterGuestCommand
     {

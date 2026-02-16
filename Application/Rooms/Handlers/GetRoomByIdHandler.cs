@@ -1,9 +1,6 @@
 ﻿using Application.Interfaces;
 using Application.Rooms.Queries;
 using Domain;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Rooms.Handlers
 {
@@ -24,5 +21,4 @@ namespace Application.Rooms.Handlers
             return new RoomDto(room.Id, room.Number, room.Capacity, room.PricePerNight);
         }
     }
-
 }

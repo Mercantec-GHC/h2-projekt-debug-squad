@@ -1,4 +1,4 @@
-﻿using Application.Interfaces;  // use repository interface
+﻿using Application.Interfaces;
 using Domain;
 using Application.Guests.Commands;
 

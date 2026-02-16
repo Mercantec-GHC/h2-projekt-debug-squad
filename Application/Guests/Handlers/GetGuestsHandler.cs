@@ -1,12 +1,8 @@
 ﻿using Application.Bookings;
 using Application.Guests.Queries;
-using Application.Guests.Queries;
 using Application.Interfaces;
 using Application.Rooms.Queries;
 using Domain;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Guests.Handlers
 {
@@ -43,4 +39,3 @@ namespace Application.Guests.Handlers
         }
     }
 }
-
