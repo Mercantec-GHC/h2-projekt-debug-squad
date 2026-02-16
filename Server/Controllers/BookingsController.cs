@@ -52,6 +52,22 @@ namespace Server.Controllers
             return Ok(bookings);
         }
 
+        [HttpPut]
+        public async Task<IActionResult> Edit([FromServices] EditBookingHandler editBookingHandler, [FromBody] EditBookingCommand command)
+        {
+            try
+            {
+                if (await editBookingHandler.Handle(command))
+                    return Ok("Booking updated successfully");
+
+                return BadRequest("Booking not found");
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpDelete()]
         public async Task<IActionResult> Delete([FromServices] DeleteBookingHandler deleteBookingHandler, [FromBody] DeleteBookingCommand command)
         {

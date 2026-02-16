@@ -43,6 +43,7 @@ namespace Server
             builder.Services.AddScoped<DeleteBookingHandler>();
             builder.Services.AddScoped<GetAllBookingsHandler>();
             builder.Services.AddScoped<GetBookingByIdHandler>();
+            builder.Services.AddScoped<EditBookingHandler>();
             builder.Services.AddScoped<IBookingRepository, EfBookingRepository>();
 
 

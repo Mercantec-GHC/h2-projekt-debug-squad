@@ -42,6 +42,15 @@
             //    throw new InvalidOperationException("Room is not available");
         }
 
+        public void ChangeDates(DateTime newCheckIn, DateTime newCheckOut)
+        {
+            if (newCheckIn.Date >= newCheckOut.Date)
+                throw new ArgumentException("Check-out date must be after check-in date");
+
+            CheckInDate = newCheckIn.Date;
+            CheckOutDate = newCheckOut.Date;
+        }
+
         public void Cancel()
         {
             Room.MarkAsAvailable();
