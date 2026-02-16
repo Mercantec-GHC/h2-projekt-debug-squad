@@ -1,4 +1,5 @@
 ﻿@page "/booking/{RoomId:int}"
+@page "/booking/{RoomId:int}/{CheckIn:datetime}/{CheckOut:datetime}"
 @using Client.Models
 @inject HttpClient Http
 @inject NavigationManager Navigation
@@ -7,17 +8,14 @@
 
 @if (SelectedRoom != null && !Step1Completed)
 {
-    <!-- Step 1: Select Dates & Guests -->
-    <h4>Step 1: Enter Dates & Guests</h4>
+    <!-- Step 1: Dates are pre-filled and read-only, only guests count editable -->
+    <h4>Step 1: Confirm Guests</h4>
 
     <p><strong>Room:</strong> @SelectedRoom.Number</p>
     <p><strong>Price per night:</strong> $@SelectedRoom.PricePerNight</p>
 
-    <label>Check-in Date:</label>
-    <input type="date" @bind="CheckInDate" min="@DateTime.Today.ToString("yyyy-MM-dd")" class="form-control mb-2" />
-
-    <label>Check-out Date:</label>
-    <input type="date" @bind="CheckOutDate" min="@CheckInDate.AddDays(1).ToString("yyyy-MM-dd")" class="form-control mb-2" />
+    <p><strong>Check-in:</strong> @CheckInDate.ToShortDateString()</p>
+    <p><strong>Check-out:</strong> @CheckOutDate.ToShortDateString()</p>
 
     <label>Number of Guests:</label>
     <input type="number" @bind="SelectedCapacity" min="1" class="form-control mb-2" />
@@ -67,32 +65,38 @@ else
 
 @code {
     [Parameter] public int RoomId { get; set; }
+    [Parameter] public DateTime? CheckIn { get; set; }
+    [Parameter] public DateTime? CheckOut { get; set; }
 
     private RoomDto? SelectedRoom;
-    private DateTime CheckInDate = DateTime.Today;
-    private DateTime CheckOutDate = DateTime.Today.AddDays(1);
+    private DateTime CheckInDate;
+    private DateTime CheckOutDate;
     private int SelectedCapacity = 1;
 
     private bool Step1Completed = false;
     private bool GuestExists = false;
     private int GuestId;
-
     private string GuestEmail = string.Empty;
     private string Message = string.Empty;
 
-    // Calculate number of nights
     private int NumberOfNights => (CheckOutDate - CheckInDate).Days;
-
-    // Calculate total price
     private decimal TotalPrice => SelectedRoom != null ? SelectedRoom.PricePerNight * NumberOfNights : 0;
 
     protected override async Task OnInitializedAsync()
     {
+        // Load the room
         var roomList = await Http.GetFromJsonAsync<List<RoomDto>>("api/rooms");
         SelectedRoom = roomList?.FirstOrDefault(r => r.Id == RoomId);
 
         if (SelectedRoom == null)
+        {
             Message = "Room not found";
+            return;
+        }
+
+        // Prefill dates from URL or defaults
+        CheckInDate = CheckIn?.Date ?? DateTime.Today;
+        CheckOutDate = CheckOut?.Date ?? DateTime.Today.AddDays(1);
     }
 
     private void NextStep()
@@ -100,12 +104,6 @@ else
         if (SelectedCapacity < 1)
         {
             Message = "Please enter a valid number of guests";
-            return;
-        }
-
-        if (CheckOutDate <= CheckInDate)
-        {
-            Message = "Check-out date must be after check-in date";
             return;
         }
 
@@ -146,22 +144,17 @@ else
     {
         if (SelectedRoom == null) return;
 
-        // Convert to UTC for backend
-        var checkInUtc = CheckInDate.ToUniversalTime();
-        var checkOutUtc = CheckOutDate.ToUniversalTime();
-
-        var bookingDto = new
+        var bookingForm = new BookingFormModel
         {
             RoomId = SelectedRoom.Id,
-            GuestId,
-            CheckInDate = checkInUtc,
-            CheckOutDate = checkOutUtc,
-            Capacity = SelectedCapacity
+            GuestId = GuestId,
+            CheckInDate = CheckInDate.Date,   // only date
+            CheckOutDate = CheckOutDate.Date  // only date
         };
 
         try
         {
-            var response = await Http.PostAsJsonAsync("api/bookings", bookingDto);
+            var response = await Http.PostAsJsonAsync("api/bookings", bookingForm);
 
             if (response.IsSuccessStatusCode)
             {
@@ -170,8 +163,6 @@ else
                 GuestExists = false;
                 GuestEmail = string.Empty;
                 SelectedCapacity = 1;
-                CheckInDate = DateTime.Today;
-                CheckOutDate = DateTime.Today.AddDays(1);
             }
             else
             {

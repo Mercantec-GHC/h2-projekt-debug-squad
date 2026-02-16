@@ -1,6 +1,8 @@
 ﻿@page "/"
 @inject HttpClient Http
 @inject NavigationManager Navigation
+@using Application.Rooms.Commands
+@using Client.Models
 
 <!-- Hero Section -->
 <div class="hero text-center py-5 bg-beige">
@@ -9,7 +11,10 @@
 </div>
 
 <!-- Room Filters -->
-<div class="filters mt-4 mb-3 d-flex gap-3 justify-content-center">
+<div class="filters mt-4 mb-3 d-flex gap-3 justify-content-center flex-wrap">
+    <input type="date" @bind="CheckInDate" min="@DateTime.Today.ToString("yyyy-MM-dd")" class="form-control w-auto" />
+    <input type="date" @bind="CheckOutDate" min="@CheckInDate.AddDays(1).ToString("yyyy-MM-dd")" class="form-control w-auto" />
+
     <input type="number" placeholder="Capacity" @bind="_filterCapacity" class="form-control w-auto" />
     <input type="number" placeholder="Max Price" @bind="_filterMaxPrice" class="form-control w-auto" />
     <button class="btn btn-primary" @onclick="ApplyFilters">Search</button>
@@ -29,13 +34,11 @@
                             <p class="card-text">Capacity: @room.Capacity</p>
                             <p class="card-text">Price per night: $@room.PricePerNight</p>
 
-                            <!-- Navigate to room details -->
                             <button class="btn btn-outline-primary w-100 mb-2"
                                     @onclick="() => ViewRoomDetails(room.Id)">
                                 Read More
                             </button>
 
-                            <!-- Book Now -->
                             <button class="btn btn-success w-100"
                                     @onclick="() => BookRoom(room.Id)">
                                 Book Now
@@ -59,12 +62,15 @@
     private int? _filterCapacity;
     private decimal? _filterMaxPrice;
 
+    private DateTime CheckInDate = DateTime.Today;
+    private DateTime CheckOutDate = DateTime.Today.AddDays(1);
+
     protected override async Task OnInitializedAsync()
     {
-        await LoadRooms();
+        await LoadAllRooms();
     }
 
-    private async Task LoadRooms()
+    private async Task LoadAllRooms()
     {
         rooms = await Http.GetFromJsonAsync<List<Client.Models.RoomDto>>("api/rooms")
                 ?? new List<Client.Models.RoomDto>();
@@ -72,14 +78,27 @@
         filteredRooms = new List<Client.Models.RoomDto>(rooms);
     }
 
-    private void ApplyFilters()
+    private async Task ApplyFilters()
     {
-        filteredRooms = rooms
-            .Where(r =>
-                (!_filterCapacity.HasValue || r.Capacity >= _filterCapacity.Value) &&
-                (!_filterMaxPrice.HasValue || r.PricePerNight <= _filterMaxPrice.Value)
-            )
-            .ToList();
+        // Only pass Date part to backend
+        var request = new
+        {
+            CheckInDate = CheckInDate.Date,
+            CheckOutDate = CheckOutDate.Date,
+            Capacity = _filterCapacity,
+            MaxPrice = _filterMaxPrice
+        };
+
+        var response = await Http.PostAsJsonAsync("api/rooms/available", request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            filteredRooms = await response.Content.ReadFromJsonAsync<List<RoomDto>>() ?? new List<RoomDto>();
+        }
+        else
+        {
+            filteredRooms = new List<RoomDto>();
+        }
     }
 
     private void ViewRoomDetails(int roomId)
@@ -89,7 +108,7 @@
 
     private void BookRoom(int roomId)
     {
-        // Navigate to booking page with selected room
-        Navigation.NavigateTo($"/booking/{roomId}");
+        // Pass only date part to booking page
+        Navigation.NavigateTo($"/booking/{roomId}/{CheckInDate:yyyy-MM-dd}/{CheckOutDate:yyyy-MM-dd}");
     }
 }

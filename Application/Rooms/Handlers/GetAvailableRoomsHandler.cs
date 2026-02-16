@@ -18,16 +18,16 @@ namespace Application.Rooms.Handlers
 
         public async Task<List<RoomDto>> Handle(GetAvailableRoomsCommand command)
         {
-            DateTime requestedCheckIn = command.CheckInDate.Date;
-            DateTime requestedCheckOut = command.CheckOutDate.Date;
+            var requestedCheckIn = command.CheckInDate.Date;
+            var requestedCheckOut = command.CheckOutDate.Date;
 
             var rooms = await _roomRepository.GetAllAsync();
             List<Booking> bookings = await _bookingRepository.GetAllAsync();
 
             var bookedRoomIds = bookings
                 .Where(b =>
-                    b.CheckInDate < requestedCheckOut &&
-                    b.CheckOutDate > requestedCheckIn)
+                     b.CheckInDate.Date < requestedCheckOut &&
+                    b.CheckOutDate.Date > requestedCheckIn)
                 .Select(b => b.Room.Id)
                 .Distinct()
                 .ToList();
