@@ -15,11 +15,14 @@ namespace Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task AddAsync(Room room)
+        public async Task SaveChangesAsync()
         {
-            await _dbContext.Rooms.AddAsync(room);
-
             await _dbContext.SaveChangesAsync();
+        }
+
+        public void Add(Room room)
+        {
+            _dbContext.Rooms.Add(room);
         }
 
         public async Task<List<Room>> GetAllAsync()
@@ -32,22 +35,9 @@ namespace Infrastructure.Repositories
             return await _dbContext.Rooms.SingleOrDefaultAsync(r => r.Id == id);
         }
 
-        public async Task DeleteByIdAsync(int id)
+        public void Delete(Room room)
         {
-            await _dbContext.Rooms.Where(r => r.Id == id).ExecuteDeleteAsync();
-
-            await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task EditAsync(Room room, int id)
-        {
-            var existingRoom = await _dbContext.Rooms.FindAsync(id);
-            if (existingRoom == null)
-                throw new Exception("Room not found");
-
-            existingRoom.Change(room.Number, room.Capacity, room.PricePerNight, room.IsAvailable);
-
-            await _dbContext.SaveChangesAsync();
+            _dbContext.Rooms.Remove(room);
         }
 
         public async Task<List<Room>> GetFilteredAsync(

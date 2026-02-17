@@ -6,11 +6,11 @@ using Domain;
 
 namespace Application.Guests.Handlers
 {
-    public class GetGuestsHandler
+    public class GetAllGuestsHandler
     {
         private readonly IGuestRepository _repository;
 
-        public GetGuestsHandler(IGuestRepository repository)
+        public GetAllGuestsHandler(IGuestRepository repository)
         {
             _repository = repository;
         }
@@ -30,7 +30,6 @@ namespace Application.Guests.Handlers
                         b.Room.Number,
                         b.Room.Capacity,
                         b.Room.PricePerNight
-                        
                     ),
                     b.CheckInDate,
                     b.CheckOutDate

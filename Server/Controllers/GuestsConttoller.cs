@@ -19,7 +19,7 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromServices] GetGuestsHandler getGuestsHandler)
+        public async Task<IActionResult> GetAll([FromServices] GetAllGuestsHandler getGuestsHandler)
         {
             var guests = await getGuestsHandler.Handle();
             return Ok(guests);
@@ -76,7 +76,7 @@ namespace Server.Controllers
         }
 
         [HttpGet("check")]
-        public async Task<IActionResult> CheckGuest([FromServices] GetGuestsHandler getGuestsHandler, [FromQuery] string email)
+        public async Task<IActionResult> CheckGuest([FromServices] GetAllGuestsHandler getGuestsHandler, [FromQuery] string email)
         {
             if (string.IsNullOrEmpty(email))
                 return BadRequest("Email is required");
@@ -88,7 +88,7 @@ namespace Server.Controllers
         }
 
         [HttpGet("byemail")]
-        public async Task<IActionResult> GetByEmail([FromServices] GetGuestsHandler getGuestsHandler, [FromQuery] string email)
+        public async Task<IActionResult> GetByEmail([FromServices] GetAllGuestsHandler getGuestsHandler, [FromQuery] string email)
         {
             if (string.IsNullOrEmpty(email))
                 return BadRequest("Email is required");

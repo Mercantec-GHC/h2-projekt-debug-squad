@@ -5,11 +5,11 @@ namespace Application.Interfaces
 {
     public interface IRoomRepository
     {
-        Task AddAsync(Room room);
+        Task SaveChangesAsync();
+        void Add(Room room);
         Task<List<Room>> GetAllAsync();
         Task<Room?> GetByIdAsync(int id);
-        Task DeleteByIdAsync(int id);
-        Task EditAsync(Room room, int id);
+        void Delete(Room room);
         Task<List<Room>> GetFilteredAsync(
             Expression<Func<Room, object>> orderBy,
             int roomAmount,

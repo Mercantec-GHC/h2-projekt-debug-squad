@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Domain;
 
 namespace Application.Guests.Handlers
 {
@@ -13,8 +14,13 @@ namespace Application.Guests.Handlers
 
         public async Task Handle(int guestId)
         {
-            // Calls repository to delete by Id
-            await _repository.DeleteByIdAsync(guestId);
+            Guest? guest = await _repository.GetByIdAsync(guestId);
+            
+            if (guest == null)
+                throw new Exception("Guest not found.");
+
+            _repository.Delete(guest);
+            await _repository.SaveChangesAsync();
         }
     }
 }

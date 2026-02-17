@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Domain;
 
 namespace Application.Rooms.Handlers
 {
@@ -13,7 +14,13 @@ namespace Application.Rooms.Handlers
 
         public async Task Handle(int id)
         {
-            await _repository.DeleteByIdAsync(id);
+            Room? room = await _repository.GetByIdAsync(id);
+
+            if (room == null)
+                throw new Exception("Room not found.");
+
+            _repository.Delete(room);
+            await _repository.SaveChangesAsync();
         }
     }
 }

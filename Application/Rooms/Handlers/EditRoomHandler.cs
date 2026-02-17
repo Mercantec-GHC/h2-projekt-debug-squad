@@ -16,12 +16,13 @@ namespace Application.Rooms.Handlers
 
         public async Task Handle(RoomDto roomDto)
         {
-            // kan vi måske prøve at hente den eksisterende room og arbejde med den...
-            // var room = await _repository.GetByIdAsync(roomDto.Id); bla-bla-bla
+            Room? room = await _repository.GetByIdAsync(roomDto.Id);
 
-            var room = new Room(roomDto.Number, roomDto.Capacity, roomDto.PricePerNight);
+            if (room == null)
+                throw new Exception("Room not found.");
 
-            await _repository.EditAsync(room, roomDto.Id);
+            room.Change(roomDto.Number, roomDto.Capacity, roomDto.PricePerNight);
+            await _repository.SaveChangesAsync();
         }
     }
 }

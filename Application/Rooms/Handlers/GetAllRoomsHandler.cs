@@ -4,11 +4,11 @@ using Domain;
 
 namespace Application.Rooms.Handlers
 {
-    public class GetRoomsHandler
+    public class GetAllRoomsHandler
     {
         private readonly IRoomRepository _repository;
 
-        public GetRoomsHandler(IRoomRepository repository)
+        public GetAllRoomsHandler(IRoomRepository repository)
         {
             _repository = repository;
         }

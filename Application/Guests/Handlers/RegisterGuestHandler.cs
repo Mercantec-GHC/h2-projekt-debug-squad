@@ -24,7 +24,8 @@ namespace Application.Guests.Handlers
                 command.Email
             );
 
-            await _guestRepository.AddAsync(guest);
+            _guestRepository.Add(guest);
+            await _guestRepository.SaveChangesAsync();
         }
     }
 }

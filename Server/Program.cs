@@ -23,7 +23,7 @@ namespace Server
             });
 
             builder.Services.AddScoped<CreateRoomHandler>();
-            builder.Services.AddScoped<GetRoomsHandler>();
+            builder.Services.AddScoped<GetAllRoomsHandler>();
             builder.Services.AddScoped<GetRoomByIdHandler>();
             builder.Services.AddScoped<DeleteRoomHandler>();
             builder.Services.AddScoped<EditRoomHandler>();
@@ -32,7 +32,7 @@ namespace Server
             builder.Services.AddScoped<IRoomRepository, EfRoomRepository>();
 
             builder.Services.AddScoped<AddGuestHandler>();
-            builder.Services.AddScoped<GetGuestsHandler>();
+            builder.Services.AddScoped<GetAllGuestsHandler>();
             builder.Services.AddScoped<GetGuestByIdHandler>();
             builder.Services.AddScoped<DeleteGuestHandler>();
             builder.Services.AddScoped<EditGuestHandler>();

@@ -17,7 +17,8 @@ namespace Application.Rooms.Handlers
         {
             var room = new Room(command.Number, command.Capacity, command.PricePerNight, command.IsAvailable);
 
-            await _repository.AddAsync(room);
+            _repository.Add(room);
+            await _repository.SaveChangesAsync();
         }
     }
 }

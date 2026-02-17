@@ -13,15 +13,15 @@ namespace Infrastructure.Repositories
         {
             _dbContext = dbContext;
         }
+
         public async Task SaveChangesAsync()
         {
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task AddAsync(Guest guest)
+        public void Add(Guest guest)
         {
-            await _dbContext.Guests.AddAsync(guest);
-            await _dbContext.SaveChangesAsync();
+            _dbContext.Guests.Add(guest);
         }
 
         public async Task<List<Guest>> GetAllAsync()
@@ -39,29 +39,13 @@ namespace Infrastructure.Repositories
                 .ThenInclude(b => b.Room)
                 .SingleOrDefaultAsync(g => g.Id == id);
 
-            if (guest == null) return null;
-
             return guest;
         }
 
-        public async Task DeleteByIdAsync(int id)
+        public void Delete(Guest guest)
         {
-            await _dbContext.Guests.Where(g => g.Id == id).ExecuteDeleteAsync();
-            await _dbContext.SaveChangesAsync();
+            _dbContext.Guests.Remove(guest);
         }
-
-        public async Task EditAsync(Guest guest, int id)
-        {
-            var existingGuest = await _dbContext.Guests.FindAsync(id);
-            if (existingGuest == null)
-                throw new KeyNotFoundException($"Guest with ID {id} not found.");
-
-            // Use the domain method to update
-            existingGuest.Change(guest.FullName, guest.PhoneNumber, guest.Email);
-
-            await _dbContext.SaveChangesAsync();
-        }
-
 
         public async Task<bool> ExistsByEmailAsync(string email)
         {

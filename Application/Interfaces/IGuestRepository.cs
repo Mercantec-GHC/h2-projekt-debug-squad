@@ -5,12 +5,10 @@ namespace Application.Interfaces
     public interface IGuestRepository
     {
         Task SaveChangesAsync();
-        Task AddAsync(Guest guest);
+        void Add(Guest guest);
         Task<List<Guest>> GetAllAsync();
         Task<Guest?> GetByIdAsync(int id);
-        Task DeleteByIdAsync(int id);
-        Task EditAsync(Guest guest, int id);
-
+        void Delete(Guest guest);
         Task<bool> ExistsByEmailAsync(string email);
     }
 }

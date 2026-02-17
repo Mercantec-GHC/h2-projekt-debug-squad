@@ -36,12 +36,11 @@
             IsAvailable = true;
         }
 
-        public void Change(string number, int capacity, decimal pricePerNight, bool isAvailable)
+        public void Change(string number, int capacity, decimal pricePerNight)
         {
             Number = number;
             Capacity = capacity;
             PricePerNight = pricePerNight;
-            IsAvailable = isAvailable;
         }
 
         private static void Validate(string number, int capacity, decimal pricePerNight)
