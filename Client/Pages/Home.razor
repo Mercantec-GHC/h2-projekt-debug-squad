@@ -1,8 +1,7 @@
 ﻿@page "/"
 @inject HttpClient Http
 @inject NavigationManager Navigation
-@using Application.Rooms.Commands
-@using Client.Models
+@using Shared
 
 <!-- Hero Section -->
 <div class="hero text-center py-5 bg-beige">
@@ -56,8 +55,8 @@
 </div>
 
 @code {
-    private List<Client.Models.RoomDto> rooms = new();
-    private List<Client.Models.RoomDto> filteredRooms = new();
+    private List<RoomDto> rooms = new();
+    private List<RoomDto> filteredRooms = new();
 
     private int? _filterCapacity;
     private decimal? _filterMaxPrice;
@@ -72,10 +71,10 @@
 
     private async Task LoadAllRooms()
     {
-        rooms = await Http.GetFromJsonAsync<List<Client.Models.RoomDto>>("api/rooms")
-                ?? new List<Client.Models.RoomDto>();
+        rooms = await Http.GetFromJsonAsync<List<RoomDto>>("api/rooms")
+                ?? new List<RoomDto>();
 
-        filteredRooms = new List<Client.Models.RoomDto>(rooms);
+        filteredRooms = new List<RoomDto>(rooms);
     }
 
     private async Task ApplyFilters()

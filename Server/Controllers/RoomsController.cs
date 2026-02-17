@@ -1,7 +1,7 @@
 ﻿using Application.Rooms.Commands;
 using Application.Rooms.Handlers;
-using Application.Rooms.Queries;
 using Microsoft.AspNetCore.Mvc;
+using Shared;
 
 namespace Server.Controllers
 {

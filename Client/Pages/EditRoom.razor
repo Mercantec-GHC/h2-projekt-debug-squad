@@ -39,11 +39,11 @@ else
 @code {
     [Parameter] public int Id { get; set; }
 
-    private Client.Models.RoomDto? _room;
+    private Shared.RoomDto? _room;
 
     protected override async Task OnInitializedAsync()
     {
-        _room = await Http.GetFromJsonAsync<Client.Models.RoomDto>($"api/rooms/{Id}");
+        _room = await Http.GetFromJsonAsync<Shared.RoomDto>($"api/rooms/{Id}");
     }
 
     private async Task Save()

@@ -46,7 +46,7 @@ else
 @code {
     [Parameter] public int Id { get; set; }
 
-    private Client.Models.GuestDto? _guest;
+    private Shared.GuestDto? _guest;
     private string _message = string.Empty;
     private bool _isError = false;
 
@@ -54,7 +54,7 @@ else
     {
         try
         {
-            _guest = await Http.GetFromJsonAsync<Client.Models.GuestDto>($"api/guests/{Id}");
+            _guest = await Http.GetFromJsonAsync<Shared.GuestDto>($"api/guests/{Id}");
         }
         catch (Exception ex)
         {

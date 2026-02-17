@@ -90,7 +90,7 @@
     private string _email = string.Empty;
     private string _message = string.Empty;
 
-    private List<Client.Models.GuestDto> guests = new();
+    private List<Shared.GuestDto> guests = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -101,8 +101,8 @@
     {
         try
         {
-            guests = await Http.GetFromJsonAsync<List<Client.Models.GuestDto>>("api/guests")
-                     ?? new List<Client.Models.GuestDto>();
+            guests = await Http.GetFromJsonAsync<List<Shared.GuestDto>>("api/guests")
+                     ?? new List<Shared.GuestDto>();
         }
         catch (Exception ex)
         {

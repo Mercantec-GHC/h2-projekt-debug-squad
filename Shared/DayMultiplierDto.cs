@@ -1,4 +1,4 @@
-﻿namespace Application.DayMultipliers
+namespace Shared
 {
     public class DayMultiplierDto
     {

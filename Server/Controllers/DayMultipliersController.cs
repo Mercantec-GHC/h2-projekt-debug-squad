@@ -1,9 +1,7 @@
-﻿using Application.DayMultipliers;
+﻿using Application.DayMultipliers.Commands;
 using Application.DayMultipliers.Handlers;
-using Application.Rooms.Handlers;
-using Application.Rooms.Queries;
 using Microsoft.AspNetCore.Mvc;
-using Application.DayMultipliers.Commands;
+using Shared;
 
 namespace Server.Controllers
 {

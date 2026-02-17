@@ -1,7 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Rooms.Commands;
-using Application.Rooms.Queries;
 using Domain;
+using Shared;
 
 namespace Application.Rooms.Handlers
 {

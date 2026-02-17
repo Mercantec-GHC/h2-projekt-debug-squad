@@ -1,6 +1,6 @@
 ﻿using Application.Interfaces;
-using Application.Rooms.Queries;
 using Domain;
+using Shared;
 
 namespace Application.Bookings.Handlers
 {

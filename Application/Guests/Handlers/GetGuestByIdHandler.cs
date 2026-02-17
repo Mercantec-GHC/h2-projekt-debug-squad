@@ -1,7 +1,6 @@
-﻿using Application.Bookings;
-using Application.Guests.Queries;
+﻿using Application.Guests.Queries;
 using Application.Interfaces;
-using Application.Rooms.Queries;
+using Shared;
 
 namespace Application.Guests.Handlers
 {
