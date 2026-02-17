@@ -12,6 +12,7 @@ namespace Infrastructure.Data
         public DbSet<Room> Rooms { get; set; } = null!;
         public DbSet<Guest> Guests { get; set; } = null!;
         public DbSet<Booking> Bookings { get; set; } = null!;
+        public DbSet<DayMultiplier> DayMultipliers { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

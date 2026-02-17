@@ -5,6 +5,7 @@ using Infrastructure.Data;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Application.Bookings.Handlers;
+using Application.DayMultipliers.Handlers;
 
 namespace Server
 {
@@ -45,6 +46,9 @@ namespace Server
             builder.Services.AddScoped<GetBookingByIdHandler>();
             builder.Services.AddScoped<EditBookingHandler>();
             builder.Services.AddScoped<IBookingRepository, EfBookingRepository>();
+
+            builder.Services.AddScoped<GetAllDayMultipliersHandler>();
+            builder.Services.AddScoped<IDayMultiplierRepository, EfDayMultiplierRepository>();
 
 
 

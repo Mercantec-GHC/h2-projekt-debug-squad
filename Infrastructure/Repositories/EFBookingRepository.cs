@@ -14,16 +14,6 @@ namespace Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        //public async Task AddAsync(Booking booking, int guestId)
-        //{
-        //    Guest? guest = await _dbContext.Guests.SingleOrDefaultAsync(r => r.Id == guestId);
-        //    if (guest == null) return;
-
-        //    guest.AddBooking(booking);
-
-        //    await _dbContext.SaveChangesAsync();
-        //}
-
         public async Task SaveChangesAsync()
         {
             await _dbContext.SaveChangesAsync();

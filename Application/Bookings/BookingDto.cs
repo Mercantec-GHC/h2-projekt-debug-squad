@@ -1,8 +1,4 @@
-﻿using Domain;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Application.Rooms.Queries;
+﻿using Application.Rooms.Queries;
 
 namespace Application.Bookings
 {
