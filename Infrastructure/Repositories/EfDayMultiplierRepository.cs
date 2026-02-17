@@ -24,5 +24,10 @@ namespace Infrastructure.Repositories
         {
             return await _dbContext.DayMultipliers.ToListAsync();
         }
+
+        public async Task<DayMultiplier?> GetByIdAsync(int id)
+        {
+            return await _dbContext.DayMultipliers.FirstOrDefaultAsync(d => d.Id == id);
+        }
     }
 }

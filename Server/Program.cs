@@ -47,6 +47,7 @@ namespace Server
             builder.Services.AddScoped<EditBookingHandler>();
             builder.Services.AddScoped<IBookingRepository, EfBookingRepository>();
 
+            builder.Services.AddScoped<EditDayMultiplierHandler>();
             builder.Services.AddScoped<GetAllDayMultipliersHandler>();
             builder.Services.AddScoped<IDayMultiplierRepository, EfDayMultiplierRepository>();
 

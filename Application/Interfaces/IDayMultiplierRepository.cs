@@ -6,5 +6,6 @@ namespace Application.Interfaces
     {
         Task SaveChangesAsync();
         Task<List<DayMultiplier>> GetAllAsync();
+        Task<DayMultiplier?> GetByIdAsync(int id);
     }
 }
