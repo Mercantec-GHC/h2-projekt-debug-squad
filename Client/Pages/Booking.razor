@@ -122,8 +122,7 @@ else
 
         try
         {
-            var guest = await Http.GetFromJsonAsync<GuestDto>(
-                $"api/guests/byemail?email={Uri.EscapeDataString(GuestEmail)}");
+            var guest = await Http.GetFromJsonAsync<GuestDto>($"api/guests/byemail?email={Uri.EscapeDataString(GuestEmail)}");
 
             if (guest == null)
             {

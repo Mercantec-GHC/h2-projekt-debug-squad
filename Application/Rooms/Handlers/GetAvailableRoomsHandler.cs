@@ -44,7 +44,6 @@ namespace Application.Rooms.Handlers
                 .Select(r => new RoomDto(r.Id, r.Number, r.Capacity, r.PricePerNight))
                 .ToList();
         }
-
     }
 }
 
