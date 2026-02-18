@@ -10,6 +10,7 @@ namespace Infrastructure.Data
         }
 
         public DbSet<Room> Rooms { get; set; } = null!;
+        public DbSet<RoomType> RoomType { get; set; } = null!; //needs to be RoomTypes
         public DbSet<Guest> Guests { get; set; } = null!;
         public DbSet<Booking> Bookings { get; set; } = null!;
         public DbSet<DayMultiplier> DayMultipliers { get; set; } = null!;
@@ -30,6 +31,12 @@ namespace Infrastructure.Data
                 .WithMany()                              // We are not keeping a collection of Bookings inside Room
                 .HasForeignKey("RoomId")                 // The foreign key column in Booking table is RoomId
                 .OnDelete(DeleteBehavior.Restrict);      // Cannot delete a Room if there are any Bookings referencing it
+
+            modelBuilder.Entity<Room>()
+                .HasOne(room => room.RoomType)           // Each Room has one RoomType
+                .WithMany(roomType => roomType.Rooms)    // Each RoomType can have many Rooms
+                .HasForeignKey("RoomTypeId")             // The foreign key column in Room table is RoomTypeId
+                .OnDelete(DeleteBehavior.Restrict);      // Cannot delete a RoomType if there are any Rooms referencing it
         }
     }
 }

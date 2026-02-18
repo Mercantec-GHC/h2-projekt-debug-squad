@@ -22,18 +22,19 @@ namespace Application.Bookings.Handlers
 
 
 
-            return guest.Bookings.Select(b => new BookingDto(
-                b.Id,
-                new RoomDto(
-                    b.Room.Id,
-                    b.Room.Number,
-                    b.Room.Capacity,
-                    b.Room.PricePerNight
+            //return guest.Bookings.Select(b => new BookingDto(
+            //    b.Id,
+            //    new RoomDto(
+            //        b.Room.Id,
+            //        b.Room.Number,
+            //        b.Room.Capacity,
+            //        b.Room.PricePerNight
              
-                ),
-                b.CheckInDate,
-                b.CheckOutDate
-                )).ToList();
+            //    ),
+            //    b.CheckInDate,
+            //    b.CheckOutDate
+            //    )).ToList();
+            return null;
         }
     }
 }

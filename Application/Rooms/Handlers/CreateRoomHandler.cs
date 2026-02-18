@@ -15,10 +15,11 @@ namespace Application.Rooms.Handlers
 
         public async Task Handle(CreateRoomCommand command)
         {
-            var room = new Room(command.Number, command.Capacity, command.PricePerNight, command.IsAvailable);
+            //var room = new Room(command.Number, command.Capacity, command.PricePerNight, command.IsAvailable);
 
-            _repository.Add(room);
-            await _repository.SaveChangesAsync();
+            //_repository.Add(room);
+            //await _repository.SaveChangesAsync();
+            return;
         }
     }
 }

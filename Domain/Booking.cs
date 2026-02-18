@@ -13,7 +13,7 @@
         // calculated property
         // result of CheckOutDate - CheckInDate) = timespan
         // timespan.TotalDays = number of days
-        public decimal TotalPrice => Room.PricePerNight * (decimal)(CheckOutDate - CheckInDate).TotalDays;
+        public decimal TotalPrice => Room.RoomType.PricePerNight * (decimal)(CheckOutDate - CheckInDate).TotalDays;
 
         private Booking() { }
 
@@ -25,10 +25,6 @@
             Room = room;
             CheckInDate = checkInDate.Date;
             CheckOutDate = checkOutDate.Date;
-
-            //room.MarkAsUnavailable();
-
-            guest.Bookings?.Add(this);
         }
 
         private static void Validate(Guest guest, Room room, DateTime checkInDate, DateTime checkOutDate)
@@ -38,8 +34,6 @@
 
             if (checkInDate.Date >= checkOutDate.Date)
                 throw new ArgumentException("Check-out date must be after check-in date");
-            //if (!room.IsAvailable)
-            //    throw new InvalidOperationException("Room is not available");
         }
 
         public void ChangeDates(DateTime newCheckIn, DateTime newCheckOut)
@@ -49,12 +43,6 @@
 
             CheckInDate = newCheckIn.Date;
             CheckOutDate = newCheckOut.Date;
-        }
-
-        public void Cancel()
-        {
-            Room.MarkAsAvailable();
-            Guest.Bookings?.Remove(this);
         }
     }
 }

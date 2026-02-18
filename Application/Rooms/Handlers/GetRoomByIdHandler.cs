@@ -18,7 +18,8 @@ namespace Application.Rooms.Handlers
             Room? room = await _repository.GetByIdAsync(id);
             if (room == null) return null;
 
-            return new RoomDto(room.Id, room.Number, room.Capacity, room.PricePerNight);
+            //return new RoomDto(room.Id, room.Number, room.Capacity, room.PricePerNight);
+            return null;
         }
     }
 }
