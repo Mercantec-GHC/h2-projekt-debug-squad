@@ -1,6 +1,7 @@
 using Application.Interfaces;
 using Application.Rooms.Handlers;
 using Application.Guests.Handlers;
+using Application.RoomTypes.Handlers;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -50,6 +51,9 @@ namespace Server
             builder.Services.AddScoped<EditDayMultiplierHandler>();
             builder.Services.AddScoped<GetAllDayMultipliersHandler>();
             builder.Services.AddScoped<IDayMultiplierRepository, EfDayMultiplierRepository>();
+
+            builder.Services.AddScoped<GetAllRoomTypesHandler>();
+            builder.Services.AddScoped<IRoomTypeRepository, EfRoomTypeRepository>();
 
 
 

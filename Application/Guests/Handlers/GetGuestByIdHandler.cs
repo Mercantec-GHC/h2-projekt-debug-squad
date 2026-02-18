@@ -21,25 +21,28 @@ namespace Application.Guests.Handlers
                 return null;
 
             // Map entity to DTO
-           // return new GuestDto(
-           //    guest.Id,
-           //    guest.FullName,
-           //    guest.PhoneNumber,
-           //    guest.Email,
-           //    guest.Bookings.Select(b => new BookingDto(
-           //        b.Id,
-           //        new RoomDto(
-           //            b.Room.Id,
-           //            b.Room.Number,
-           //            b.Room.Capacity,
-           //            b.Room.PricePerNight
-           //        ),
-           //        b.CheckInDate,
-           //        b.CheckOutDate
-           //    )).ToList()
-           //);
-            return null;
-
+            return new GuestDto
+            {
+                Id = guest.Id,
+                FullName = guest.FullName,
+                PhoneNumber = guest.PhoneNumber,
+                Email = guest.Email,
+                Bookings = guest.Bookings.Select(b => new BookingDto
+                {
+                    Id = b.Id,
+                    Room = new RoomDto
+                    {
+                        Id = b.Room.Id,
+                        Number = b.Room.Number,
+                        Capacity = b.Room.RoomType.Capacity,
+                        PricePerNight = b.Room.RoomType.PricePerNight
+                    },
+                    CheckInDate = b.CheckInDate,
+                    CheckOutDate = b.CheckOutDate
+                }).ToList()
+            };
         }
+
+
     }
 }

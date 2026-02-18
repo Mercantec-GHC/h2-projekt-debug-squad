@@ -34,16 +34,22 @@ namespace Application.Rooms.Handlers
             var availableRooms = rooms
                 .Where(r => !bookedRoomIds.Contains(r.Id));
 
-            //if (command.Capacity.HasValue)
-            //    availableRooms = availableRooms.Where(r => r.Capacity == command.Capacity.Value);
+            if (command.Capacity.HasValue)
+                availableRooms = availableRooms.Where(r => r.RoomType.Capacity >= command.Capacity.Value);
 
-            //if (command.MaxPrice.HasValue)
-            //    availableRooms = availableRooms.Where(r => r.PricePerNight <= command.MaxPrice.Value);
+            if (command.MaxPrice.HasValue)
+                availableRooms = availableRooms.Where(r => r.RoomType.PricePerNight <= command.MaxPrice.Value);
 
-            //return availableRooms
-            //    .Select(r => new RoomDto(r.Id, r.Number, r.Capacity, r.PricePerNight))
-            //    .ToList();
-            return null;
+            return availableRooms
+                .Select(r => new RoomDto(
+                    r.Id,
+                    r.Number,
+                    r.RoomType.Id,
+                    r.RoomType.Name,
+                    r.RoomType.Capacity,
+                    r.RoomType.PricePerNight
+                ))
+                .ToList();
         }
     }
 }

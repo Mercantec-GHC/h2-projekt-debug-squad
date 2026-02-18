@@ -10,7 +10,7 @@ namespace Infrastructure.Data
         }
 
         public DbSet<Room> Rooms { get; set; } = null!;
-        public DbSet<RoomType> RoomType { get; set; } = null!; //needs to be RoomTypes
+        public DbSet<RoomType> RoomTypes { get; set; } = null!;
         public DbSet<Guest> Guests { get; set; } = null!;
         public DbSet<Booking> Bookings { get; set; } = null!;
         public DbSet<DayMultiplier> DayMultipliers { get; set; } = null!;
@@ -19,6 +19,9 @@ namespace Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
             // Calls the base implementation of OnModelCreating, which is a good practice to ensure any default behavior is preserved.
+
+            modelBuilder.Entity<RoomType>()
+                .ToTable("RoomType");
 
             modelBuilder.Entity<Booking>()
                 .HasOne(booking => booking.Guest)        // Each Booking has one Guest

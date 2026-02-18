@@ -20,9 +20,8 @@ namespace Application.Rooms.Handlers
             if (room == null)
                 throw new Exception("Room not found.");
 
-            //room.Change(roomDto.Number, roomDto.Capacity, roomDto.PricePerNight);
-            //await _repository.SaveChangesAsync();
-            return;
+            room.RoomType.Change(roomDto.Capacity, roomDto.PricePerNight);
+            await _repository.SaveChangesAsync();
         }
     }
 }

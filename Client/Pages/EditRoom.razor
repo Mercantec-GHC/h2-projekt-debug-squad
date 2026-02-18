@@ -1,6 +1,7 @@
 ﻿@page "/manage/rooms/edit/{Id:int}"
 @inject HttpClient Http
 @inject NavigationManager Nav
+@using Shared
 
 <h3>Edit Room</h3>
 
@@ -13,7 +14,12 @@ else
     <div class="card p-4 shadow-sm">
         <div class="mb-3">
             <label class="form-label">Room number</label>
-            <input class="form-control" @bind="_room.Number" />
+            <input class="form-control" value="@_room.Number" disabled />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Room Type</label>
+            <input class="form-control" value="@_room.RoomTypeName" disabled />
         </div>
 
         <div class="mb-3">
@@ -25,6 +31,8 @@ else
             <label class="form-label">Price per night</label>
             <input class="form-control" type="number" step="0.01" @bind="_room.PricePerNight" />
         </div>
+
+        <p class="text-muted small">Note: Editing capacity and price will affect all rooms of this type.</p>
 
         <button class="btn btn-warning w-100" @onclick="Save">
             Save
@@ -39,11 +47,11 @@ else
 @code {
     [Parameter] public int Id { get; set; }
 
-    private Shared.RoomDto? _room;
+    private RoomDto? _room;
 
     protected override async Task OnInitializedAsync()
     {
-        _room = await Http.GetFromJsonAsync<Shared.RoomDto>($"api/rooms/{Id}");
+        _room = await Http.GetFromJsonAsync<RoomDto>($"api/rooms/{Id}");
     }
 
     private async Task Save()

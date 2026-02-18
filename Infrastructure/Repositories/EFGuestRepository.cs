@@ -28,7 +28,8 @@ namespace Infrastructure.Repositories
         {
             return await _dbContext.Guests
                 .Include(g => g.Bookings)
-                .ThenInclude(b => b.Room)
+                    .ThenInclude(b => b.Room)
+                        .ThenInclude(r => r.RoomType)
                 .ToListAsync();
         }
 
@@ -36,7 +37,8 @@ namespace Infrastructure.Repositories
         {
             Guest? guest = await _dbContext.Guests
                 .Include(g => g.Bookings)
-                .ThenInclude(b => b.Room)
+                    .ThenInclude(b => b.Room)
+                        .ThenInclude(r => r.RoomType)
                 .SingleOrDefaultAsync(g => g.Id == id);
 
             return guest;

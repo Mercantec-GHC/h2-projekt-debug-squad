@@ -20,21 +20,19 @@ namespace Application.Bookings.Handlers
             if (guest is null)
                 return null;
 
-
-
-            //return guest.Bookings.Select(b => new BookingDto(
-            //    b.Id,
-            //    new RoomDto(
-            //        b.Room.Id,
-            //        b.Room.Number,
-            //        b.Room.Capacity,
-            //        b.Room.PricePerNight
-             
-            //    ),
-            //    b.CheckInDate,
-            //    b.CheckOutDate
-            //    )).ToList();
-            return null;
+            return guest.Bookings.Select(b => new BookingDto(
+                b.Id,
+                new RoomDto(
+                    b.Room.Id,
+                    b.Room.Number,
+                    b.Room.RoomType.Id,
+                    b.Room.RoomType.Name,
+                    b.Room.RoomType.Capacity,
+                    b.Room.RoomType.PricePerNight
+                ),
+                b.CheckInDate,
+                b.CheckOutDate
+                )).ToList();
         }
     }
 }

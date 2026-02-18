@@ -27,12 +27,16 @@ namespace Infrastructure.Repositories
 
         public async Task<List<Room>> GetAllAsync()
         {
-            return await _dbContext.Rooms.ToListAsync();
+            return await _dbContext.Rooms
+                .Include(r => r.RoomType)
+                .ToListAsync();
         }
 
         public async Task<Room?> GetByIdAsync(int id)
         {
-            return await _dbContext.Rooms.SingleOrDefaultAsync(r => r.Id == id);
+            return await _dbContext.Rooms
+                .Include(r => r.RoomType)
+                .SingleOrDefaultAsync(r => r.Id == id);
         }
 
         public void Delete(Room room)

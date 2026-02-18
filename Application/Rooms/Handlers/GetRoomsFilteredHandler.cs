@@ -1,7 +1,6 @@
 ﻿using Application.Interfaces;
 using Domain;
 using Shared;
-using System.Linq.Expressions;
 
 namespace Application.Rooms.Handlers
 {
@@ -14,18 +13,18 @@ namespace Application.Rooms.Handlers
             _repository = repository;
         }
 
-        public async Task<List<RoomDto>> Handle(
-            Expression<Func<Room, object>> orderBy,
-            int roomAmount,
-            bool showOnlyAvailable,
-            bool orderDescending
-            )
+        public async Task<List<RoomDto>> Handle()
         {
-            //List<Room> rooms = await _repository.GetFilteredAsync(orderBy, roomAmount,
-            //showOnlyAvailable, orderDescending);
+            List<Room> rooms = await _repository.GetAllAsync();
 
-            //return rooms.Select(room => new RoomDto(room.Id, room.Number, room.Capacity, room.PricePerNight)).ToList();
-            return null;
+            return rooms.Select(room => new RoomDto(
+                room.Id,
+                room.Number,
+                room.RoomType.Id,
+                room.RoomType.Name,
+                room.RoomType.Capacity,
+                room.RoomType.PricePerNight
+            )).ToList();
         }
     }
 }

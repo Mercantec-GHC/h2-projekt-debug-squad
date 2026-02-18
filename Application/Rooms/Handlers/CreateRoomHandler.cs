@@ -6,20 +6,24 @@ namespace Application.Rooms.Handlers
 {
     public class CreateRoomHandler
     {
-        private readonly IRoomRepository _repository;
+        private readonly IRoomRepository _roomRepository;
+        private readonly IRoomTypeRepository _roomTypeRepository;
 
-        public CreateRoomHandler(IRoomRepository repository)
+        public CreateRoomHandler(IRoomRepository roomRepository, IRoomTypeRepository roomTypeRepository)
         {
-            _repository = repository;
+            _roomRepository = roomRepository;
+            _roomTypeRepository = roomTypeRepository;
         }
 
         public async Task Handle(CreateRoomCommand command)
         {
-            //var room = new Room(command.Number, command.Capacity, command.PricePerNight, command.IsAvailable);
+            var roomType = await _roomTypeRepository.GetByIdAsync(command.RoomTypeId);
+            if (roomType == null) throw new ArgumentException("Room type not found");
 
-            //_repository.Add(room);
-            //await _repository.SaveChangesAsync();
-            return;
+            var room = new Room(command.Number, roomType);
+
+            _roomRepository.Add(room);
+            await _roomRepository.SaveChangesAsync();
         }
     }
 }
