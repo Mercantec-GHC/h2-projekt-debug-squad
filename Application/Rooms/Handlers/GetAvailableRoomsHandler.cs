@@ -22,27 +22,29 @@ namespace Application.Rooms.Handlers
             var requestedCheckOut = command.CheckOutDate.Date;
 
             var rooms = await _roomRepository.GetAllAsync();
-            List<Booking> bookings = await _bookingRepository.GetAllAsync();
+            var bookings = await _bookingRepository.GetAllAsync();
 
             var bookedRoomIds = bookings
-                .Where(b =>
-                     b.CheckInDate.Date < requestedCheckOut &&
-                    b.CheckOutDate.Date > requestedCheckIn)
+                .Where(b => b.CheckInDate.Date < requestedCheckOut &&
+                            b.CheckOutDate.Date > requestedCheckIn)
                 .Select(b => b.Room.Id)
                 .Distinct()
                 .ToList();
 
             var availableRooms = rooms
-                .Where(r => !bookedRoomIds.Contains(r.Id))
-                .Select(r => new RoomDto(
-                    r.Id, 
-                    r.Number, 
-                    r.Capacity, 
-                    r.PricePerNight
-                   
-                    )).ToList();
+                .Where(r => !bookedRoomIds.Contains(r.Id));
 
-            return availableRooms;
+            if (command.Capacity.HasValue)
+                availableRooms = availableRooms.Where(r => r.Capacity >= command.Capacity.Value);
+
+            if (command.MaxPrice.HasValue)
+                availableRooms = availableRooms.Where(r => r.PricePerNight <= command.MaxPrice.Value);
+
+            return availableRooms
+                .Select(r => new RoomDto(r.Id, r.Number, r.Capacity, r.PricePerNight))
+                .ToList();
         }
+
     }
 }
+
