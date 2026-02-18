@@ -35,7 +35,7 @@ namespace Application.Rooms.Handlers
                 .Where(r => !bookedRoomIds.Contains(r.Id));
 
             if (command.Capacity.HasValue)
-                availableRooms = availableRooms.Where(r => r.Capacity >= command.Capacity.Value);
+                availableRooms = availableRooms.Where(r => r.Capacity == command.Capacity.Value);
 
             if (command.MaxPrice.HasValue)
                 availableRooms = availableRooms.Where(r => r.PricePerNight <= command.MaxPrice.Value);
