@@ -16,7 +16,7 @@ namespace Application.Rooms.Handlers
             _bookingRepository = bookingRepository;
         }
 
-        public async Task<List<RoomDto>> Handle(GetAvailableRoomsCommand command)
+        public async Task<List<RoomDto>?> Handle(GetAvailableRoomsCommand command)
         {
             var requestedCheckIn = command.CheckInDate.Date;
             var requestedCheckOut = command.CheckOutDate.Date;
@@ -34,15 +34,16 @@ namespace Application.Rooms.Handlers
             var availableRooms = rooms
                 .Where(r => !bookedRoomIds.Contains(r.Id));
 
-            if (command.Capacity.HasValue)
-                availableRooms = availableRooms.Where(r => r.Capacity == command.Capacity.Value);
+            //if (command.Capacity.HasValue)
+            //    availableRooms = availableRooms.Where(r => r.Capacity == command.Capacity.Value);
 
-            if (command.MaxPrice.HasValue)
-                availableRooms = availableRooms.Where(r => r.PricePerNight <= command.MaxPrice.Value);
+            //if (command.MaxPrice.HasValue)
+            //    availableRooms = availableRooms.Where(r => r.PricePerNight <= command.MaxPrice.Value);
 
-            return availableRooms
-                .Select(r => new RoomDto(r.Id, r.Number, r.Capacity, r.PricePerNight))
-                .ToList();
+            //return availableRooms
+            //    .Select(r => new RoomDto(r.Id, r.Number, r.Capacity, r.PricePerNight))
+            //    .ToList();
+            return null;
         }
 
     }

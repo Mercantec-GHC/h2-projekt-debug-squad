@@ -40,20 +40,20 @@ namespace Infrastructure.Repositories
             _dbContext.Rooms.Remove(room);
         }
 
-        public async Task<List<Room>> GetFilteredAsync(
-            Expression<Func<Room, object>> orderBy,
-            int roomAmount = 50,
-            bool showOnlyAvailable = true,
-            bool orderDescending = true)
-        {
-            var query = _dbContext.Rooms
-                .Where(r => r.IsAvailable == showOnlyAvailable).Take(roomAmount);
+        //public async Task<List<Room>> GetFilteredAsync(
+        //    Expression<Func<Room, object>> orderBy,
+        //    int roomAmount = 50,
+        //    bool showOnlyAvailable = true,
+        //    bool orderDescending = true)
+        //{
+        //    var query = _dbContext.Rooms
+        //        .Where(r => r.IsAvailable == showOnlyAvailable).Take(roomAmount);
 
-            query = orderDescending
-                ? query.OrderByDescending(orderBy)
-                : query.OrderBy(orderBy);
+        //    query = orderDescending
+        //        ? query.OrderByDescending(orderBy)
+        //        : query.OrderBy(orderBy);
 
-            return await query.ToListAsync();
-        }
+        //    return await query.ToListAsync();
+        //}
     }
 }

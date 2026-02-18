@@ -6,50 +6,21 @@
 
         public string Number { get; private set; } = string.Empty;
 
-        public int Capacity { get; private set; }
-
-        public decimal PricePerNight { get; private set; }
-
-        public bool IsAvailable { get; private set; }
+        public RoomType RoomType { get; private set; } = null!;
 
         private Room() { }
 
-        public Room(string number, int capacity, decimal pricePerNight, bool isAvailable = true)
+        public Room(string number, RoomType roomType)
         {
-            Validate(number, capacity, pricePerNight);
+            Validate(number);
 
             Number = number;
-            Capacity = capacity;
-            PricePerNight = pricePerNight;
-            IsAvailable = isAvailable;
+            RoomType = roomType;
         }
 
-        //public void MarkAsUnavailable()
-        //{
-        //    if (!IsAvailable) throw new InvalidOperationException("Room is already unavailable");
-        //    IsAvailable = false;
-        //}
-
-        public void MarkAsAvailable()
-        {
-            if (IsAvailable) throw new InvalidOperationException("Room is already available");
-            IsAvailable = true;
-        }
-
-        public void Change(string number, int capacity, decimal pricePerNight)
-        {
-            Number = number;
-            Capacity = capacity;
-            PricePerNight = pricePerNight;
-        }
-
-        private static void Validate(string number, int capacity, decimal pricePerNight)
+        private static void Validate(string number)
         {
             if (string.IsNullOrWhiteSpace(number)) throw new ArgumentException("Room number is required");
-
-            if (capacity <= 0) throw new ArgumentException("Capacity must be greater than 0");
-
-            if (pricePerNight <= 0) throw new ArgumentException("Price must be greater than 0");
         }
     }
 }

@@ -16,23 +16,24 @@ namespace Application.Guests.Handlers
         public async Task<List<GuestDto>> Handle()
         {
             List<Guest> guests = await _repository.GetAllAsync();
-            return guests.Select(g => new GuestDto(
-                g.Id,
-                g.FullName,
-                g.PhoneNumber,
-                g.Email,
-                g.Bookings.Select(b => new BookingDto(
-                    b.Id,
-                    new RoomDto(
-                        b.Room.Id,
-                        b.Room.Number,
-                        b.Room.Capacity,
-                        b.Room.PricePerNight
-                    ),
-                    b.CheckInDate,
-                    b.CheckOutDate
-                )).ToList()
-            )).ToList();
+            //return guests.Select(g => new GuestDto(
+            //    g.Id,
+            //    g.FullName,
+            //    g.PhoneNumber,
+            //    g.Email,
+            //    g.Bookings.Select(b => new BookingDto(
+            //        b.Id,
+            //        new RoomDto(
+            //            b.Room.Id,
+            //            b.Room.Number,
+            //            b.Room.Capacity,
+            //            b.Room.PricePerNight
+            //        ),
+            //        b.CheckInDate,
+            //        b.CheckOutDate
+            //    )).ToList()
+            //)).ToList();
+            return null;
         }
     }
 }

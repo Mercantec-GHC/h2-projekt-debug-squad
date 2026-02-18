@@ -17,17 +17,18 @@ namespace Application.Bookings.Handlers
         {
             List<Booking> bookings = await _repository.GetAllAsync();
 
-            return bookings.Select(b => new BookingDto(
-                    b.Id,
-                    new RoomDto(
-                        b.Room.Id,
-                        b.Room.Number,
-                        b.Room.Capacity,
-                        b.Room.PricePerNight  
-                    ),
-                    b.CheckInDate,
-                    b.CheckOutDate
-            )).ToList();
+            //return bookings.Select(b => new BookingDto(
+            //        b.Id,
+            //        new RoomDto(
+            //            b.Room.Id,
+            //            b.Room.Number,
+            //            b.Room.Capacity,
+            //            b.Room.PricePerNight  
+            //        ),
+            //        b.CheckInDate,
+            //        b.CheckOutDate
+            //)).ToList();
+            return null;
         }
     }
 }

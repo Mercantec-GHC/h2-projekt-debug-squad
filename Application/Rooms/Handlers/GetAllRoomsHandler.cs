@@ -13,11 +13,12 @@ namespace Application.Rooms.Handlers
             _repository = repository;
         }
 
-        public async Task<List<RoomDto>> Handle()
+        public async Task<List<RoomDto>?> Handle()
         {
             List<Room> rooms = await _repository.GetAllAsync();
 
-            return rooms.Select(room => new RoomDto(room.Id, room.Number, room.Capacity, room.PricePerNight)).ToList();
+            //return rooms.Select(room => new RoomDto(room.Id, room.Number, room.Capacity, room.PricePerNight)).ToList();
+            return null;
         }
     }
 }
