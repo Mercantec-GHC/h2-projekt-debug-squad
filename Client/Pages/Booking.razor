@@ -13,7 +13,7 @@
     <h4>Step 1: Confirm Guests</h4>
 
     <p><strong>Room:</strong> @SelectedRoom.Number</p>
-    <p><strong>Price per night:</strong> $@SelectedRoom.PricePerNight</p>
+    <p><strong>Price per night:</strong> $@SelectedRoom.RoomType.PricePerNight</p>
 
     <p><strong>Check-in:</strong> @CheckInDate.ToShortDateString()</p>
     <p><strong>Check-out:</strong> @CheckOutDate.ToShortDateString()</p>
@@ -53,7 +53,7 @@ else
     <p><strong>Check-out:</strong> @CheckOutDate.ToShortDateString()</p>
     <p><strong>Nights:</strong> @NumberOfNights</p>
     <p><strong>Guests:</strong> @SelectedCapacity</p>
-    <p><strong>Price per night:</strong> $@SelectedRoom.PricePerNight</p>
+    <p><strong>Price per night:</strong> $@SelectedRoom.RoomType.PricePerNight</p>
     <p><strong>Total Price:</strong> $@TotalPrice</p>
 
     <button class="btn btn-primary w-100" @onclick="FinishBooking">Confirm Booking</button>
@@ -81,7 +81,7 @@ else
     private string Message = string.Empty;
 
     private int NumberOfNights => (CheckOutDate - CheckInDate).Days;
-    private decimal TotalPrice => SelectedRoom != null ? SelectedRoom.PricePerNight * NumberOfNights : 0;
+    private decimal TotalPrice => SelectedRoom != null ? SelectedRoom.RoomType.PricePerNight * NumberOfNights : 0;
 
     protected override async Task OnInitializedAsync()
     {

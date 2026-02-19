@@ -30,9 +30,9 @@
                     <div class="card shadow-sm h-100">
                         <div class="card-body">
                             <h5 class="card-title">Room @room.Number</h5>
-                            <p class="card-text">Type: @room.RoomTypeName</p>
-                            <p class="card-text">Capacity: @room.Capacity</p>
-                            <p class="card-text">Price per night: $@room.PricePerNight</p>
+                            <p class="card-text">Type: @room.RoomType.Name</p>
+                            <p class="card-text">Capacity: @room.RoomType.Capacity</p>
+                            <p class="card-text">Price per night: $@room.RoomType.PricePerNight</p>
 
                             <button class="btn btn-outline-primary w-100 mb-2"
                                     @onclick="() => ViewRoomDetails(room.Id)">
