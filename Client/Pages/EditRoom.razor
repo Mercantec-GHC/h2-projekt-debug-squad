@@ -19,17 +19,17 @@ else
 
         <div class="mb-3">
             <label class="form-label">Room Type</label>
-            <input class="form-control" value="@_room.RoomTypeName" disabled />
+            <input class="form-control" value="@_room.RoomType.Name" disabled />
         </div>
 
         <div class="mb-3">
             <label class="form-label">Capacity</label>
-            <input class="form-control" type="number" @bind="_room.Capacity" />
+            <input class="form-control" type="number" @bind="_room.RoomType.Capacity" />
         </div>
 
         <div class="mb-3">
             <label class="form-label">Price per night</label>
-            <input class="form-control" type="number" step="0.01" @bind="_room.PricePerNight" />
+            <input class="form-control" type="number" step="0.01" @bind="_room.RoomType.PricePerNight" />
         </div>
 
         <p class="text-muted small">Note: Editing capacity and price will affect all rooms of this type.</p>

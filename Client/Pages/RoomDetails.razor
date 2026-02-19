@@ -13,9 +13,9 @@
         <h3>@room.Number</h3>
 
         <p>Room ID: @room.Id</p>
-        <p>Type: @room.RoomTypeName</p>
-        <p>Capacity: @room.Capacity</p>
-        <p>Price per Night: $@room.PricePerNight</p>
+        <p>Type: @room.RoomType.Name</p>
+        <p>Capacity: @room.RoomType.Capacity</p>
+        <p>Price per Night: $@room.RoomType.PricePerNight</p>
 
       
             <button class="btn btn-success w-100" @onclick="() => NavigateToBooking(room.Id)">
