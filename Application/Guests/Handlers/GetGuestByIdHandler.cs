@@ -1,5 +1,6 @@
 ﻿using Application.Guests.Queries;
 using Application.Interfaces;
+using Domain;
 using Shared;
 
 namespace Application.Guests.Handlers
@@ -31,12 +32,16 @@ namespace Application.Guests.Handlers
                 {
                     Id = b.Id,
                     Room = new RoomDto
-                    {
-                        Id = b.Room.Id,
-                        Number = b.Room.Number,
-                        Capacity = b.Room.RoomType.Capacity,
-                        PricePerNight = b.Room.RoomType.PricePerNight
-                    },
+                    (
+                        b.Room.Id,
+                        b.Room.Number,
+                        new RoomTypeDto(
+                            b.Room.RoomType.Id,
+                            b.Room.RoomType.Name,
+                            b.Room.RoomType.Capacity,
+                            b.Room.RoomType.PricePerNight
+                        )
+                    ),
                     CheckInDate = b.CheckInDate,
                     CheckOutDate = b.CheckOutDate
                 }).ToList()

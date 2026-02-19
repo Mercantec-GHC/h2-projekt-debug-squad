@@ -23,14 +23,6 @@ namespace Application.Guests.Handlers
                 g.Email,
                 g.Bookings.Select(b => new BookingDto(
                     b.Id,
-                    new RoomDto(
-                        b.Room.Id,
-                        b.Room.Number,
-                        b.Room.RoomType.Id,
-                        b.Room.RoomType.Name,
-                        b.Room.RoomType.Capacity,
-                        b.Room.RoomType.PricePerNight
-                    ),
                     b.CheckInDate,
                     b.CheckOutDate
                 )).ToList()

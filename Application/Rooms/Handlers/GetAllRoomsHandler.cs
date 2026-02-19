@@ -6,24 +6,26 @@ namespace Application.Rooms.Handlers
 {
     public class GetAllRoomsHandler
     {
-        private readonly IRoomRepository _repository;
+        private readonly IRoomRepository _roomRepository;
 
-        public GetAllRoomsHandler(IRoomRepository repository)
+        public GetAllRoomsHandler(IRoomRepository roomRepository)
         {
-            _repository = repository;
+            _roomRepository = roomRepository;
         }
 
         public async Task<List<RoomDto>?> Handle()
         {
-            List<Room> rooms = await _repository.GetAllAsync();
+            List<Room> rooms = await _roomRepository.GetAllAsync();
 
             return rooms.Select(room => new RoomDto(
                 room.Id,
                 room.Number,
-                room.RoomType.Id,
-                room.RoomType.Name,
-                room.RoomType.Capacity,
-                room.RoomType.PricePerNight
+                new RoomTypeDto(
+                    room.RoomType.Id,
+                    room.RoomType.Name,
+                    room.RoomType.Capacity,
+                    room.RoomType.PricePerNight
+                    )
             )).ToList();
         }
     }

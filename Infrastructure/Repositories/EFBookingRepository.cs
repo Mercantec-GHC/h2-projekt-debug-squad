@@ -19,11 +19,23 @@ namespace Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
+        //public async Task<List<Booking>> GetAllAsync(bool includeRoom = false)
+        //{
+        //    var bookings = _dbContext.Bookings;
+
+        //    if (includeRoom)
+        //    {
+        //        bookings.Include(b => b.Room)
+        //        .ThenInclude(r => r.RoomType);
+        //    }
+
+        //    return await bookings.ToListAsync();
+        //}
+
         public async Task<List<Booking>> GetAllAsync()
         {
             return await _dbContext.Bookings
                 .Include(b => b.Room)
-                    .ThenInclude(r => r.RoomType)
                 .ToListAsync();
         }
 

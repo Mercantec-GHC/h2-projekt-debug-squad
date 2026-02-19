@@ -18,6 +18,10 @@
             RoomType = roomType;
         }
 
+        public void ChangeRoomType(RoomType roomType) 
+        { 
+            RoomType = roomType; 
+        }
         private static void Validate(string number)
         {
             if (string.IsNullOrWhiteSpace(number)) throw new ArgumentException("Room number is required");
