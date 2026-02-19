@@ -21,10 +21,12 @@ namespace Application.Rooms.Handlers
             return new RoomDto(
                 room.Id,
                 room.Number,
-                room.RoomType.Id,
-                room.RoomType.Name,
-                room.RoomType.Capacity,
-                room.RoomType.PricePerNight
+                new RoomTypeDto(
+                    room.RoomType.Id,
+                    room.RoomType.Name,
+                    room.RoomType.Capacity,
+                    room.RoomType.PricePerNight
+                )
             );
         }
     }

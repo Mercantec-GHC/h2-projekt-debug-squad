@@ -25,10 +25,12 @@ namespace Application.Bookings.Handlers
                 new RoomDto(
                     b.Room.Id,
                     b.Room.Number,
-                    b.Room.RoomType.Id,
-                    b.Room.RoomType.Name,
-                    b.Room.RoomType.Capacity,
-                    b.Room.RoomType.PricePerNight
+                    new RoomTypeDto(
+                        b.Room.RoomType.Id,
+                        b.Room.RoomType.Name,
+                        b.Room.RoomType.Capacity,
+                        b.Room.RoomType.PricePerNight
+                    )
                 ),
                 b.CheckInDate,
                 b.CheckOutDate

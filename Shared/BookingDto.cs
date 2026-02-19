@@ -16,5 +16,12 @@ namespace Shared
             CheckInDate = checkInDate;
             CheckOutDate = checkOutDate;
         }
+
+        public BookingDto(int id, DateTime checkInDate, DateTime checkOutDate)
+        {
+            Id = id;
+            CheckInDate = checkInDate;
+            CheckOutDate = checkOutDate;
+        }
     }
 }

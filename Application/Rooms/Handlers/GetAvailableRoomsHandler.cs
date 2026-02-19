@@ -44,10 +44,12 @@ namespace Application.Rooms.Handlers
                 .Select(r => new RoomDto(
                     r.Id,
                     r.Number,
-                    r.RoomType.Id,
-                    r.RoomType.Name,
-                    r.RoomType.Capacity,
-                    r.RoomType.PricePerNight
+                    new RoomTypeDto(
+                        r.RoomType.Id,
+                        r.RoomType.Name,
+                        r.RoomType.Capacity,
+                        r.RoomType.PricePerNight
+                    )
                 ))
                 .ToList();
         }
