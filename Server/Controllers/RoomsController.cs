@@ -51,9 +51,9 @@ namespace Server.Controllers
         }
 
         [HttpPost("edit")]
-        public async Task<IActionResult> Edit([FromServices] EditRoomHandler editRoomHandler, [FromBody] RoomDto room)
+        public async Task<IActionResult> Edit([FromServices] EditRoomHandler editRoomHandler, [FromBody] EditRoomCommand command)
         {
-            await editRoomHandler.Handle(room);
+            await editRoomHandler.Handle(command);
 
             return Ok("Room updated successfully");
         }
