@@ -11,7 +11,7 @@
 
 <!-- Room Filters -->
 <div class="filters mt-4 mb-3 d-flex gap-3 justify-content-center flex-wrap">
-    <input type="date" @bind="CheckInDate" min="@DateTime.Today.ToString("yyyy-MM-dd")" class="form-control w-auto" />
+    <input type="date" @bind="CheckInDate" min="@DateTime.Today.ToString("yyyy-MM-dd")" class="form-control w-auto" /> 
     <input type="date" @bind="CheckOutDate" min="@CheckInDate.AddDays(1).ToString("yyyy-MM-dd")" class="form-control w-auto" />
 
     <input type="number" placeholder="Capacity" @bind="_filterCapacity" class="form-control w-auto" />
@@ -57,7 +57,7 @@
 
 @code {
     private List<RoomDto> rooms = new();
-    private List<RoomDto> filteredRooms = new();
+    private List<RoomDto> filteredRooms = new(); 
 
     private int? _filterCapacity;
     private decimal? _filterMaxPrice;
@@ -72,7 +72,7 @@
 
     private async Task LoadAllRooms()
     {
-        rooms = await Http.GetFromJsonAsync<List<RoomDto>>("api/rooms")
+        rooms = await Http.GetFromJsonAsync<List<RoomDto>>("api/rooms") //http request to API
                 ?? new List<RoomDto>();
 
         filteredRooms = new List<RoomDto>(rooms);
@@ -80,7 +80,7 @@
 
     private async Task ApplyFilters()
     {
-        // Only pass Date part to backend
+        // data that backend needs to filter rooms
         var request = new
         {
             CheckInDate = CheckInDate.Date,
@@ -93,17 +93,17 @@
 
         if (response.IsSuccessStatusCode)
         {
-            filteredRooms = await response.Content.ReadFromJsonAsync<List<RoomDto>>() ?? new List<RoomDto>();
+            filteredRooms = await response.Content.ReadFromJsonAsync<List<RoomDto>>() ?? new List<RoomDto>();//update the list
         }
         else
         {
-            filteredRooms = new List<RoomDto>();
+            filteredRooms = new List<RoomDto>(); //show empty list (page)
         }
     }
 
     private void ViewRoomDetails(int roomId)
     {
-        Navigation.NavigateTo($"/room-details/{roomId}");
+        Navigation.NavigateTo($"/room-details/{roomId}"); 
     }
 
     private void BookRoom(int roomId)

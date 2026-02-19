@@ -7,7 +7,7 @@
 
 <h3>Booking Page</h3>
 
-@if (SelectedRoom != null && !Step1Completed)
+@if (SelectedRoom != null && !Step1Completed) //if room is selected and step1 is not completed show the block
 {
     <!-- Step 1: Dates are pre-filled and read-only, only guests count editable -->
     <h4>Step 1: Confirm Guests</h4>
@@ -35,7 +35,7 @@ else if (!GuestExists)
     <input type="email" @bind="GuestEmail" placeholder="Enter your email" class="form-control mb-2" />
 
     <button class="btn btn-success w-100" @onclick="CheckGuest" disabled="@string.IsNullOrWhiteSpace(GuestEmail)">
-        Next
+        Next                                       
     </button>
 
     @if (!string.IsNullOrEmpty(Message))
@@ -60,16 +60,16 @@ else
 
     @if (!string.IsNullOrEmpty(Message))
     {
-        <div class="alert alert-info mt-2">@Message</div>
+        <div class="alert alert-success mt-2">@Message</div>
     }
 }
 
 @code {
-    [Parameter] public int RoomId { get; set; }
+    [Parameter] public int RoomId { get; set; }  // parameters from URL
     [Parameter] public DateTime? CheckIn { get; set; }
     [Parameter] public DateTime? CheckOut { get; set; }
 
-    private RoomDto? SelectedRoom;
+    private RoomDto? SelectedRoom; 
     private DateTime CheckInDate;
     private DateTime CheckOutDate;
     private int SelectedCapacity = 1;
@@ -123,10 +123,10 @@ else
         try
         {
             var guest = await Http.GetFromJsonAsync<GuestDto>($"api/guests/byemail?email={Uri.EscapeDataString(GuestEmail)}");
-
+                                            //check if a guest exist by email 
             if (guest == null)
             {
-                Navigation.NavigateTo("/signup");
+                Navigation.NavigateTo("/signup"); //if not navigates to sign up
                 return;
             }
 
@@ -136,7 +136,7 @@ else
         }
         catch
         {
-            Navigation.NavigateTo("/signup");
+            Navigation.NavigateTo("/signup");  //// if any error occurs, navigate to sign up page
         }
     }
 
@@ -144,17 +144,17 @@ else
     {
         if (SelectedRoom == null) return;
 
-        var bookingForm = new BookingFormModel
+        var bookingForm = new BookingFormModel // object for POST request
         {
             RoomId = SelectedRoom.Id,
             GuestId = GuestId,
-            CheckInDate = CheckInDate.Date,   // only date
-            CheckOutDate = CheckOutDate.Date  // only date
+            CheckInDate = CheckInDate.Date,   
+            CheckOutDate = CheckOutDate.Date 
         };
 
         try
         {
-            var response = await Http.PostAsJsonAsync("api/bookings", bookingForm);
+            var response = await Http.PostAsJsonAsync("api/bookings", bookingForm); //sends booking too the server
 
             if (response.IsSuccessStatusCode)
             {
