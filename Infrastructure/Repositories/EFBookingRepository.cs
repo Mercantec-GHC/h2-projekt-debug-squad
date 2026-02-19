@@ -36,6 +36,7 @@ namespace Infrastructure.Repositories
         {
             return await _dbContext.Bookings
                 .Include(b => b.Room)
+                .ThenInclude(r => r.RoomType)
                 .ToListAsync();
         }
 

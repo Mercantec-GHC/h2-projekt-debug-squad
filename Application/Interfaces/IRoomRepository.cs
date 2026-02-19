@@ -10,6 +10,11 @@ namespace Application.Interfaces
         Task<List<Room>> GetAllAsync();
         Task<Room?> GetByIdAsync(int id);
         void Delete(Room room);
+
+        Task<List<Room>> GetAvailableAsync(
+            DateTime requestedCheckIn,
+            DateTime requestedCheckOut,
+            int roomTypeId);
         //Task<List<Room>> GetFilteredAsync(
         //    Expression<Func<Room, object>> orderBy,
         //    int roomAmount,

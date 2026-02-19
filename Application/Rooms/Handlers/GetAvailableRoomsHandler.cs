@@ -16,31 +16,52 @@ namespace Application.Rooms.Handlers
             _bookingRepository = bookingRepository;
         }
 
+        //public async Task<List<RoomDto>?> Handle(GetAvailableRoomsCommand command)
+        //{
+        //    var requestedCheckIn = command.CheckInDate.Date;
+        //    var requestedCheckOut = command.CheckOutDate.Date;
+
+        //    var rooms = await _roomRepository.GetAllAsync();
+        //    var bookings = await _bookingRepository.GetAllAsync();
+
+        //    var bookedRoomIds = bookings
+        //        .Where(b => b.CheckInDate.Date < requestedCheckOut &&
+        //                    b.CheckOutDate.Date > requestedCheckIn)
+        //        .Select(b => b.Room.Id)
+        //        .Distinct()
+        //        .ToList();
+
+        //    var availableRooms = rooms
+        //        .Where(r => !bookedRoomIds.Contains(r.Id));
+
+        //    if (command.Capacity.HasValue)
+        //        availableRooms = availableRooms.Where(r => r.RoomType.Capacity >= command.Capacity.Value);
+
+        //    if (command.MaxPrice.HasValue)
+        //        availableRooms = availableRooms.Where(r => r.RoomType.PricePerNight <= command.MaxPrice.Value);
+
+        //    return availableRooms
+        //        .Select(r => new RoomDto(
+        //            r.Id,
+        //            r.Number,
+        //            new RoomTypeDto(
+        //                r.RoomType.Id,
+        //                r.RoomType.Name,
+        //                r.RoomType.Capacity,
+        //                r.RoomType.PricePerNight
+        //            )
+        //        ))
+        //        .ToList();
+        //}
+
         public async Task<List<RoomDto>?> Handle(GetAvailableRoomsCommand command)
         {
-            var requestedCheckIn = command.CheckInDate.Date;
-            var requestedCheckOut = command.CheckOutDate.Date;
+            var rooms = await _roomRepository.GetAvailableAsync(
+                command.CheckInDate, 
+                command.CheckOutDate, 
+                command.RoomTypeId);
 
-            var rooms = await _roomRepository.GetAllAsync();
-            var bookings = await _bookingRepository.GetAllAsync();
-
-            var bookedRoomIds = bookings
-                .Where(b => b.CheckInDate.Date < requestedCheckOut &&
-                            b.CheckOutDate.Date > requestedCheckIn)
-                .Select(b => b.Room.Id)
-                .Distinct()
-                .ToList();
-
-            var availableRooms = rooms
-                .Where(r => !bookedRoomIds.Contains(r.Id));
-
-            if (command.Capacity.HasValue)
-                availableRooms = availableRooms.Where(r => r.RoomType.Capacity >= command.Capacity.Value);
-
-            if (command.MaxPrice.HasValue)
-                availableRooms = availableRooms.Where(r => r.RoomType.PricePerNight <= command.MaxPrice.Value);
-
-            return availableRooms
+            return rooms
                 .Select(r => new RoomDto(
                     r.Id,
                     r.Number,
