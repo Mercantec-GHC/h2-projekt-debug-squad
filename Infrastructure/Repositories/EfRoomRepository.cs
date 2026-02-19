@@ -49,11 +49,14 @@ namespace Infrastructure.Repositories
             DateTime requestedCheckOut,
             int roomTypeId)
         {
+            requestedCheckIn = DateTime.SpecifyKind(requestedCheckIn, DateTimeKind.Utc);
+            requestedCheckOut = DateTime.SpecifyKind(requestedCheckOut, DateTimeKind.Utc);
+
             // Get IDs of rooms that are already booked in the requested period
             var bookedRoomIds = await _dbContext.Bookings
                 .Where(b => b.CheckInDate < requestedCheckOut &&
                             b.CheckOutDate > requestedCheckIn)
-                .Select(b => b.Id) // Use FK instead of navigation property
+                .Select(b => b.Room.Id) // Use FK instead of navigation property
                 .Distinct()
                 .ToListAsync();
 
@@ -66,22 +69,5 @@ namespace Infrastructure.Repositories
 
             return availableRooms;
         }
-
-
-        //public async Task<List<Room>> GetFilteredAsync(
-        //    Expression<Func<Room, object>> orderBy,
-        //    int roomAmount = 50,
-        //    bool showOnlyAvailable = true,
-        //    bool orderDescending = true)
-        //{
-        //    var query = _dbContext.Rooms
-        //        .Where(r => r.IsAvailable == showOnlyAvailable).Take(roomAmount);
-
-        //    query = orderDescending
-        //        ? query.OrderByDescending(orderBy)
-        //        : query.OrderBy(orderBy);
-
-        //    return await query.ToListAsync();
-        //}
     }
 }
