@@ -32,6 +32,8 @@ else
                         <p><strong>Room:</strong> @booking.Room.Number</p>
                         <p><strong>Capacity:</strong> @booking.Room.RoomType.Capacity</p>
                         <p><strong>Price per Night:</strong> $@booking.Room.RoomType.PricePerNight</p>
+                        <p><strong>Total Price:</strong> $@booking.TotalPrice</p>
+
 
                         @if (editingBookingId == booking.Id)
                         {

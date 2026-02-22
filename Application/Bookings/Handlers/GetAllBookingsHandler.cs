@@ -24,7 +24,8 @@ namespace Application.Bookings.Handlers
                         b.Room.Number
                     ),
                     b.CheckInDate,
-                    b.CheckOutDate
+                    b.CheckOutDate,
+                    b.TotalPrice
             )).ToList();
         }
     }

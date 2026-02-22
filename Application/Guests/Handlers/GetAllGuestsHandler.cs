@@ -24,7 +24,8 @@ namespace Application.Guests.Handlers
                 g.Bookings.Select(b => new BookingDto(
                     b.Id,
                     b.CheckInDate,
-                    b.CheckOutDate
+                    b.CheckOutDate,
+                    b.TotalPrice
                 )).ToList()
             )).ToList();
         }

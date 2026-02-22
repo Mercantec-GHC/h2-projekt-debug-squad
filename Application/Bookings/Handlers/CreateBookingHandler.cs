@@ -9,15 +9,18 @@ namespace Application.Bookings.Handlers
         private readonly IGuestRepository _guestRepository;
         private readonly IRoomRepository _roomRepository;
         private readonly IBookingRepository _bookingRepository;
+        private readonly IRoomPricingService _pricingService;
 
         public CreateBookingHandler(
             IGuestRepository guestRepository,
             IRoomRepository roomRepository,
-            IBookingRepository bookingRepository)
+            IBookingRepository bookingRepository,
+            IRoomPricingService pricingService)
         {
             _guestRepository = guestRepository;
             _roomRepository = roomRepository;
             _bookingRepository = bookingRepository;
+            _pricingService = pricingService;
         }
 
         public async Task Handle(CreateBookingCommand command)
@@ -53,8 +56,12 @@ namespace Application.Bookings.Handlers
             var checkInUtc = DateTime.SpecifyKind(command.CheckInDate.Date, DateTimeKind.Utc);
             var checkOutUtc = DateTime.SpecifyKind(command.CheckOutDate.Date, DateTimeKind.Utc);
 
+            // Calculate total price using day multipliers
+            decimal totalPrice = await _pricingService.CalculateTotalPriceAsync(
+                room.RoomType.PricePerNight, checkInUtc, checkOutUtc);
+
             // Create booking
-            var booking = new Booking(guest, room, checkInUtc, checkOutUtc);
+            var booking = new Booking(guest, room, checkInUtc, checkOutUtc, totalPrice);
 
             // Add booking to guest
             guest.AddBooking(booking);

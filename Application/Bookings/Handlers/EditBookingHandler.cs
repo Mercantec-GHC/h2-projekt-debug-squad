@@ -6,10 +6,12 @@ namespace Application.Bookings.Handlers
     public class EditBookingHandler
     {
         private readonly IBookingRepository _bookingRepository;
+        private readonly IRoomPricingService _pricingService;
 
-        public EditBookingHandler(IBookingRepository bookingRepository)
+        public EditBookingHandler(IBookingRepository bookingRepository, IRoomPricingService pricingService)
         {
             _bookingRepository = bookingRepository;
+            _pricingService = pricingService;
         }
 
         public async Task<bool> Handle(EditBookingCommand command)
@@ -35,7 +37,11 @@ namespace Application.Bookings.Handlers
             var checkInUtc = DateTime.SpecifyKind(command.CheckInDate.Date, DateTimeKind.Utc);
             var checkOutUtc = DateTime.SpecifyKind(command.CheckOutDate.Date, DateTimeKind.Utc);
 
-            booking.ChangeDates(checkInUtc, checkOutUtc);
+            // Recalculate total price with day multipliers
+            decimal totalPrice = await _pricingService.CalculateTotalPriceAsync(
+                booking.Room.RoomType.PricePerNight, checkInUtc, checkOutUtc);
+
+            booking.ChangeDates(checkInUtc, checkOutUtc, totalPrice);
 
             await _bookingRepository.SaveChangesAsync();
             return true;

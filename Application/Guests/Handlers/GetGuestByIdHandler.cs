@@ -43,7 +43,8 @@ namespace Application.Guests.Handlers
                         )
                     ),
                     CheckInDate = b.CheckInDate,
-                    CheckOutDate = b.CheckOutDate
+                    CheckOutDate = b.CheckOutDate,
+                    TotalPrice = b.TotalPrice
                 }).ToList()
             };
         }

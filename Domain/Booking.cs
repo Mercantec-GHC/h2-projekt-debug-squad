@@ -10,14 +10,11 @@
 
         public DateTime CheckOutDate { get; private set; }
 
-        // calculated property
-        // result of CheckOutDate - CheckInDate) = timespan
-        // timespan.TotalDays = number of days
-        public decimal TotalPrice => Room.RoomType.PricePerNight * (decimal)(CheckOutDate - CheckInDate).TotalDays;
+        public decimal TotalPrice { get; private set; }
 
         private Booking() { }
 
-        public Booking(Guest guest, Room room, DateTime checkInDate, DateTime checkOutDate)
+        public Booking(Guest guest, Room room, DateTime checkInDate, DateTime checkOutDate, decimal totalPrice)
         {
             Validate(guest, room, checkInDate, checkOutDate);
 
@@ -25,6 +22,7 @@
             Room = room;
             CheckInDate = checkInDate.Date;
             CheckOutDate = checkOutDate.Date;
+            TotalPrice = totalPrice;
         }
 
         private static void Validate(Guest guest, Room room, DateTime checkInDate, DateTime checkOutDate)
@@ -36,13 +34,14 @@
                 throw new ArgumentException("Check-out date must be after check-in date");
         }
 
-        public void ChangeDates(DateTime newCheckIn, DateTime newCheckOut)
+        public void ChangeDates(DateTime newCheckIn, DateTime newCheckOut, decimal totalPrice)
         {
             if (newCheckIn.Date >= newCheckOut.Date)
                 throw new ArgumentException("Check-out date must be after check-in date");
 
             CheckInDate = newCheckIn.Date;
             CheckOutDate = newCheckOut.Date;
+            TotalPrice = totalPrice;
         }
     }
 }

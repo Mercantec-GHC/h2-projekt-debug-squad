@@ -7,6 +7,7 @@ using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Application.Bookings.Handlers;
 using Application.DayMultipliers.Handlers;
+using Application.Pricing;
 
 namespace Server
 {
@@ -51,6 +52,8 @@ namespace Server
             builder.Services.AddScoped<EditDayMultiplierHandler>();
             builder.Services.AddScoped<GetAllDayMultipliersHandler>();
             builder.Services.AddScoped<IDayMultiplierRepository, EfDayMultiplierRepository>();
+
+            builder.Services.AddScoped<IRoomPricingService, RoomPricingService>();
 
             builder.Services.AddScoped<GetAllRoomTypesHandler>();
             builder.Services.AddScoped<IRoomTypeRepository, EfRoomTypeRepository>();

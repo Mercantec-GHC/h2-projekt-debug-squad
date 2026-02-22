@@ -33,7 +33,8 @@ namespace Application.Bookings.Handlers
                     )
                 ),
                 b.CheckInDate,
-                b.CheckOutDate
+                b.CheckOutDate,
+                b.TotalPrice
                 )).ToList();
         }
     }
