@@ -15,16 +15,12 @@ namespace Application.Guests.Handlers
 
         public async Task Handle(RegisterGuestCommand command)
         {
-            if (await _guestRepository.ExistsByEmailAsync(command.Email))
-                throw new InvalidOperationException("Guest with this email already exists");
+            if (await _guestRepository.ExistsByEmailAsync(command.Email)) throw new InvalidOperationException("Guest with this email already exists");
 
-            var guest = new Guest(
-                command.FullName,
-                command.PhoneNumber,
-                command.Email
-            );
+            var guest = new Guest(command.FullName, command.PhoneNumber, command.Email);
 
             _guestRepository.Add(guest);
+
             await _guestRepository.SaveChangesAsync();
         }
     }

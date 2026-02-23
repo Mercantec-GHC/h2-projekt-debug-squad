@@ -21,7 +21,6 @@ namespace Application.Guests.Handlers
             if (guest == null)
                 return null;
 
-            // Map entity to DTO
             return new GuestDto
             {
                 Id = guest.Id,
@@ -48,7 +47,5 @@ namespace Application.Guests.Handlers
                 }).ToList()
             };
         }
-
-
     }
 }
