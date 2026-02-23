@@ -19,7 +19,11 @@
     <p><strong>Check-out:</strong> @CheckOutDate.ToShortDateString()</p>
 
     <label>Number of Guests:</label>
-    <input type="number" @bind="SelectedCapacity" min="1" class="form-control mb-2" />
+    <input type="number"
+           @bind="SelectedCapacity"
+           min="1"
+           max="@SelectedRoom.RoomType.Capacity"
+           class="form-control mb-2" />
 
     <button class="btn btn-primary w-100" @onclick="NextStep">Next</button>
 
@@ -105,6 +109,12 @@ else
         if (SelectedCapacity < 1)
         {
             Message = "Please enter a valid number of guests";
+            return;
+        }
+
+        if (SelectedRoom != null && SelectedCapacity > SelectedRoom.RoomType.Capacity)
+        {
+            Message = $"Maximum capacity for this room is {SelectedRoom.RoomType.Capacity} guests.";
             return;
         }
 
