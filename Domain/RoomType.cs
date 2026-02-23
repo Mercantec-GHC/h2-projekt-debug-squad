@@ -33,7 +33,7 @@ namespace Domain
             Rooms.Remove(room);
         }
 
-        public void Change(int capacity, decimal pricePerNight)
+        public void Change(string name, int capacity, decimal pricePerNight)
         {
             if (capacity <= 0) throw new ArgumentException("Capacity must be greater than 0");
             if (pricePerNight <= 0) throw new ArgumentException("Price must be greater than 0");
