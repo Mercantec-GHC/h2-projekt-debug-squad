@@ -1,0 +1,87 @@
+﻿@page "/manage/roomtypes/edit"
+@inject HttpClient Http
+@inject NavigationManager Nav
+@using Shared
+
+<h3>Edit Room Type Capacity & Price</h3>
+
+@if (_roomTypes == null)
+{
+    <p>Loading room types...</p>
+}
+else
+{
+    @if (!string.IsNullOrEmpty(_message))
+    {
+        <div class="alert alert-success">@_message</div>
+    }
+
+    <div class="list-group">
+        @foreach (var type in _roomTypes)
+        {
+            <div class="list-group-item mb-3 p-3 shadow-sm">
+                <h5>@type.Name</h5>
+
+                <!-- Capacity -->
+                <div class="mb-2">
+                    <label class="form-label">Capacity</label>
+                    <input class="form-control" type="number" @bind="type.Capacity" />
+                </div>
+
+                <!-- Price per night -->
+                <div class="mb-2">
+                    <label class="form-label">Price per Night</label>
+                    <input class="form-control" type="number" step="0.01" @bind="type.PricePerNight" />
+                </div>
+
+                <!-- Save button -->
+                <button class="btn btn-warning" @onclick="() => Save(type)">
+                    Save
+                </button>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<RoomTypeDto>? _roomTypes;
+    private string _message = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadRoomTypes();
+    }
+
+    private async Task LoadRoomTypes()
+    {
+        try
+        {
+            _roomTypes = await Http.GetFromJsonAsync<List<RoomTypeDto>>("api/roomtypes");
+        }
+        catch (Exception ex)
+        {
+            _message = $"Error loading room types: {ex.Message}";
+        }
+    }
+
+    private async Task Save(RoomTypeDto type)
+    {
+        try
+        {
+            var response = await Http.PostAsJsonAsync("api/roomtypes/edit", type);
+
+            if (response.IsSuccessStatusCode)
+            {
+                _message = $"Room type {type.Name} updated successfully!";
+            }
+            else
+            {
+                _message = $"Failed to update {type.Name}";
+            }
+        }
+        catch (Exception ex)
+        {
+            _message = $"Error: {ex.Message}";
+        }
+    }
+}

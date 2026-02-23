@@ -7,11 +7,18 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h3 class="mb-0">Manage Rooms</h3>
 
-    <button class="btn btn-success"
-            @onclick="() => _showCreateForm = !_showCreateForm">
-        <i class="bi bi-plus-circle me-1"></i>
-        @(_showCreateForm ? "Cancel" : "Create Room")
-    </button>
+    <div>
+        <button class="btn btn-success me-2"
+                @onclick="() => _showCreateForm = !_showCreateForm">
+            <i class="bi bi-plus-circle me-1"></i>
+            @(_showCreateForm ? "Cancel" : "Create Room")
+        </button>
+
+        <button class="btn btn-primary" @onclick="GoToEditRoomType">
+            <i class="bi bi-pencil-square me-1"></i>
+            Edit Room Type Capacity / Price
+        </button>
+    </div>
 </div>
 
 @if (!string.IsNullOrEmpty(_message))
@@ -48,6 +55,7 @@
         </div>
 
         <button class="btn btn-success w-100" @onclick="CreateRoom">Save</button>
+
     </div>
 }
 
@@ -182,5 +190,10 @@
             }
             await LoadRooms();
         }
+    }
+
+    private void GoToEditRoomType()
+    {
+        Navigation.NavigateTo("/manage/roomtypes/edit");
     }
 }
