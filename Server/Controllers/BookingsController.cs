@@ -11,9 +11,16 @@ namespace Server.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromServices] CreateBookingHandler createBookingHandler, [FromBody] CreateBookingCommand command)
         {
-            await createBookingHandler.Handle(command);
+            try
+            {
+                await createBookingHandler.Handle(command);
+                return Ok("Booking created successfully");
+            }
 
-            return Ok("Booking created successfully");
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet()]
