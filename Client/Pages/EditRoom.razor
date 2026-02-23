@@ -5,42 +5,46 @@
 
 <h3>Edit Room</h3>
 
-@if (_room == null)
+@if (_room == null || _roomTypes == null)
 {
     <p>Loading...</p>
 }
 else
 {
     <div class="card p-4 shadow-sm">
+
+        <!-- Room Number (read-only) -->
         <div class="mb-3">
-            <label class="form-label">Room number</label>
+            <label class="form-label">Room Number</label>
             <input class="form-control" value="@_room.Number" disabled />
         </div>
 
+        <!-- Room Type Dropdown -->
         <div class="mb-3">
             <label class="form-label">Room Type</label>
-            <input class="form-control" value="@_room.RoomType.Name" disabled />
+            <select class="form-select" @bind="SelectedRoomTypeId">
+                @foreach (var type in _roomTypes)
+                {
+                    <option value="@type.Id">@type.Name</option>
+                }
+            </select>
         </div>
 
+        <!-- Capacity (read-only) -->
         <div class="mb-3">
             <label class="form-label">Capacity</label>
-            <input class="form-control" type="number" @bind="_room.RoomType.Capacity" />
+            <input class="form-control" value="@_selectedRoomType?.Capacity" disabled />
         </div>
 
+        <!-- Price per Night (read-only) -->
         <div class="mb-3">
             <label class="form-label">Price per night</label>
-            <input class="form-control" type="number" step="0.01" @bind="_room.RoomType.PricePerNight" />
+            <input class="form-control" value="@_selectedRoomType?.PricePerNight.ToString("F2")" disabled />
         </div>
 
-        <p class="text-muted small">Note: Editing capacity and price will affect all rooms of this type.</p>
-
-        <button class="btn btn-warning w-100" @onclick="Save">
-            Save
-        </button>
-
-        <button class="btn btn-secondary w-100 mt-2" @onclick="Cancel">
-            Cancel
-        </button>
+        <!-- Save & Cancel buttons -->
+        <button class="btn btn-warning w-100" @onclick="Save">Save</button>
+        <button class="btn btn-secondary w-100 mt-2" @onclick="Cancel">Cancel</button>
     </div>
 }
 
@@ -48,15 +52,48 @@ else
     [Parameter] public int Id { get; set; }
 
     private RoomDto? _room;
+    private List<RoomTypeDto>? _roomTypes;
+    private RoomTypeDto? _selectedRoomType;
+
+    // Use a property with a setter to update _selectedRoomType dynamically
+    private int SelectedRoomTypeId
+    {
+        get => _selectedRoomType?.Id ?? 0;
+        set
+        {
+            if (_selectedRoomType?.Id != value)
+            {
+                _selectedRoomType = _roomTypes?.FirstOrDefault(x => x.Id == value);
+            }
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
+        // Load the room
         _room = await Http.GetFromJsonAsync<RoomDto>($"api/rooms/{Id}");
+
+        // Load all room types
+        _roomTypes = await Http.GetFromJsonAsync<List<RoomTypeDto>>("api/roomtypes");
+
+        // Prefill dropdown with current room type
+        if (_room != null)
+        {
+            _selectedRoomType = _room.RoomType;
+        }
     }
 
     private async Task Save()
     {
-        var response = await Http.PostAsJsonAsync($"api/rooms/edit", _room);
+        if (_room == null) return;
+
+        var updateDto = new UpdateRoomTypeDto
+        {
+            RoomId = _room.Id,
+            RoomTypeId = SelectedRoomTypeId // use the property bound to the dropdown
+        };
+
+        var response = await Http.PostAsJsonAsync("api/rooms/edit", updateDto);
 
         if (response.IsSuccessStatusCode)
         {
