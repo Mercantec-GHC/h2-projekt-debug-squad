@@ -1,6 +1,6 @@
-﻿namespace Application.Guests.Commands
+﻿namespace Shared
 {
-    public class RegisterGuestCommand
+    public class AddGuestCommand
     {
         public string FullName { get; init; } = string.Empty;
         public string PhoneNumber { get; init; } = string.Empty;

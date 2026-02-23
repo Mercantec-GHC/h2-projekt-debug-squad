@@ -1,9 +1,6 @@
 ﻿using Application.Interfaces;
 using Domain;
-using Application.DayMultipliers.Commands;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Shared;
 
 namespace Application.DayMultipliers.Handlers
 {

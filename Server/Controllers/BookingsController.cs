@@ -1,6 +1,6 @@
-﻿using Application.Bookings.Commands;
-using Application.Bookings.Handlers;
+﻿using Application.Bookings.Handlers;
 using Microsoft.AspNetCore.Mvc;
+using Shared;
 
 namespace Server.Controllers
 {
@@ -58,10 +58,9 @@ namespace Server.Controllers
         {
             try
             {
-                if (await editBookingHandler.Handle(command))
-                    return Ok("Booking updated successfully");
+                await editBookingHandler.Handle(command);
+                return Ok("Booking updated successfully");
 
-                return BadRequest("Booking not found");
             }
             catch (ArgumentException ex)
             {
@@ -72,7 +71,8 @@ namespace Server.Controllers
         [HttpDelete()]
         public async Task<IActionResult> Delete([FromServices] DeleteBookingHandler deleteBookingHandler, [FromBody] DeleteBookingCommand command)
         {
-            if (await deleteBookingHandler.Handle(command)) return Ok("Booking deleted successfully");
+            await deleteBookingHandler.Handle(command);
+            return Ok("Booking deleted successfully");
 
             return BadRequest("One of the IDs was invalid");
         }

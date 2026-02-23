@@ -1,4 +1,4 @@
-﻿namespace Application.Guests.Commands
+﻿namespace Shared
 {
     public class EditGuestCommand
     {
