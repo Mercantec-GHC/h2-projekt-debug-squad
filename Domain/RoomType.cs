@@ -28,8 +28,9 @@ namespace Domain
             Rooms.Remove(room);
         }
 
-        public void Change(int capacity, decimal pricePerNight)
+        public void Change(string name, int capacity, decimal pricePerNight)
         {
+            Name = name;
             Capacity = capacity;
             PricePerNight = pricePerNight;
         }
