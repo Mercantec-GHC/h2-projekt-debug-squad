@@ -13,19 +13,15 @@ namespace Application.Bookings.Handlers
             _guestRepository = repository;
         }
 
-        public async Task<bool> Handle(DeleteBookingCommand command)
+        public async Task Handle(DeleteBookingCommand command)
         {
-            Guest guest = await _guestRepository.GetByIdAsync(command.GuestId);
+            var guest = await _guestRepository.GetByIdAsync(command.GuestId) ?? throw new ArgumentException("Guest not found");
 
-            Booking? booking = guest.Bookings.FirstOrDefault(x => x.Id == command.BookingId);
-
-            if (booking is null)
-                return false;
+            var booking = guest.Bookings.FirstOrDefault(x => x.Id == command.BookingId) ?? throw new ArgumentException("Booking not found");
 
             guest.RemoveBooking(booking);
 
             await _guestRepository.SaveChangesAsync();
-            return true;
         }
     }
 }

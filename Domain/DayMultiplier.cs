@@ -14,6 +14,7 @@ namespace Domain
 
         public void ChangeMultiplier(decimal multiplier)
         {
+            if (multiplier <= 0) throw new ArgumentException("Multiplier must be greater than 0");
             Multiplier = multiplier;
         }
     }

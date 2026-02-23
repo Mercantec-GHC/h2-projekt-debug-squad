@@ -16,15 +16,13 @@ namespace Application.DayMultipliers.Handlers
             _repository = repository;
         }
 
-        public async Task<bool> Handle(EditDayMultiplierCommand command)
+        public async Task Handle(EditDayMultiplierCommand command)
         {
             DayMultiplier? dayMultiplier = await _repository.GetByIdAsync(command.Id);
-            if (dayMultiplier == null) { return false; }
+            if (dayMultiplier == null) throw new ArgumentException("Day multiplier not found");
 
             dayMultiplier.ChangeMultiplier(command.Multiplier);
             await _repository.SaveChangesAsync();
-
-            return true;
         }
     }
 }

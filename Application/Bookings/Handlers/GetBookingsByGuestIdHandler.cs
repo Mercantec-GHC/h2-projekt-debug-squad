@@ -13,29 +13,14 @@ namespace Application.Bookings.Handlers
             _guestRepository = repository;
         }
 
-        public async Task<List<BookingDto>?> Handle(int guestId)
+        public async Task<List<BookingDto>> Handle(int guestId)
         {
             Guest? guest = await _guestRepository.GetByIdAsync(guestId);
 
-            if (guest is null)
-                return null;
+            if (guest == null)
+                return new List<BookingDto>();
 
-            return guest.Bookings.Select(b => new BookingDto(
-                b.Id,
-                new RoomDto(
-                    b.Room.Id,
-                    b.Room.Number,
-                    new RoomTypeDto(
-                        b.Room.RoomType.Id,
-                        b.Room.RoomType.Name,
-                        b.Room.RoomType.Capacity,
-                        b.Room.RoomType.PricePerNight
-                    )
-                ),
-                b.CheckInDate,
-                b.CheckOutDate,
-                b.TotalPrice
-                )).ToList();
+            return guest.Bookings.Select(b => new BookingDto(b.Id, new RoomDto(b.Room.Id, b.Room.Number, new RoomTypeDto(b.Room.RoomType.Id, b.Room.RoomType.Name, b.Room.RoomType.Capacity, b.Room.RoomType.PricePerNight)), b.CheckInDate, b.CheckOutDate, b.TotalPrice)).ToList();
         }
     }
 }

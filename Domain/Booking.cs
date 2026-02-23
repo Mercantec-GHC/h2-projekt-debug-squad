@@ -7,7 +7,6 @@
         public Room Room { get; private set; } = null!;
 
         public DateTime CheckInDate { get; private set; }
-
         public DateTime CheckOutDate { get; private set; }
 
         public decimal TotalPrice { get; private set; }
@@ -30,14 +29,14 @@
             ArgumentNullException.ThrowIfNull(guest, nameof(guest));
             ArgumentNullException.ThrowIfNull(room, nameof(room));
 
-            if (checkInDate.Date >= checkOutDate.Date)
-                throw new ArgumentException("Check-out date must be after check-in date");
+
+            if (checkInDate.Date >= checkOutDate.Date) throw new ArgumentException("Check-out date must be after check-in date");
         }
 
         public void ChangeDates(DateTime newCheckIn, DateTime newCheckOut, decimal totalPrice)
         {
-            if (newCheckIn.Date >= newCheckOut.Date)
-                throw new ArgumentException("Check-out date must be after check-in date");
+            if (newCheckIn.Date >= newCheckOut.Date) throw new ArgumentException("Check-out date must be after check-in date");
+            if (totalPrice < 0) throw new ArgumentException("Total price must be non-negative");
 
             CheckInDate = newCheckIn.Date;
             CheckOutDate = newCheckOut.Date;
