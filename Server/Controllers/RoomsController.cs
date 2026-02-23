@@ -9,52 +9,132 @@ namespace Server.Controllers
     public class RoomsController : ControllerBase
     {
         [HttpPost]
-        public async Task<IActionResult> Create([FromServices] CreateRoomHandler createRoomHandler, [FromBody] CreateRoomCommand command)
+        public async Task<IActionResult> Create([FromServices] CreateRoomHandler handler, [FromBody] CreateRoomCommand command)
         {
-            await createRoomHandler.Handle(command);
-
-            return Ok("Room created successfully");
+            try
+            {
+                await handler.Handle(command);
+                return Ok("Room created successfully");
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromServices] GetAllRoomsHandler getRoomsHandler)
+        public async Task<IActionResult> GetAll(
+            [FromServices] GetAllRoomsHandler handler)
         {
-            var rooms = await getRoomsHandler.Handle();
-
-            return Ok(rooms);
+            try
+            {
+                var rooms = await handler.Handle();
+                return Ok(rooms);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById([FromServices] GetRoomByIdHandler getRoomByIdHandler, int id)
+        public async Task<IActionResult> GetById([FromServices] GetRoomByIdHandler handler, int id)
         {
-            var room = await getRoomByIdHandler.Handle(id);
-            if (room == null)
-                return NotFound();
+            try
+            {
+                var room = await handler.Handle(id);
 
-            return Ok(room);
+                if (room == null)
+                    return NotFound("Room not found");
+
+                return Ok(room);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         [HttpPost("available")]
-        public async Task<IActionResult> GetAvailable([FromServices] GetAvailableRoomsHandler getAvailableRoomsHandler, [FromBody] GetAvailableRoomsCommand command)
+        public async Task<IActionResult> GetAvailable([FromServices] GetAvailableRoomsHandler handler, [FromBody] GetAvailableRoomsCommand command)
         {
-            var rooms = await getAvailableRoomsHandler.Handle(command);
-
-            return Ok(rooms);
+            try
+            {
+                var rooms = await handler.Handle(command);
+                return Ok(rooms);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete([FromServices] DeleteRoomHandler deleteRoomHandler, int id)
+        public async Task<IActionResult> Delete([FromServices] DeleteRoomHandler handler, int id)
         {
-            await deleteRoomHandler.Handle(id);
-            return Ok("Room deleted successfully");
+            try
+            {
+                await handler.Handle(id);
+                return Ok("Room deleted successfully");
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error");
+            }
         }
 
-        [HttpPost("edit")]
-        public async Task<IActionResult> Edit([FromServices] EditRoomHandler editRoomHandler, [FromBody] EditRoomCommand command)
+        [HttpPut]
+        public async Task<IActionResult> Edit([FromServices] EditRoomHandler handler, [FromBody] EditRoomCommand command)
         {
-            await editRoomHandler.Handle(command);
-
-            return Ok("Room updated successfully");
+            try
+            {
+                await handler.Handle(command);
+                return Ok("Room updated successfully");
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error");
+            }
         }
     }
 }

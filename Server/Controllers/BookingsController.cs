@@ -9,72 +9,118 @@ namespace Server.Controllers
     public class BookingsController : ControllerBase
     {
         [HttpPost]
-        public async Task<IActionResult> Create([FromServices] CreateBookingHandler createBookingHandler, [FromBody] CreateBookingCommand command)
+        public async Task<IActionResult> Create([FromServices] CreateBookingHandler handler, [FromBody] CreateBookingCommand command)
         {
             try
             {
-                await createBookingHandler.Handle(command);
+                await handler.Handle(command);
                 return Ok("Booking created successfully");
             }
-
             catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
             }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error");
+            }
         }
 
-        [HttpGet()]
-        public async Task<IActionResult> GetAll([FromServices] GetAllBookingsHandler getAllBookingsHandler)
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromServices] GetAllBookingsHandler handler)
         {
-            var bookings = await getAllBookingsHandler.Handle();
-
-            return Ok(bookings);
+            try
+            {
+                var bookings = await handler.Handle();
+                return Ok(bookings);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById([FromServices] GetBookingByIdHandler getBookingByIdHandler, int id)
-        {
-            var booking = await getBookingByIdHandler.Handle(id);
-
-            if (booking == null)
-                return NotFound("The booking ID is invalid");
-
-            return Ok(booking);
-        }
-
-        [HttpGet("guest/{id}")]
-        public async Task<IActionResult> GetByGuestId([FromServices] GetBookingsByGuestIdHandler getBookingsByGuestIdHandler, int id)
-        {
-            var bookings = await getBookingsByGuestIdHandler.Handle(id);
-
-            if (bookings == null)
-                return NotFound("The ID of the Guest is invalid");
-
-            return Ok(bookings);
-        }
-
-        [HttpPut]
-        public async Task<IActionResult> Edit([FromServices] EditBookingHandler editBookingHandler, [FromBody] EditBookingCommand command)
+        public async Task<IActionResult> GetById([FromServices] GetBookingByIdHandler handler,
+            int id)
         {
             try
             {
-                await editBookingHandler.Handle(command);
-                return Ok("Booking updated successfully");
+                var booking = await handler.Handle(id);
 
+                if (booking == null)
+                    return NotFound("Booking not found");
+
+                return Ok(booking);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet("guest/{id}")]
+        public async Task<IActionResult> GetByGuestId([FromServices] GetBookingsByGuestIdHandler handler,
+            int id)
+        {
+            try
+            {
+                var bookings = await handler.Handle(id);
+                return Ok(bookings); // лучше всегда возвращать список
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Edit([FromServices] EditBookingHandler handler,
+            [FromBody] EditBookingCommand command)
+        {
+            try
+            {
+                await handler.Handle(command);
+                return Ok("Booking updated successfully");
             }
             catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
             }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error");
+            }
         }
 
-        [HttpDelete()]
-        public async Task<IActionResult> Delete([FromServices] DeleteBookingHandler deleteBookingHandler, [FromBody] DeleteBookingCommand command)
+        [HttpDelete]
+        public async Task<IActionResult> Delete([FromServices] DeleteBookingHandler handler, [FromBody] DeleteBookingCommand command)
         {
-            await deleteBookingHandler.Handle(command);
-            return Ok("Booking deleted successfully");
-
-            return BadRequest("One of the IDs was invalid");
+            try
+            {
+                await handler.Handle(command);
+                return Ok("Booking deleted successfully");
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error");
+            }
         }
     }
 }
