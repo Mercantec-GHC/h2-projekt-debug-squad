@@ -1,5 +1,6 @@
 using Application.Bookings.Commands;
 using Application.Interfaces;
+using Domain;
 
 namespace Application.Bookings.Handlers
 {
@@ -14,15 +15,12 @@ namespace Application.Bookings.Handlers
             _pricingService = pricingService;
         }
 
-        public async Task<bool> Handle(EditBookingCommand command)
+        public async Task Handle(EditBookingCommand command)
         {
-            var booking = await _bookingRepository.GetByIdAsync(command.BookingId);
-            if (booking == null) return false;
+            var booking = await _bookingRepository.GetByIdAsync(command.BookingId) ?? throw new ArgumentException("Booking not found");
 
-            if (command.CheckInDate.Date < DateTime.Today)
-                throw new ArgumentException("Check-in date cannot be in the past");
+            if (command.CheckInDate.Date < DateTime.Today) throw new ArgumentException("Check-in date cannot be in the past");
 
-            // Check for conflicting bookings on the same room
             var allBookings = await _bookingRepository.GetAllAsync();
             bool isRoomBooked = allBookings.Any(b =>
                 b.Room.Id == booking.Room.Id &&
@@ -31,19 +29,16 @@ namespace Application.Bookings.Handlers
                 b.CheckOutDate.Date > command.CheckInDate.Date
             );
 
-            if (isRoomBooked)
-                throw new ArgumentException("Room is already booked for the selected dates");
+            if (isRoomBooked) throw new ArgumentException("Room is already booked for the selected dates");
 
             var checkInUtc = DateTime.SpecifyKind(command.CheckInDate.Date, DateTimeKind.Utc);
             var checkOutUtc = DateTime.SpecifyKind(command.CheckOutDate.Date, DateTimeKind.Utc);
 
-            // Recalculate total price with day multipliers
             decimal totalPrice = await _pricingService.CalculateTotalPriceAsync(booking.Room.RoomType.PricePerNight, checkInUtc, checkOutUtc);
 
             booking.ChangeDates(checkInUtc, checkOutUtc, totalPrice);
 
             await _bookingRepository.SaveChangesAsync();
-            return true;
         }
     }
 }

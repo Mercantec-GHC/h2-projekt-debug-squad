@@ -10,6 +10,7 @@
         public List<Booking> Bookings { get; private set; } = new();
 
         private Guest() { }
+
         public Guest(string fullName, string phoneNumber, string email)
         {
             Validate(fullName, phoneNumber, email);
@@ -27,14 +28,19 @@
             PhoneNumber = phoneNumber;
             Email = email;
         }
+
         public void AddBooking(Booking booking)
         {
+            if (booking == null) throw new ArgumentException("Booking cannot be null");
             Bookings.Add(booking);
         }
+
         public void RemoveBooking(Booking booking)
         {
+            if (booking == null) throw new ArgumentException("Booking cannot be null");
             Bookings.Remove(booking);
         }
+
         private static void Validate(string fullName, string phoneNumber, string email)
         {
             if (string.IsNullOrWhiteSpace(fullName)) throw new ArgumentException("Full name is required", nameof(fullName));
@@ -42,6 +48,8 @@
             if (string.IsNullOrWhiteSpace(phoneNumber)) throw new ArgumentException("Phone number is required", nameof(phoneNumber));
 
             if (string.IsNullOrWhiteSpace(email)) throw new ArgumentException("Email is required", nameof(email));
+
+            if (!email.Contains("@")) throw new ArgumentException("Email is invalid", nameof(email));
         }
     }
 }

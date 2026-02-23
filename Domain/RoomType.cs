@@ -9,9 +9,12 @@ namespace Domain
         public List<Room> Rooms { get; private set; } = new();
 
         private RoomType() { }
+
         public RoomType(string name, int capacity, decimal pricePerNight)
         {
-            Validate(name, capacity, pricePerNight);
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Room type name is required");
+            if (capacity <= 0) throw new ArgumentException("Capacity must be greater than 0");
+            if (pricePerNight < 0) throw new ArgumentException("Price must be greater than 0");
 
             Name = name;
             Capacity = capacity;
@@ -20,27 +23,23 @@ namespace Domain
 
         public void AddRoom(Room room)
         {
+            if (room == null) throw new ArgumentException("Room cannot be null");
             Rooms.Add(room);
         }
 
         public void RemoveRoom(Room room)
         {
+            if (room == null) throw new ArgumentException("Room cannot be null");
             Rooms.Remove(room);
         }
 
         public void Change(int capacity, decimal pricePerNight)
         {
+            if (capacity <= 0) throw new ArgumentException("Capacity must be greater than 0");
+            if (pricePerNight <= 0) throw new ArgumentException("Price must be greater than 0");
+
             Capacity = capacity;
             PricePerNight = pricePerNight;
-        }
-
-        private static void Validate(string name, int capacity, decimal pricePerNight)
-        {
-            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Room type name is required");
-
-            if (capacity <= 0) throw new ArgumentException("Capacity must be greater than 0");
-
-            if (pricePerNight <= 0) throw new ArgumentException("Price must be greater than 0");
         }
     }
 }
