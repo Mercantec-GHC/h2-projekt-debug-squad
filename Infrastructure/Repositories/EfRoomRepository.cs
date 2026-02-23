@@ -3,6 +3,7 @@ using Domain;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Infrastructure.Repositories
 {
@@ -63,9 +64,12 @@ namespace Infrastructure.Repositories
 
             // Get rooms of the requested type that are NOT booked
             var availableRooms = await _dbContext.Rooms
-                .Where(r => r.RoomType.Capacity == capacity && r.RoomType.PricePerNight >= maxPrice && !bookedRoomIds.Contains(r.Id))
+                .Where(r => !bookedRoomIds.Contains(r.Id))
                 .Include(r => r.RoomType) // optional
                 .ToListAsync();
+
+            if (capacity.HasValue && capacity.Value != 0) availableRooms = availableRooms.Where(r => r.RoomType.Capacity == capacity).ToList();
+            if (maxPrice.HasValue && maxPrice.Value != 0) availableRooms = availableRooms.Where(r => r.RoomType.PricePerNight <= maxPrice).ToList();
 
             return availableRooms;
         }
