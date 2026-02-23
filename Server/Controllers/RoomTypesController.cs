@@ -1,5 +1,5 @@
 using Application.RoomTypes.Handlers;
-using Application.RoomTypes.Commands;
+using Shared;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Server.Controllers

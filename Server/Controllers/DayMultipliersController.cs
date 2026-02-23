@@ -1,5 +1,4 @@
-﻿using Application.DayMultipliers.Commands;
-using Application.DayMultipliers.Handlers;
+﻿using Application.DayMultipliers.Handlers;
 using Microsoft.AspNetCore.Mvc;
 using Shared;
 
@@ -20,8 +19,8 @@ namespace Server.Controllers
         [HttpPost("edit")]
         public async Task<IActionResult> Edit([FromServices] EditDayMultiplierHandler editDayMultiplierHandler, [FromBody] EditDayMultiplierCommand command)
         {
-            bool response = await editDayMultiplierHandler.Handle(command);
-            if (response) return Ok("Day multiplier updated successfully");
+            await editDayMultiplierHandler.Handle(command);
+            return Ok("Day multiplier updated successfully");
 
             return BadRequest("The specified id is invalid");
         }

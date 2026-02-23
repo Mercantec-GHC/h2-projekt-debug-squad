@@ -1,6 +1,6 @@
 ﻿using Application.Interfaces;
 using Domain;
-using Application.RoomTypes.Commands;
+using Shared;
 
 namespace Application.RoomTypes.Handlers
 {

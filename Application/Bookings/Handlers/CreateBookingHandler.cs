@@ -1,6 +1,6 @@
-﻿using Application.Bookings.Commands;
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using Domain;
+using Shared;
 
 namespace Application.Bookings.Handlers
 {

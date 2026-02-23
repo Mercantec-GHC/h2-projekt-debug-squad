@@ -1,6 +1,6 @@
 ﻿using Application.Interfaces;
 using Domain;
-using Application.Guests.Commands;
+using Shared;
 
 namespace Application.Guests.Handlers
 {

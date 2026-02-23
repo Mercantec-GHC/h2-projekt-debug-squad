@@ -1,4 +1,4 @@
-﻿namespace Application.Rooms.Commands
+﻿namespace Shared
 {
     public class CreateRoomCommand
     {

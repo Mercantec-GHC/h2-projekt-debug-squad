@@ -1,4 +1,4 @@
-﻿namespace Application.Bookings.Commands
+﻿namespace Shared
 {
     public class DeleteBookingCommand
     {

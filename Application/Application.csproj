@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Bookings\Commands\" />
     <Folder Include="Bookings\Queries\" />
     <Folder Include="Guests\Queries\" />
   </ItemGroup>
