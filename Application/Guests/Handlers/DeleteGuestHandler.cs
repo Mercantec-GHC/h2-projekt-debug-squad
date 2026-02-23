@@ -15,9 +15,8 @@ namespace Application.Guests.Handlers
         public async Task Handle(int guestId)
         {
             Guest? guest = await _repository.GetByIdAsync(guestId);
-            
-            if (guest == null)
-                throw new Exception("Guest not found.");
+
+            if (guest == null) throw new ArgumentException("Guest not found.");
 
             _repository.Delete(guest);
             await _repository.SaveChangesAsync();

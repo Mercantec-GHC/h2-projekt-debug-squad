@@ -16,18 +16,7 @@ namespace Application.Guests.Handlers
         public async Task<List<GuestDto>> Handle()
         {
             List<Guest> guests = await _repository.GetAllAsync();
-            return guests.Select(g => new GuestDto(
-                g.Id,
-                g.FullName,
-                g.PhoneNumber,
-                g.Email,
-                g.Bookings.Select(b => new BookingDto(
-                    b.Id,
-                    b.CheckInDate,
-                    b.CheckOutDate,
-                    b.TotalPrice
-                )).ToList()
-            )).ToList();
+            return guests.Select(g => new GuestDto(g.Id, g.FullName, g.PhoneNumber, g.Email, g.Bookings.Select(b => new BookingDto(b.Id, b.CheckInDate, b.CheckOutDate, b.TotalPrice)).ToList())).ToList();
         }
     }
 }
