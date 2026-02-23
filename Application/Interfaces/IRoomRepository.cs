@@ -11,15 +11,6 @@ namespace Application.Interfaces
         Task<Room?> GetByIdAsync(int id);
         void Delete(Room room);
 
-        Task<List<Room>> GetAvailableAsync(
-            DateTime requestedCheckIn,
-            DateTime requestedCheckOut,
-            int? capacity,
-            decimal? maxPrice);
-        //Task<List<Room>> GetFilteredAsync(
-        //    Expression<Func<Room, object>> orderBy,
-        //    int roomAmount,
-        //    bool showOnlyAvailable,
-        //    bool orderDescending);
+        Task<List<Room>> GetAvailableAsync(DateTime requestedCheckIn, DateTime requestedCheckOut, int? capacity, decimal? maxPrice);
     }
 }

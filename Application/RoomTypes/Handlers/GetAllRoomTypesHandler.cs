@@ -17,12 +17,7 @@ namespace Application.RoomTypes.Handlers
         {
             List<RoomType> roomTypes = await _repository.GetAllAsync();
 
-            return roomTypes.Select(rt => new RoomTypeDto(
-                rt.Id,
-                rt.Name,
-                rt.Capacity,
-                rt.PricePerNight
-            )).ToList();
+            return roomTypes.Select(rt => new RoomTypeDto(rt.Id, rt.Name, rt.Capacity, rt.PricePerNight)).ToList();
         }
     }
 }

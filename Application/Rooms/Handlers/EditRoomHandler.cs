@@ -21,10 +21,8 @@ namespace Application.Rooms.Handlers
 
             RoomType? roomType = await _roomTypeRepository.GetByIdAsync(command.RoomTypeId);
 
-            if (room == null)
-                throw new Exception("Room not found.");
-            if (roomType == null)
-                throw new Exception("RoomType not found");
+            if (room == null) throw new InvalidOperationException("Room not found.");
+            if (roomType == null) throw new InvalidOperationException("RoomType not found");
 
             room.ChangeRoomType(roomType);
             await _roomRepository.SaveChangesAsync();

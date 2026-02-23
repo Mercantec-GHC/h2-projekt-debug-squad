@@ -17,7 +17,7 @@ namespace Application.RoomTypes.Handlers
         {
             RoomType? roomType = await _repository.GetByIdAsync(command.Id);
 
-            if (roomType == null) throw new Exception("The roomType id is invalid");
+            if (roomType == null) throw new ArgumentException("The roomType id is invalid");
 
             roomType.Change(command.Name, command.Capacity, command.PricePerNight);
 

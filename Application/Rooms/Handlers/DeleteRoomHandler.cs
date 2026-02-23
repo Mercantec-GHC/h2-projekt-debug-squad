@@ -14,12 +14,9 @@ namespace Application.Rooms.Handlers
 
         public async Task Handle(int id)
         {
-            Room? room = await _repository.GetByIdAsync(id);
-
-            if (room == null)
-                throw new Exception("Room not found.");
-
+            Room? room = await _repository.GetByIdAsync(id) ?? throw new ArgumentException("Room not found.");
             _repository.Delete(room);
+
             await _repository.SaveChangesAsync();
         }
     }
