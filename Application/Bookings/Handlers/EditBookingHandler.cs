@@ -38,8 +38,7 @@ namespace Application.Bookings.Handlers
             var checkOutUtc = DateTime.SpecifyKind(command.CheckOutDate.Date, DateTimeKind.Utc);
 
             // Recalculate total price with day multipliers
-            decimal totalPrice = await _pricingService.CalculateTotalPriceAsync(
-                booking.Room.RoomType.PricePerNight, checkInUtc, checkOutUtc);
+            decimal totalPrice = await _pricingService.CalculateTotalPriceAsync(booking.Room.RoomType.PricePerNight, checkInUtc, checkOutUtc);
 
             booking.ChangeDates(checkInUtc, checkOutUtc, totalPrice);
 

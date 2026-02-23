@@ -57,8 +57,7 @@ namespace Application.Bookings.Handlers
             var checkOutUtc = DateTime.SpecifyKind(command.CheckOutDate.Date, DateTimeKind.Utc);
 
             // Calculate total price using day multipliers
-            decimal totalPrice = await _pricingService.CalculateTotalPriceAsync(
-                room.RoomType.PricePerNight, checkInUtc, checkOutUtc);
+            decimal totalPrice = await _pricingService.CalculateTotalPriceAsync(room.RoomType.PricePerNight, checkInUtc, checkOutUtc);
 
             // Create booking
             var booking = new Booking(guest, room, checkInUtc, checkOutUtc, totalPrice);
