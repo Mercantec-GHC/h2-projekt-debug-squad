@@ -57,9 +57,10 @@ namespace Application.Rooms.Handlers
         public async Task<List<RoomDto>?> Handle(GetAvailableRoomsCommand command)
         {
             var rooms = await _roomRepository.GetAvailableAsync(
-                command.CheckInDate, 
-                command.CheckOutDate, 
-                command.RoomTypeId);
+                command.CheckInDate,
+                command.CheckOutDate,
+                command.Capacity,
+                command.MaxPrice);
 
             return rooms
                 .Select(r => new RoomDto(

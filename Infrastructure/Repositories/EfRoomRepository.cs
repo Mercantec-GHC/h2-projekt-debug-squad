@@ -47,7 +47,8 @@ namespace Infrastructure.Repositories
         public async Task<List<Room>> GetAvailableAsync(
             DateTime requestedCheckIn,
             DateTime requestedCheckOut,
-            int roomTypeId)
+            int capacity,
+            decimal maxPrice)
         {
             requestedCheckIn = DateTime.SpecifyKind(requestedCheckIn, DateTimeKind.Utc);
             requestedCheckOut = DateTime.SpecifyKind(requestedCheckOut, DateTimeKind.Utc);
@@ -62,8 +63,7 @@ namespace Infrastructure.Repositories
 
             // Get rooms of the requested type that are NOT booked
             var availableRooms = await _dbContext.Rooms
-                .Where(r => r.RoomType.Id == roomTypeId &&
-                            !bookedRoomIds.Contains(r.Id))
+                .Where(r => r.RoomType.Capacity == capacity && r.RoomType.PricePerNight >= maxPrice && !bookedRoomIds.Contains(r.Id))
                 .Include(r => r.RoomType) // optional
                 .ToListAsync();
 
