@@ -47,8 +47,8 @@ namespace Infrastructure.Repositories
         public async Task<List<Room>> GetAvailableAsync(
             DateTime requestedCheckIn,
             DateTime requestedCheckOut,
-            int capacity,
-            decimal maxPrice)
+            int? capacity,
+            decimal? maxPrice)
         {
             requestedCheckIn = DateTime.SpecifyKind(requestedCheckIn, DateTimeKind.Utc);
             requestedCheckOut = DateTime.SpecifyKind(requestedCheckOut, DateTimeKind.Utc);
