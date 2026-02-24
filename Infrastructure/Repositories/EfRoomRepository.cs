@@ -46,18 +46,8 @@ namespace Infrastructure.Repositories
             requestedCheckIn = DateTime.SpecifyKind(requestedCheckIn, DateTimeKind.Utc);
             requestedCheckOut = DateTime.SpecifyKind(requestedCheckOut, DateTimeKind.Utc);
 
-            // Get IDs of rooms that are already booked in the requested period
-            var bookedRoomIds = await _dbContext.Bookings
-                .Where(b => b.CheckInDate < requestedCheckOut && b.CheckOutDate > requestedCheckIn)
-                .Select(b => b.Room.Id) // Use FK instead of navigation property
-                .Distinct()
-                .ToListAsync();
-
-            // Get rooms of the requested type that are NOT booked
-            var availableRooms = await _dbContext.Rooms
-                .Where(r => !bookedRoomIds.Contains(r.Id))
-                .Include(r => r.RoomType) // optional
-                .ToListAsync();
+            var bookedRoomIds = await _dbContext.Bookings.Where(b => b.CheckInDate < requestedCheckOut && b.CheckOutDate > requestedCheckIn).Select(b => b.Room.Id).Distinct().ToListAsync();
+            var availableRooms = await _dbContext.Rooms.Where(r => !bookedRoomIds.Contains(r.Id)).Include(r => r.RoomType).ToListAsync();
 
             if (capacity.HasValue && capacity.Value != 0) availableRooms = availableRooms.Where(r => r.RoomType.Capacity == capacity).ToList();
             if (maxPrice.HasValue && maxPrice.Value != 0) availableRooms = availableRooms.Where(r => r.RoomType.PricePerNight <= maxPrice).ToList();
