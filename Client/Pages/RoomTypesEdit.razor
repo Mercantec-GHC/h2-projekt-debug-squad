@@ -68,7 +68,15 @@ else
     {
         try
         {
-            var response = await Http.PostAsJsonAsync("api/roomtypes/edit", type);
+            var command = new EditRoomTypeCommand
+            {
+                Id = type.Id,
+                Name = type.Name,
+                Capacity = type.Capacity,
+                PricePerNight = type.PricePerNight
+            };
+
+            var response = await Http.PutAsJsonAsync("api/roomtypes", command);
 
             if (response.IsSuccessStatusCode)
             {

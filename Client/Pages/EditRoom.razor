@@ -87,13 +87,13 @@ else
     {
         if (_room == null) return;
 
-        var updateDto = new UpdateRoomTypeDto
+        var updateDto = new EditRoomCommand
         {
             RoomId = _room.Id,
             RoomTypeId = SelectedRoomTypeId // use the property bound to the dropdown
         };
 
-        var response = await Http.PostAsJsonAsync("api/rooms/edit", updateDto);
+        var response = await Http.PutAsJsonAsync("api/rooms", updateDto);
 
         if (response.IsSuccessStatusCode)
         {

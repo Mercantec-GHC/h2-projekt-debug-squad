@@ -69,7 +69,7 @@ else
 
         try
         {
-            var response = await Http.PutAsJsonAsync("api/guests/edit", _guest);
+            var response = await Http.PutAsJsonAsync("api/guests", _guest);
 
             if (response.IsSuccessStatusCode)
             {

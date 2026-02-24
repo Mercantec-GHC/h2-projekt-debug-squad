@@ -12,8 +12,8 @@
     <!-- Step 1: Dates are pre-filled and read-only, only guests count editable -->
     <h4>Step 1: Confirm Guests</h4>
 
-    <p><strong>Room:</strong> @SelectedRoom.Number</p>
-    <p><strong>Price per night:</strong> $@SelectedRoom.RoomType.PricePerNight</p>
+    <p><strong>Room:</strong> @SelectedRoom?.Number</p>
+    <p><strong>Price per night:</strong> $@SelectedRoom?.RoomType.PricePerNight</p>
 
     <p><strong>Check-in:</strong> @CheckInDate.ToShortDateString()</p>
     <p><strong>Check-out:</strong> @CheckOutDate.ToShortDateString()</p>
@@ -22,7 +22,7 @@
     <input type="number"
            @bind="SelectedCapacity"
            min="1"
-           max="@SelectedRoom.RoomType.Capacity"
+           max="@SelectedRoom?.RoomType.Capacity"
            class="form-control mb-2" />
 
     <button class="btn btn-primary w-100" @onclick="NextStep">Next</button>
@@ -52,12 +52,12 @@ else
     <!-- Step 3: Confirm Booking -->
     <h4>Step 3: Confirm Booking</h4>
 
-    <p><strong>Room:</strong> @SelectedRoom.Number</p>
+    <p><strong>Room:</strong> @(SelectedRoom?.Number ?? "N/A")</p>
     <p><strong>Check-in:</strong> @CheckInDate.ToShortDateString()</p>
     <p><strong>Check-out:</strong> @CheckOutDate.ToShortDateString()</p>
     <p><strong>Nights:</strong> @NumberOfNights</p>
     <p><strong>Guests:</strong> @SelectedCapacity</p>
-    <p><strong>Price per night:</strong> $@SelectedRoom.RoomType.PricePerNight</p>
+    <p><strong>Price per night:</strong> $@SelectedRoom?.RoomType.PricePerNight</p>
     <p><strong>Total Price:</strong> $@TotalPrice</p>
 
     <button class="btn btn-primary w-100" @onclick="FinishBooking">Confirm Booking</button>
