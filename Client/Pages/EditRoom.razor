@@ -93,7 +93,7 @@ else
             RoomTypeId = SelectedRoomTypeId // use the property bound to the dropdown
         };
 
-        var response = await Http.PutAsJsonAsync("api/rooms", updateDto);
+        var response = await Http.PostAsJsonAsync("api/rooms/edit", updateDto);
 
         if (response.IsSuccessStatusCode)
         {

@@ -146,10 +146,10 @@ else
 
         try
         {
-            var command = new
+            var command = new EditBookingCommand
             {
                 BookingId = bookingId,
-                GuestId,
+                GuestId = GuestId,
                 CheckInDate = editCheckIn,
                 CheckOutDate = editCheckOut
             };

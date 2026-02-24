@@ -78,8 +78,7 @@ namespace Server.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Edit([FromServices] EditBookingHandler handler,
-            [FromBody] EditBookingCommand command)
+        public async Task<IActionResult> Edit([FromServices] EditBookingHandler handler, [FromBody] EditBookingCommand command)
         {
             try
             {
