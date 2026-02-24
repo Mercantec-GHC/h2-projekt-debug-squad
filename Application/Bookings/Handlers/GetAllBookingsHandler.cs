@@ -20,4 +20,6 @@ namespace Application.Bookings.Handlers
             return bookings.Select(b => new BookingDto(b.Id, new RoomDto(b.Room.Id, b.Room.Number), b.CheckInDate, b.CheckOutDate, b.TotalPrice)).ToList();
         }
     }
+
+
 }

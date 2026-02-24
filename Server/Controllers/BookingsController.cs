@@ -121,5 +121,19 @@ namespace Server.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+
+        [HttpGet("summary")]
+        public async Task<IActionResult> GetAllSummary([FromServices] GetBookingSummariesHandler handler)
+        {
+            try
+            {
+                var bookings = await handler.Handle();
+                return Ok(bookings);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+        }
     }
 }
