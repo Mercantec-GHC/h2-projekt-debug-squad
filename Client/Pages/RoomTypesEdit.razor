@@ -20,7 +20,10 @@ else
         @foreach (var type in _roomTypes)
         {
             <div class="list-group-item mb-3 p-3 shadow-sm">
-                <h5>@type.Name</h5>
+                <div class="mb-2">
+                    <label class="form-label">Room Type Name</label>
+                    <input class="form-control" @bind="type.Name" />
+                </div>
 
                 <!-- Capacity -->
                 <div class="mb-2">
