@@ -4,7 +4,6 @@
 
 @page "/room-details/{Id:int}"
 
-
 <h3>RoomDetails</h3>
 
 @if (room != null)
@@ -17,20 +16,19 @@
         <p>Capacity: @room.RoomType.Capacity</p>
         <p>Price per Night: $@room.RoomType.PricePerNight</p>
 
-      
-            <button class="btn btn-success w-100" @onclick="() => NavigateToBooking(room.Id)">
-                Book Now
-            </button>
-     
+
+        <button class="btn btn-success w-100" @onclick="() => NavigateToBooking(room.Id)">
+            Book Now
+        </button>
+
     </div>
 }
-else {
+else
+{
     <p>Page is loading...</p>
 }
 
 <p>@message</p>
-
-
 
 @code {
     [Parameter]
@@ -56,11 +54,4 @@ else {
         // Go to booking page with roomId
         Navigation.NavigateTo($"/booking/{roomId}");
     }
-
-
-
-
-
-
-
 }

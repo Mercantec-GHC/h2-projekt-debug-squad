@@ -2,6 +2,7 @@
 @inject HttpClient Http
 @inject NavigationManager Navigation
 @inject IJSRuntime JsRuntime
+@using Shared
 
 
 <h3 class="mb-4 d-flex justify-content-between align-items-center">
@@ -101,8 +102,7 @@
     {
         try
         {
-            guests = await Http.GetFromJsonAsync<List<Shared.GuestDto>>("api/guests")
-                     ?? new List<Shared.GuestDto>();
+            guests = await Http.GetFromJsonAsync<List<Shared.GuestDto>>("api/guests") ?? new List<Shared.GuestDto>();
         }
         catch (Exception ex)
         {
@@ -112,7 +112,7 @@
 
     private async Task AddGuest()
     {
-        var command = new
+        var command = new AddGuestCommand
         {
             FullName = _fullName,
             PhoneNumber = _phoneNumber,

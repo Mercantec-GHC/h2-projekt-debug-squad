@@ -35,8 +35,7 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll(
-            [FromServices] GetAllRoomsHandler handler)
+        public async Task<IActionResult> GetAll([FromServices] GetAllRoomsHandler handler)
         {
             try
             {

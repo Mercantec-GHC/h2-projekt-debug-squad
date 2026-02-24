@@ -22,7 +22,7 @@ else
 
     <!-- Booking History -->
     <h4>Booking History</h4>
-    @if (guest.Bookings != null && guest.Bookings.Count > 0) 
+    @if (guest.Bookings != null && guest.Bookings.Count > 0)
     {
         <div class="row g-3">
             @foreach (var booking in guest.Bookings)
@@ -183,7 +183,7 @@ else
 
         try
         {
-            var command = new { GuestId, BookingId = bookingId };
+            var command = new DeleteBookingCommand { GuestId = GuestId, BookingId = bookingId };
 
             var request = new HttpRequestMessage(HttpMethod.Delete, "api/bookings")
             {

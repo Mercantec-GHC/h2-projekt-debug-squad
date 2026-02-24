@@ -1,5 +1,6 @@
 ﻿@page "/signup"
 @inject HttpClient Http
+@using Shared
 
 <h3>Sign Up</h3>
 
@@ -22,12 +23,7 @@
 
     private async Task Register()
     {
-        var command = new
-        {
-            FullName = _fullName,
-            Email = _email,
-            PhoneNumber = _phoneNumber
-        };
+        var command = new RegisterGuestCommand(_fullName, _phoneNumber, _email);
 
         try
         {

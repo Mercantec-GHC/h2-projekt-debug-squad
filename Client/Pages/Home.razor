@@ -79,7 +79,7 @@
 
     private async Task ApplyFilters()
     {
-        var request = new
+        var request = new GetAvailableRoomsCommand
         {
             CheckInDate = CheckInDate.Date,
             CheckOutDate = CheckOutDate.Date,

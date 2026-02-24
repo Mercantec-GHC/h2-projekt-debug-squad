@@ -1,6 +1,5 @@
 ﻿@page "/booking/{RoomId:int}"
 @page "/booking/{RoomId:int}/{CheckIn:datetime}/{CheckOut:datetime}"
-@using Client.Models
 @using Shared
 @inject HttpClient Http
 @inject NavigationManager Navigation
@@ -154,10 +153,11 @@ else
     {
         if (SelectedRoom == null) return;
 
-        var bookingForm = new BookingFormModel // object for POST request
+        var bookingForm = new CreateBookingCommand// object for POST request
         {
-            RoomId = SelectedRoom.Id,
             GuestId = GuestId,
+            RoomId = SelectedRoom.Id,
+            
             CheckInDate = CheckInDate.Date,   
             CheckOutDate = CheckOutDate.Date 
         };
