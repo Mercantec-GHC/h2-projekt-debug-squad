@@ -21,7 +21,7 @@ namespace Application.Rooms.Handlers
             var bookings = await _bookingRepository.GetAllAsync();
             bool hasBookings = bookings.Any(b => b.Room.Id == id);
 
-            if (hasBookings)
+            if (hasBookings) 
                 throw new InvalidOperationException("Cannot delete a room that has bookings.");
 
             _roomRepository.Delete(room);
