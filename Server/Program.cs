@@ -58,6 +58,8 @@ namespace Server
             builder.Services.AddScoped<GetAllRoomTypesHandler>();
             builder.Services.AddScoped<EditRoomTypeHandler>();
             builder.Services.AddScoped<IRoomTypeRepository, EfRoomTypeRepository>();
+            
+            builder.Services.AddScoped<GetBookingSummariesHandler>();
 
 
 
