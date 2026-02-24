@@ -71,13 +71,7 @@ else
     {
         try
         {
-            var command = new EditRoomTypeCommand
-            {
-                Id = type.Id,
-                Name = type.Name,
-                Capacity = type.Capacity,
-                PricePerNight = type.PricePerNight
-            };
+            var command = new EditRoomTypeCommand(type.Id, type.Name, type.Capacity, type.PricePerNight);
 
             var response = await Http.PutAsJsonAsync("api/roomtypes", command);
 

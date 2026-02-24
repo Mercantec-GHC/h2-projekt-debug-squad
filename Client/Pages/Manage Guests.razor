@@ -112,12 +112,7 @@
 
     private async Task AddGuest()
     {
-        var command = new AddGuestCommand
-        {
-            FullName = _fullName,
-            PhoneNumber = _phoneNumber,
-            Email = _email
-        };
+        var command = new AddGuestCommand(_fullName, _phoneNumber, _email);
 
         try
         {

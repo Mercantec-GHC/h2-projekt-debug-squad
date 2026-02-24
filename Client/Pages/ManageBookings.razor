@@ -61,8 +61,7 @@ else
     {
         try
         {
-            bookings = await Http.GetFromJsonAsync<List<BookingSummaryDto>>("api/bookings/summary")
-                       ?? new List<BookingSummaryDto>();
+            bookings = await Http.GetFromJsonAsync<List<BookingSummaryDto>>("api/bookings/summary") ?? new List<BookingSummaryDto>();
         }
         catch (Exception ex)
         {

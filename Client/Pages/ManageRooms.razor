@@ -83,7 +83,7 @@
                     <td>@room.RoomType.PricePerNight</td>
                     <td>
                         <button class="btn btn-sm btn-warning me-1" @onclick="() => NavigateToEdit(room.Id)">   <i class="bi bi-pencil"></i>  </button>
-                        <button class="btn btn-sm btn-danger" @onclick="()=>DeleteConfirm(room.Id)"><i class="bi bi-trash"></i></button>
+                        <button class="btn btn-sm btn-danger" @onclick="() => DeleteConfirm(room.Id)"><i class="bi bi-trash"></i></button>
                     </td>
                 </tr>
             }
@@ -146,11 +146,7 @@
             return;
         }
 
-        var command = new CreateRoomCommand
-        {
-            Number = _roomNumber,
-            RoomTypeId = _selectedRoomTypeId
-        };
+        var command = new CreateRoomCommand(_roomNumber, _selectedRoomTypeId);
 
         try
         {
@@ -187,6 +183,11 @@
             if (response.IsSuccessStatusCode)
             {
                 _message = "Room succesfully Deleted";
+            }
+            else
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                _message = $"Failed to delete room: {error}";
             }
             await LoadRooms();
         }

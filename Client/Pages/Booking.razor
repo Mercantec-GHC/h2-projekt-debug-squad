@@ -38,7 +38,7 @@ else if (!GuestExists)
     <input type="email" @bind="GuestEmail" placeholder="Enter your email" class="form-control mb-2" />
 
     <button class="btn btn-success w-100" @onclick="CheckGuest" disabled="@string.IsNullOrWhiteSpace(GuestEmail)">
-        Next                                       
+        Next
     </button>
 
     @if (!string.IsNullOrEmpty(Message))
@@ -72,7 +72,7 @@ else
     [Parameter] public DateTime? CheckIn { get; set; }
     [Parameter] public DateTime? CheckOut { get; set; }
 
-    private RoomDto? SelectedRoom; 
+    private RoomDto? SelectedRoom;
     private DateTime CheckInDate;
     private DateTime CheckOutDate;
     private int SelectedCapacity = 1;
@@ -132,7 +132,7 @@ else
         try
         {
             var guest = await Http.GetFromJsonAsync<GuestDto>($"api/guests/byemail?email={Uri.EscapeDataString(GuestEmail)}");
-                                            //check if a guest exist by email 
+            //check if a guest exist by email
             if (guest == null)
             {
                 Navigation.NavigateTo("/signup"); //if not navigates to sign up
@@ -153,14 +153,7 @@ else
     {
         if (SelectedRoom == null) return;
 
-        var bookingForm = new CreateBookingCommand// object for POST request
-        {
-            GuestId = GuestId,
-            RoomId = SelectedRoom.Id,
-            
-            CheckInDate = CheckInDate.Date,   
-            CheckOutDate = CheckOutDate.Date 
-        };
+        var bookingForm = new CreateBookingCommand(GuestId, RoomId = SelectedRoom.Id, CheckInDate = CheckInDate.Date, CheckOutDate = CheckOutDate.Date);
 
         try
         {

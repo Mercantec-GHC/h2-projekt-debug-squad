@@ -79,23 +79,17 @@
 
     private async Task ApplyFilters()
     {
-        var request = new GetAvailableRoomsCommand
-        {
-            CheckInDate = CheckInDate.Date,
-            CheckOutDate = CheckOutDate.Date,
-            Capacity = _filterCapacity,
-            MaxPrice = _filterMaxPrice
-        };
+        var request = new GetAvailableRoomsCommand(CheckInDate.Date, CheckOutDate.Date, _filterCapacity, _filterMaxPrice);
 
         var response = await Http.PostAsJsonAsync("api/rooms/available", request);
 
         if (response.IsSuccessStatusCode)
         {
-            filteredRooms = await response.Content.ReadFromJsonAsync<List<RoomDto>>() ?? new List<RoomDto>(); 
+            filteredRooms = await response.Content.ReadFromJsonAsync<List<RoomDto>>() ?? new List<RoomDto>();
         }
         else
         {
-            filteredRooms = new List<RoomDto>();  
+            filteredRooms = new List<RoomDto>();
         }
     }
 

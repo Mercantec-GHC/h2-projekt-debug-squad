@@ -146,13 +146,7 @@ else
 
         try
         {
-            var command = new EditBookingCommand
-            {
-                BookingId = bookingId,
-                GuestId = GuestId,
-                CheckInDate = editCheckIn,
-                CheckOutDate = editCheckOut
-            };
+            var command = new EditBookingCommand(bookingId, GuestId, editCheckIn, editCheckOut);
 
             var response = await Http.PutAsJsonAsync("api/bookings", command);
 
@@ -183,7 +177,7 @@ else
 
         try
         {
-            var command = new DeleteBookingCommand { GuestId = GuestId, BookingId = bookingId };
+            var command = new DeleteBookingCommand(GuestId, bookingId);
 
             var request = new HttpRequestMessage(HttpMethod.Delete, "api/bookings")
             {
