@@ -20,7 +20,7 @@ namespace Application.Bookings.Handlers
             var bookings = await _repository.GetAllAsync();
             return bookings.Select(b => new BookingSummaryDto(
                 b.Id,
-                new RoomDto(b.Room.Id, b.Room.Number),
+                b.Room != null ? new RoomDto(b.Room.Id, b.Room.Number) : null,
                 b.Guest?.FullName ?? "Unknown",
                 b.CheckInDate,
                 b.CheckOutDate,
