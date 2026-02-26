@@ -22,6 +22,24 @@ namespace Server.Controllers
             }
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetRoomTypeById([FromServices] GetRoomTypeByIdHandler handler, int id)
+        {
+            try 
+            {
+                var roomType = await handler.Handle(id);
+                if (roomType == null) 
+                {
+                    return NotFound("room type is not found");
+                }
+                return Ok(roomType);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
         [HttpPost("available")]
         public async Task<IActionResult> GetAvailable([FromServices] GetAvailableRoomTypesHandler handler, [FromBody] GetAvailableRoomTypesCommand command)
         {

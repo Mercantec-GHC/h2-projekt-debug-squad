@@ -31,9 +31,12 @@ namespace Infrastructure.Repositories
 
         public async Task<Guest?> GetByIdAsync(int id)
         {
-            Guest? guest = await _dbContext.Guests.Include(g => g.Bookings).ThenInclude(b => b.Room).ThenInclude(r => r.RoomType).SingleOrDefaultAsync(g => g.Id == id);
-
-            return guest;
+            return await _dbContext.Guests
+        .Include(g => g.Bookings)
+            .ThenInclude(b => b.Room)
+        .Include(g => g.Bookings)
+            .ThenInclude(b => b.RoomType)
+        .SingleOrDefaultAsync(g => g.Id == id);
         }
 
         public void Delete(Guest guest)

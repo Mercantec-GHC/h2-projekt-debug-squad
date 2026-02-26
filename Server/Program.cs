@@ -32,7 +32,6 @@ namespace Server
             builder.Services.AddScoped<GetRoomsFilteredHandler>();
             builder.Services.AddScoped<GetAvailableRoomsHandler>();
             builder.Services.AddScoped<IRoomRepository, EfRoomRepository>();
-
             builder.Services.AddScoped<AddGuestHandler>();
             builder.Services.AddScoped<GetAllGuestsHandler>();
             builder.Services.AddScoped<GetGuestByIdHandler>();
@@ -40,7 +39,6 @@ namespace Server
             builder.Services.AddScoped<EditGuestHandler>();
             builder.Services.AddScoped<RegisterGuestHandler>();
             builder.Services.AddScoped<IGuestRepository, EfGuestRepository>();
-
             builder.Services.AddScoped<GetBookingsByGuestIdHandler>();
             builder.Services.AddScoped<CreateBookingHandler>();
             builder.Services.AddScoped<DeleteBookingHandler>();
@@ -48,22 +46,16 @@ namespace Server
             builder.Services.AddScoped<GetBookingByIdHandler>();
             builder.Services.AddScoped<EditBookingHandler>();
             builder.Services.AddScoped<IBookingRepository, EfBookingRepository>();
-
             builder.Services.AddScoped<EditDayMultiplierHandler>();
             builder.Services.AddScoped<GetAllDayMultipliersHandler>();
             builder.Services.AddScoped<IDayMultiplierRepository, EfDayMultiplierRepository>();
-
             builder.Services.AddScoped<IRoomPricingService, RoomPricingService>();
-
             builder.Services.AddScoped<GetAllRoomTypesHandler>();
             builder.Services.AddScoped<EditRoomTypeHandler>();
             builder.Services.AddScoped<GetAvailableRoomTypesHandler>();
             builder.Services.AddScoped<IRoomTypeRepository, EfRoomTypeRepository>();
-            
+            builder.Services.AddScoped<GetRoomTypeByIdHandler>();
             builder.Services.AddScoped<GetBookingSummariesHandler>();
-
-
-
             builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

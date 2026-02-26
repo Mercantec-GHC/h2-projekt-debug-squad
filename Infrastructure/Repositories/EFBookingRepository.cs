@@ -21,14 +21,14 @@ namespace Infrastructure.Repositories
 
         public async Task<List<Booking>> GetAllAsync()
         {
-            return await _dbContext.Bookings.Include(b => b.Room).ThenInclude(r => r.RoomType). Include(b => b.Guest)
+            return await _dbContext.Bookings.Include(b => b.Room).Include(r => r.RoomType). Include(b => b.Guest)
            .ToListAsync();
 
         }
 
         public async Task<Booking?> GetByIdAsync(int id)
         {
-            return await _dbContext.Bookings.Include(b => b.Room).ThenInclude(r => r.RoomType).SingleOrDefaultAsync(r => r.Id == id);
+            return await _dbContext.Bookings.Include(b => b.Room).Include(r => r.RoomType).SingleOrDefaultAsync(r => r.Id == id);
         }
     }
 }
