@@ -36,6 +36,7 @@ namespace Application.Bookings.Handlers
             if (isRoomBooked) throw new ArgumentException("Room is already booked for the selected dates");
 
             var checkInUtc = DateTime.SpecifyKind(command.CheckInDate.Date, DateTimeKind.Utc);
+
             var checkOutUtc = DateTime.SpecifyKind(command.CheckOutDate.Date, DateTimeKind.Utc);
 
             decimal totalPrice = await _pricingService.CalculateTotalPriceAsync(room.RoomType.PricePerNight, checkInUtc, checkOutUtc);
@@ -48,4 +49,3 @@ namespace Application.Bookings.Handlers
         }
     }
 }
- 
