@@ -28,7 +28,7 @@
             @foreach (var booking in bookings)
             {
                 <tr>
-                    <td>@booking.Room.Number</td>
+                    <td>@booking.Room?.Number</td>
                     <td>@booking.GuestName</td>
                     <td>@booking.CheckInDate.ToShortDateString()</td>
                     <td>@booking.CheckOutDate.ToShortDateString()</td>
