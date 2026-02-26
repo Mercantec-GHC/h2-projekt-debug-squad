@@ -9,5 +9,12 @@ namespace Application.Interfaces
         Task<List<RoomType>> GetAllAsync();
         Task<RoomType?> GetByIdAsync(int id);
         void Delete(RoomType roomType);
+        Task<List<RoomType>> GetAvailableAsync(
+            int? capacity,
+            decimal? maxPrice,
+            DateTime requestedCheckIn,
+            DateTime requestedCheckOut);
+        Task<int> GetOverlappingAsync(int roomTypeId, DateTime checkInDate, DateTime checkOutDate);
+        Task<int> RoomCountAsync(int roomTypeId);
     }
 }
