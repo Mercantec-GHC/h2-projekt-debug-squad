@@ -6,89 +6,50 @@
 
 <h3>Booking Page</h3>
 
-@if (SelectedRoomType != null && !Step1Completed) //if roomType is selected and step1 is not completed show the block
+@if (SelectedRoomType != null)
 {
-    <!-- Step 1: Dates are pre-filled and read-only, only guests count editable -->
-    <h4>Step 1: Confirm Guests</h4>
+    <!-- All info on the same page -->
+    <h4>Booking Details</h4>
 
     <p><strong>RoomType:</strong> @SelectedRoomType?.Name</p>
     <p><strong>Price per night:</strong> $@SelectedRoomType?.PricePerNight</p>
-
     <p><strong>Check-in:</strong> @CheckInDate.ToShortDateString()</p>
     <p><strong>Check-out:</strong> @CheckOutDate.ToShortDateString()</p>
+    <p><strong>Guests:</strong> @SelectedCapacity</p>
 
-    <label>Number of Guests:</label>
-    <input type="number"
-           @bind="SelectedCapacity"
-           min="1"
-           max="@SelectedRoomType?.Capacity"
-           class="form-control mb-2" />
-
-    <button class="btn btn-primary w-100" @onclick="NextStep">Next</button>
-
-    @if (!string.IsNullOrEmpty(Message))
-    {
-        <div class="alert alert-danger mt-2">@Message</div>
-    }
-}
-else if (!GuestExists)
-{
-    <!-- Step 2: Enter Guest Email -->
-    <h4>Step 2: Guest Info Required</h4>
+    <label>Enter your email:</label>
     <input type="email" @bind="GuestEmail" placeholder="Enter your email" class="form-control mb-2" />
 
-    <button class="btn btn-success w-100" @onclick="CheckGuest" disabled="@string.IsNullOrWhiteSpace(GuestEmail)">
-        Next
+    <button class="btn btn-primary w-100" @onclick="CheckGuestAndConfirm"
+            disabled="@string.IsNullOrWhiteSpace(GuestEmail)">
+        Confirm Booking
     </button>
 
     @if (!string.IsNullOrEmpty(Message))
     {
-        <div class="alert alert-danger mt-2">@Message</div>
-    }
-}
-else
-{
-    <!-- Step 3: Confirm Booking -->
-    <h4>Step 3: Confirm Booking</h4>
-
-    <p><strong>RoomType:</strong> @SelectedRoomType?.Name</p>
-    <p><strong>Check-in:</strong> @CheckInDate.ToShortDateString()</p>
-    <p><strong>Check-out:</strong> @CheckOutDate.ToShortDateString()</p>
-    <p><strong>Nights:</strong> @NumberOfNights</p>
-    <p><strong>Guests:</strong> @SelectedCapacity</p>
-    <p><strong>Price per night:</strong> $@SelectedRoomType?.PricePerNight</p>
-    <p><strong>Total Price:</strong> $@TotalPrice</p>
-
-    <button class="btn btn-primary w-100" @onclick="FinishBooking">Confirm Booking</button>
-
-    @if (!string.IsNullOrEmpty(Message))
-    {
-        <div class="alert alert-success mt-2">@Message</div>
+        <div class="alert @AlertClass mt-2">@Message</div>
     }
 }
 
 @code {
-    [Parameter] public int RoomTypeId { get; set; }  // parameters from URL
+    [Parameter] public int RoomTypeId { get; set; }
     [Parameter] public DateTime? CheckIn { get; set; }
     [Parameter] public DateTime? CheckOut { get; set; }
 
     private RoomTypeDto? SelectedRoomType;
     private DateTime CheckInDate;
     private DateTime CheckOutDate;
-    private int SelectedCapacity = 1;
-
-    private bool Step1Completed = false;
-    private bool GuestExists = false;
-    private int GuestId;
+    private int SelectedCapacity = 1; // always prefilled
     private string GuestEmail = string.Empty;
+    private int GuestId;
     private string Message = string.Empty;
+    private string AlertClass = "alert-danger"; // dynamic alert styling
 
     private int NumberOfNights => (CheckOutDate - CheckInDate).Days;
     private decimal TotalPrice => SelectedRoomType != null ? SelectedRoomType.PricePerNight * NumberOfNights : 0;
 
     protected override async Task OnInitializedAsync()
     {
-        // Load the roomType
         var roomTypeList = await Http.GetFromJsonAsync<List<RoomTypeDto>>("api/roomtypes");
         SelectedRoomType = roomTypeList?.FirstOrDefault(r => r.Id == RoomTypeId);
 
@@ -98,54 +59,34 @@ else
             return;
         }
 
-        // Prefill dates from URL or defaults
         CheckInDate = CheckIn?.Date ?? DateTime.Today;
         CheckOutDate = CheckOut?.Date ?? DateTime.Today.AddDays(1);
     }
 
-    private void NextStep()
-    {
-        if (SelectedCapacity < 1)
-        {
-            Message = "Please enter a valid number of guests";
-            return;
-        }
-
-        if (SelectedRoomType != null && SelectedCapacity > SelectedRoomType.Capacity)
-        {
-            Message = $"Maximum capacity for this roomType is {SelectedRoomType.Capacity} guests.";
-            return;
-        }
-
-        Step1Completed = true;
-        Message = string.Empty;
-    }
-
-    private async Task CheckGuest()
+    private async Task CheckGuestAndConfirm()
     {
         if (string.IsNullOrWhiteSpace(GuestEmail))
         {
             Message = "Please enter your email";
+            AlertClass = "alert-danger";
             return;
         }
 
         try
         {
             var guest = await Http.GetFromJsonAsync<GuestDto>($"api/guests/byemail?email={Uri.EscapeDataString(GuestEmail)}");
-            //check if a guest exist by email
             if (guest == null)
             {
-                Navigation.NavigateTo("/signup"); //if not navigates to sign up
+                Navigation.NavigateTo("/signup");
                 return;
             }
 
             GuestId = guest.Id;
-            GuestExists = true;
-            Message = string.Empty;
+            await FinishBooking();
         }
         catch
         {
-            Navigation.NavigateTo("/signup");  //// if any error occurs, navigate to sign up page
+            Navigation.NavigateTo("/signup");
         }
     }
 
@@ -157,15 +98,12 @@ else
 
         try
         {
-            var response = await Http.PostAsJsonAsync("api/bookings", bookingForm); //sends booking too the server
+            var response = await Http.PostAsJsonAsync("api/bookings", bookingForm);
 
             if (response.IsSuccessStatusCode)
             {
                 Message = "Booking completed successfully!";
-                Step1Completed = false;
-                GuestExists = false;
-                GuestEmail = string.Empty;
-                SelectedCapacity = 1;
+                AlertClass = "alert-success";
 
                 await Task.Delay(3000);
                 Navigation.NavigateTo("/");
@@ -174,11 +112,13 @@ else
             {
                 var error = await response.Content.ReadAsStringAsync();
                 Message = $"Error: {error}";
+                AlertClass = "alert-danger";
             }
         }
         catch (Exception ex)
         {
             Message = $"Something went wrong: {ex.Message}";
+            AlertClass = "alert-danger";
         }
     }
 }
