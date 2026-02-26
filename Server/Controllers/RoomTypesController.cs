@@ -22,6 +22,20 @@ namespace Server.Controllers
             }
         }
 
+        [HttpPost("available")]
+        public async Task<IActionResult> GetAvailable([FromServices] GetAvailableRoomTypesHandler handler, [FromBody] GetAvailableRoomTypesCommand command)
+        {
+            try
+            {
+                var roomTypes = await handler.Handle(command);
+                return Ok(roomTypes);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
         [HttpPut]
         public async Task<IActionResult> Edit([FromServices] EditRoomTypeHandler handler, [FromBody] EditRoomTypeCommand command)
         {

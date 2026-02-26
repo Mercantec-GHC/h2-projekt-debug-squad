@@ -16,5 +16,10 @@ namespace Shared
             Capacity = capacity;
             PricePerNight = pricePerNight;
         }
+
+        public RoomTypeDto(int id)
+        {
+            Id = id; 
+        }
     }
 }

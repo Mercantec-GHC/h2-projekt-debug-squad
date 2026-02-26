@@ -4,8 +4,8 @@
     {
         public int Id { get; private set; }
         public Guest Guest { get; private set; } = null!;
-        public Room Room { get; private set; } = null!;
-
+        public Room? Room { get; private set; }
+        public RoomType RoomType { get; private set; } = null!;
         public DateTime CheckInDate { get; private set; }
         public DateTime CheckOutDate { get; private set; }
 
@@ -13,21 +13,21 @@
 
         private Booking() { }
 
-        public Booking(Guest guest, Room room, DateTime checkInDate, DateTime checkOutDate, decimal totalPrice)
+        public Booking(Guest guest, RoomType roomType, DateTime checkInDate, DateTime checkOutDate, decimal totalPrice)
         {
-            Validate(guest, room, checkInDate, checkOutDate);
+            Validate(guest, roomType, checkInDate, checkOutDate);
 
             Guest = guest;
-            Room = room;
+            RoomType = roomType;
             CheckInDate = checkInDate.Date;
             CheckOutDate = checkOutDate.Date;
             TotalPrice = totalPrice;
         }
 
-        private static void Validate(Guest guest, Room room, DateTime checkInDate, DateTime checkOutDate)
+        private static void Validate(Guest guest, RoomType roomType, DateTime checkInDate, DateTime checkOutDate)
         {
             ArgumentNullException.ThrowIfNull(guest, nameof(guest));
-            ArgumentNullException.ThrowIfNull(room, nameof(room));
+            ArgumentNullException.ThrowIfNull(roomType, nameof(roomType));
 
 
             if (checkInDate.Date >= checkOutDate.Date) throw new ArgumentException("Check-out date must be after check-in date");
@@ -41,6 +41,11 @@
             CheckInDate = newCheckIn.Date;
             CheckOutDate = newCheckOut.Date;
             TotalPrice = totalPrice;
+        }
+
+        public void SetRoom(Room room)
+        {
+            Room = room;
         }
     }
 }
