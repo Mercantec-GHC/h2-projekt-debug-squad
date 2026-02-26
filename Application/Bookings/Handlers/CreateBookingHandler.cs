@@ -24,19 +24,19 @@ namespace Application.Bookings.Handlers
             RoomType roomType = await _roomTypeRepository.GetByIdAsync(command.RoomTypeId) ?? throw new ArgumentException("Room type not found");
             Guest guest = await _guestRepository.GetByIdAsync(command.GuestId) ?? throw new ArgumentException("Guest not found");
 
-            if (command.CheckInDate.Date < DateTime.Today) throw new ArgumentException("Check-in date cannot be in the past");
-            if (command.CheckOutDate <= command.CheckInDate) throw new ArgumentException("Check-out date must be after check-in date");
+            var checkInUtc = DateTime.SpecifyKind(command.CheckInDate.Date, DateTimeKind.Utc);
+            var checkOutUtc = DateTime.SpecifyKind(command.CheckOutDate.Date, DateTimeKind.Utc);
 
-            int bookedBookings = await _roomTypeRepository.GetOverlappingAsync(command.RoomTypeId, command.CheckInDate, command.CheckOutDate);
+            if (checkInUtc.Date < DateTime.Today) throw new ArgumentException("Check-in date cannot be in the past");
+            if (checkOutUtc <= checkInUtc) throw new ArgumentException("Check-out date must be after check-in date");
+
+            int bookedBookings = await _roomTypeRepository.GetOverlappingAsync(command.RoomTypeId, checkInUtc, checkOutUtc);
             int totalRooms = await _roomTypeRepository.RoomCountAsync(command.RoomTypeId);
 
             if (bookedBookings >= totalRooms)
                 throw new ArgumentException("No available rooms of this type for selected dates");
 
 
-            var checkInUtc = DateTime.SpecifyKind(command.CheckInDate.Date, DateTimeKind.Utc);
-
-            var checkOutUtc = DateTime.SpecifyKind(command.CheckOutDate.Date, DateTimeKind.Utc);
 
             decimal totalPrice = await _pricingService.CalculateTotalPriceAsync(roomType.PricePerNight, checkInUtc, checkOutUtc);
 

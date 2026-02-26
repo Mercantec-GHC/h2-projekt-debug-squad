@@ -9,7 +9,7 @@
     <p class="lead">Experience luxury like never before</p>
 </div>
 
-<!-- Room Filters -->
+<!-- RoomType Filters -->
 <div class="filters mt-4 mb-3 d-flex gap-3 justify-content-center flex-wrap">
     <input type="date" @bind="CheckInDate" min="@DateTime.Today.ToString("yyyy-MM-dd")" class="form-control w-auto" />
     <input type="date" @bind="CheckOutDate" min="@CheckInDate.AddDays(1).ToString("yyyy-MM-dd")" class="form-control w-auto" />
@@ -19,28 +19,27 @@
     <button class="btn btn-primary" @onclick="ApplyFilters">Search</button>
 </div>
 
-<!-- Room List -->
+<!-- RoomType List -->
 <div class="room-list container mt-4">
-    @if (filteredRooms != null && filteredRooms.Any())
+    @if (filteredRoomTypes != null && filteredRoomTypes.Any())
     {
         <div class="row">
-            @foreach (var room in filteredRooms)
+            @foreach (var roomType in filteredRoomTypes)
             {
                 <div class="col-md-4 mb-4">
                     <div class="card shadow-sm h-100">
                         <div class="card-body">
-                            <h5 class="card-title">Room @room.Number</h5>
-                            <p class="card-text">Type: @room.RoomType.Name</p>
-                            <p class="card-text">Capacity: @room.RoomType.Capacity</p>
-                            <p class="card-text">Price per night: $@room.RoomType.PricePerNight</p>
+                            <h5 class="card-text">@roomType.Name</h5>
+                            <p class="card-text">Capacity: @roomType.Capacity</p>
+                            <p class="card-text">Price per night: $@roomType.PricePerNight</p>
 
                             <button class="btn btn-outline-primary w-100 mb-2"
-                                    @onclick="() => ViewRoomDetails(room.Id)">
+                                    @onclick="() => ViewRoomDetails(roomType.Id)">
                                 Read More
                             </button>
 
                             <button class="btn btn-success w-100"
-                                    @onclick="() => BookRoom(room.Id)">
+                                    @onclick="() => BookRoom(roomType.Id)">
                                 Book Now
                             </button>
                         </div>
@@ -56,8 +55,8 @@
 </div>
 
 @code {
-    private List<RoomDto> rooms = new();
-    private List<RoomDto> filteredRooms = new();
+    private List<RoomTypeDto> roomTypes = new();
+    private List<RoomTypeDto> filteredRoomTypes = new();
 
     private int? _filterCapacity;
     private decimal? _filterMaxPrice;
@@ -72,34 +71,34 @@
 
     private async Task LoadAllRooms()
     {
-        rooms = await Http.GetFromJsonAsync<List<RoomDto>>("api/rooms") ?? new List<RoomDto>();
+        roomTypes = await Http.GetFromJsonAsync<List<RoomTypeDto>>("api/roomtypes") ?? new List<RoomTypeDto>();
 
-        filteredRooms = new List<RoomDto>(rooms);
+        filteredRoomTypes = new List<RoomTypeDto>(roomTypes);
     }
 
     private async Task ApplyFilters()
     {
         var request = new GetAvailableRoomsCommand(CheckInDate.Date, CheckOutDate.Date, _filterCapacity, _filterMaxPrice);
 
-        var response = await Http.PostAsJsonAsync("api/rooms/available", request);
+        var response = await Http.PostAsJsonAsync("api/roomtypes/available", request);
 
         if (response.IsSuccessStatusCode)
         {
-            filteredRooms = await response.Content.ReadFromJsonAsync<List<RoomDto>>() ?? new List<RoomDto>();
+            filteredRoomTypes = await response.Content.ReadFromJsonAsync<List<RoomTypeDto>>() ?? new List<RoomTypeDto>();
         }
         else
         {
-            filteredRooms = new List<RoomDto>();
+            filteredRoomTypes = new List<RoomTypeDto>();
         }
     }
 
-    private void ViewRoomDetails(int roomId)
+    private void ViewRoomDetails(int roomTypeId)
     {
-        Navigation.NavigateTo($"/room-details/{roomId}");
+        Navigation.NavigateTo($"/room-type-details/{roomTypeId}");
     }
 
-    private void BookRoom(int roomId)
+    private void BookRoom(int roomTypeId)
     {
-        Navigation.NavigateTo($"/booking/{roomId}/{CheckInDate:yyyy-MM-dd}/{CheckOutDate:yyyy-MM-dd}");
+        Navigation.NavigateTo($"/booking/{roomTypeId}/{CheckInDate:yyyy-MM-dd}/{CheckOutDate:yyyy-MM-dd}");
     }
 }

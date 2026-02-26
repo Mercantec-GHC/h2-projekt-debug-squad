@@ -1,18 +1,18 @@
-﻿@page "/booking/{RoomId:int}"
-@page "/booking/{RoomId:int}/{CheckIn:datetime}/{CheckOut:datetime}"
+﻿@page "/booking/{RoomTypeId:int}"
+@page "/booking/{RoomTypeId:int}/{CheckIn:datetime}/{CheckOut:datetime}"
 @using Shared
 @inject HttpClient Http
 @inject NavigationManager Navigation
 
 <h3>Booking Page</h3>
 
-@if (SelectedRoom != null && !Step1Completed) //if room is selected and step1 is not completed show the block
+@if (SelectedRoomType != null && !Step1Completed) //if roomType is selected and step1 is not completed show the block
 {
     <!-- Step 1: Dates are pre-filled and read-only, only guests count editable -->
     <h4>Step 1: Confirm Guests</h4>
 
-    <p><strong>Room:</strong> @SelectedRoom?.Number</p>
-    <p><strong>Price per night:</strong> $@SelectedRoom?.RoomType.PricePerNight</p>
+    <p><strong>RoomType:</strong> @SelectedRoomType?.Name</p>
+    <p><strong>Price per night:</strong> $@SelectedRoomType?.PricePerNight</p>
 
     <p><strong>Check-in:</strong> @CheckInDate.ToShortDateString()</p>
     <p><strong>Check-out:</strong> @CheckOutDate.ToShortDateString()</p>
@@ -21,7 +21,7 @@
     <input type="number"
            @bind="SelectedCapacity"
            min="1"
-           max="@SelectedRoom?.RoomType.Capacity"
+           max="@SelectedRoomType?.Capacity"
            class="form-control mb-2" />
 
     <button class="btn btn-primary w-100" @onclick="NextStep">Next</button>
@@ -51,12 +51,12 @@ else
     <!-- Step 3: Confirm Booking -->
     <h4>Step 3: Confirm Booking</h4>
 
-    <p><strong>Room:</strong> @(SelectedRoom?.Number ?? "N/A")</p>
+    <p><strong>RoomType:</strong> @SelectedRoomType?.Name</p>
     <p><strong>Check-in:</strong> @CheckInDate.ToShortDateString()</p>
     <p><strong>Check-out:</strong> @CheckOutDate.ToShortDateString()</p>
     <p><strong>Nights:</strong> @NumberOfNights</p>
     <p><strong>Guests:</strong> @SelectedCapacity</p>
-    <p><strong>Price per night:</strong> $@SelectedRoom?.RoomType.PricePerNight</p>
+    <p><strong>Price per night:</strong> $@SelectedRoomType?.PricePerNight</p>
     <p><strong>Total Price:</strong> $@TotalPrice</p>
 
     <button class="btn btn-primary w-100" @onclick="FinishBooking">Confirm Booking</button>
@@ -68,11 +68,11 @@ else
 }
 
 @code {
-    [Parameter] public int RoomId { get; set; }  // parameters from URL
+    [Parameter] public int RoomTypeId { get; set; }  // parameters from URL
     [Parameter] public DateTime? CheckIn { get; set; }
     [Parameter] public DateTime? CheckOut { get; set; }
 
-    private RoomDto? SelectedRoom;
+    private RoomTypeDto? SelectedRoomType;
     private DateTime CheckInDate;
     private DateTime CheckOutDate;
     private int SelectedCapacity = 1;
@@ -84,17 +84,17 @@ else
     private string Message = string.Empty;
 
     private int NumberOfNights => (CheckOutDate - CheckInDate).Days;
-    private decimal TotalPrice => SelectedRoom != null ? SelectedRoom.RoomType.PricePerNight * NumberOfNights : 0;
+    private decimal TotalPrice => SelectedRoomType != null ? SelectedRoomType.PricePerNight * NumberOfNights : 0;
 
     protected override async Task OnInitializedAsync()
     {
-        // Load the room
-        var roomList = await Http.GetFromJsonAsync<List<RoomDto>>("api/rooms");
-        SelectedRoom = roomList?.FirstOrDefault(r => r.Id == RoomId);
+        // Load the roomType
+        var roomTypeList = await Http.GetFromJsonAsync<List<RoomTypeDto>>("api/roomtypes");
+        SelectedRoomType = roomTypeList?.FirstOrDefault(r => r.Id == RoomTypeId);
 
-        if (SelectedRoom == null)
+        if (SelectedRoomType == null)
         {
-            Message = "Room not found";
+            Message = "RoomType not found";
             return;
         }
 
@@ -111,9 +111,9 @@ else
             return;
         }
 
-        if (SelectedRoom != null && SelectedCapacity > SelectedRoom.RoomType.Capacity)
+        if (SelectedRoomType != null && SelectedCapacity > SelectedRoomType.Capacity)
         {
-            Message = $"Maximum capacity for this room is {SelectedRoom.RoomType.Capacity} guests.";
+            Message = $"Maximum capacity for this roomType is {SelectedRoomType.Capacity} guests.";
             return;
         }
 
@@ -151,9 +151,9 @@ else
 
     private async Task FinishBooking()
     {
-        if (SelectedRoom == null) return;
+        if (SelectedRoomType == null) return;
 
-        var bookingForm = new CreateBookingCommand(GuestId, RoomId = SelectedRoom.Id, CheckInDate = CheckInDate.Date, CheckOutDate = CheckOutDate.Date);
+        var bookingForm = new CreateBookingCommand(GuestId, SelectedRoomType.Id, CheckInDate.Date, CheckOutDate.Date);
 
         try
         {
@@ -166,6 +166,9 @@ else
                 GuestExists = false;
                 GuestEmail = string.Empty;
                 SelectedCapacity = 1;
+
+                await Task.Delay(3000);
+                Navigation.NavigateTo("/");
             }
             else
             {

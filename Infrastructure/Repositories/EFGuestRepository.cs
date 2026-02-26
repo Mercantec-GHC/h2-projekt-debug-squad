@@ -26,7 +26,7 @@ namespace Infrastructure.Repositories
 
         public async Task<List<Guest>> GetAllAsync()
         {
-            return await _dbContext.Guests.Include(g => g.Bookings).ThenInclude(b => b.Room).ThenInclude(r => r.RoomType).ToListAsync();
+            return await _dbContext.Guests.Include(g => g.Bookings).ThenInclude(r => r.RoomType).ToListAsync();
         }
 
         public async Task<Guest?> GetByIdAsync(int id)
