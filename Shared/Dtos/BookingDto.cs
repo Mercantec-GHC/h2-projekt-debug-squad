@@ -11,7 +11,7 @@ namespace Shared
 
         public BookingDto() { }
 
-        public BookingDto(int id, RoomDto room, RoomTypeDto roomType, DateTime checkInDate, DateTime checkOutDate, decimal totalPrice)
+        public BookingDto(int id, RoomDto? room, RoomTypeDto roomType, DateTime checkInDate, DateTime checkOutDate, decimal totalPrice)
         {
             Id = id;
             Room = room;
