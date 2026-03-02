@@ -31,12 +31,12 @@
                 <tr>
                     <td>@booking.Room?.Number</td>
                     <td>@booking.GuestName</td>
-                    <td>@booking.RoomType.Name</td>
+                    <td>@(booking.RoomType?.Name ?? "N/A")</td>
                     <td>@booking.CheckInDate.ToShortDateString()</td>
                     <td>@booking.CheckOutDate.ToShortDateString()</td>
                     <td>$@booking.TotalPrice</td>
                     <td>
-                        <button class="btn btn-sm btn-danger" @onclick="() => CancelBooking(booking.Id)">
+                        <button class="btn btn-sm btn-danger" @onclick="() => CancelBooking(booking.Id, booking.GuestId)">
                             Cancel
                         </button>
                     </td>
@@ -71,18 +71,18 @@ else
         }
     }
 
-    private async Task CancelBooking(int bookingId)
+    private async Task CancelBooking(int bookingId, int guestId)
     {
         bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to cancel this booking?");
         if (!confirmed) return;
 
         try
         {
-            var command = new { BookingId = bookingId };
+            DeleteBookingCommand command = new (guestId, bookingId);
 
             var request = new HttpRequestMessage(HttpMethod.Delete, "api/bookings")
             {
-                Content = JsonContent.Create(command)
+                Content = JsonContent.Create(command)   
             };
 
             var response = await Http.SendAsync(request);

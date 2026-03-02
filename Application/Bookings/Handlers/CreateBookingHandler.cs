@@ -36,8 +36,6 @@ namespace Application.Bookings.Handlers
             if (bookedBookings >= totalRooms)
                 throw new ArgumentException("No available rooms of this type for selected dates");
 
-
-
             decimal totalPrice = await _pricingService.CalculateTotalPriceAsync(roomType.PricePerNight, checkInUtc, checkOutUtc);
 
             var booking = new Booking(guest, roomType, checkInUtc, checkOutUtc, totalPrice);

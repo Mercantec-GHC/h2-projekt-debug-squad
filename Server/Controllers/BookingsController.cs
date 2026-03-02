@@ -62,20 +62,6 @@ namespace Server.Controllers
             }
         }
 
-        //[HttpGet("guest/{id}")]
-        //public async Task<IActionResult> GetByGuestId([FromServices] GetBookingsByGuestIdHandler handler, int id)
-        //{
-        //    try
-        //    {
-        //        var bookings = await handler.Handle(id);
-        //        return Ok(bookings);
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return StatusCode(500, "Internal server error");
-        //    }
-        //}
-
         [HttpPut]
         public async Task<IActionResult> Edit([FromServices] EditBookingHandler handler, [FromBody] EditBookingCommand command)
         {

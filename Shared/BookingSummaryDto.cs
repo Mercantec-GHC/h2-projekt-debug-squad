@@ -7,6 +7,7 @@ namespace Shared
     public class BookingSummaryDto
     {
         public int Id { get; set; }
+        public int GuestId { get; set; }
         public RoomDto? Room { get; set; } = null!;
         public RoomTypeDto? RoomType { get; set; } = null!;
         public string GuestName { get; set; } = string.Empty;
@@ -15,7 +16,7 @@ namespace Shared
         public decimal TotalPrice { get; set; }
 
         // Parameterless constructor 
-        public BookingSummaryDto() { }
+        public BookingSummaryDto() { }  
 
         // Full constructor
         public BookingSummaryDto(int id, RoomDto? room, string guestName, RoomTypeDto roomType, DateTime checkInDate, DateTime checkOutDate, decimal totalPrice)
