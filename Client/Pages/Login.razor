@@ -1,5 +1,56 @@
-﻿<h3>Login</h3>
+﻿@page "/login"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@inject Client.Auth.JwtAuthenticationStateProvider AuthStateProvider
+@using Shared
+
+<h3>Login</h3>
+
+<div class="card p-4 shadow-sm" style="max-width: 400px; margin: auto;">
+    <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-control" @bind="_email" placeholder="Enter your email" />
+    </div>
+
+    <button class="btn btn-primary w-100" @onclick="HandleLogin">Login</button>
+
+    @if (!string.IsNullOrEmpty(_message))
+    {
+        <div class="alert alert-danger mt-3">@_message</div>
+    }
+</div>
 
 @code {
+    private string _email = string.Empty;
+    private string _message = string.Empty;
 
+    private async Task HandleLogin()
+    {
+        _message = string.Empty;
+
+        try
+        {
+            var command = new LoginCommand(_email);
+            var response = await Http.PostAsJsonAsync("api/auth/login", command);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<LoginResponseDto>();
+                if (result != null)
+                {
+                    await AuthStateProvider.LoginAsync(result.Token);
+                    Navigation.NavigateTo("/");
+                }
+            }
+            else
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                _message = error;
+            }
+        }
+        catch (Exception ex)
+        {
+            _message = $"Error: {ex.Message}";
+        }
+    }
 }

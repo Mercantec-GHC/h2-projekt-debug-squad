@@ -20,7 +20,7 @@
             </NavLink>
         </div>
         <div class="nav-item px-3">
-    <NavLink class="nav-link" href="/manage/rooms">
+            <NavLink class="nav-link" href="/manage/rooms">
                 <span class="bi bi-door-open" aria-hidden="true"></span> Manage Rooms
             </NavLink>
         </div>
@@ -36,22 +36,36 @@
                 <span>Manage Bookings</span>
             </NavLink>
         </div>
-        
-        <div class="nav-item px-3">
-            <NavLink class="nav-link d-flex align-items-center" href="/signup" Match="NavLinkMatch.All">
-                <i class="bi bi-person-plus-fill me-2"></i>
-                Sign Up
-            </NavLink>
-        </div>
 
-
-        
-
-
-
+        <AuthorizeView>
+            <Authorized>
+                <div class="nav-item px-3">
+                    <button class="nav-link btn btn-link d-flex align-items-center" @onclick="Logout">
+                        <i class="bi bi-box-arrow-right me-2"></i>
+                        <span>Logout (@context.User.Identity?.Name)</span>
+                    </button>
+                </div>
+            </Authorized>
+            <NotAuthorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link d-flex align-items-center" href="/login" Match="NavLinkMatch.All">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>
+                        Login
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link d-flex align-items-center" href="/signup" Match="NavLinkMatch.All">
+                        <i class="bi bi-person-plus-fill me-2"></i>
+                        Sign Up
+                    </NavLink>
+                </div>
+            </NotAuthorized>
+        </AuthorizeView>
     </nav>
-
 </div>
+
+@inject Client.Auth.JwtAuthenticationStateProvider AuthStateProvider
+@inject NavigationManager Navigation
 
 @code {
     private bool collapseNavMenu = true;
@@ -61,5 +75,11 @@
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    private async Task Logout()
+    {
+        await AuthStateProvider.LogoutAsync();
+        Navigation.NavigateTo("/login");
     }
 }
