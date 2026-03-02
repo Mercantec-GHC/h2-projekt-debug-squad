@@ -4,11 +4,10 @@
 @inject HttpClient Http
 @inject NavigationManager Navigation
 
-<h3>Booking Page</h3>
 
 @if (SelectedRoomType != null)
 {
-    <!-- All info on the same page -->
+ 
     <h4>Booking Details</h4>
 
     <p><strong>RoomType:</strong> @SelectedRoomType?.Name</p>
@@ -17,7 +16,7 @@
     <p><strong>Check-out:</strong> @CheckOutDate.ToShortDateString()</p>
     <p><strong>Guests:</strong> @SelectedCapacity</p>
 
-    <label>Enter your email:</label>
+    
     <input type="email" @bind="GuestEmail" placeholder="Enter your email" class="form-control mb-2" />
 
     <button class="btn btn-primary w-100" @onclick="CheckGuestAndConfirm"
