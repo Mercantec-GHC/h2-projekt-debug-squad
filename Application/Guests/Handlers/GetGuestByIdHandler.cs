@@ -30,7 +30,7 @@ namespace Application.Guests.Handlers
                 Bookings = guest.Bookings.Select(b => new BookingDto
                 {
                     Id = b.Id,
-                    Room = new RoomDto
+                    Room = b.Room != null ? new RoomDto
                     (
                         b.Room.Id,
                         b.Room.Number,
@@ -40,7 +40,7 @@ namespace Application.Guests.Handlers
                             b.Room.RoomType.Capacity,
                             b.Room.RoomType.PricePerNight
                         )
-                    ),
+                    ) : null,
                     CheckInDate = b.CheckInDate,
                     CheckOutDate = b.CheckOutDate,
                     TotalPrice = b.TotalPrice

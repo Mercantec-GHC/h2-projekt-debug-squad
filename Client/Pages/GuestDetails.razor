@@ -29,9 +29,9 @@ else
             {
                 <div class="col-md-4">
                     <div class="card p-3 shadow-sm">
-                        <p><strong>Room:</strong> @booking.Room.Number</p>
-                        <p><strong>Capacity:</strong> @booking.Room.RoomType.Capacity</p>
-                        <p><strong>Price per Night:</strong> $@booking.Room.RoomType.PricePerNight</p>
+                        <p><strong>Room:</strong> @(booking.Room != null ? booking.Room.Number : "N/A")</p>
+                        <p><strong>Capacity:</strong> @(booking.Room != null && booking.Room.RoomType != null ? booking.Room.RoomType.Capacity.ToString() : "N/A")</p>
+                        <p><strong>Price per Night:</strong> @(booking.Room != null && booking.Room.RoomType != null ? $"${booking.Room.RoomType.PricePerNight}" : "N/A")</p>
                         <p><strong>Total Price:</strong> $@booking.TotalPrice</p>
 
 
