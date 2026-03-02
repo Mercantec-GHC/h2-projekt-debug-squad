@@ -18,6 +18,7 @@
             <tr>
                 <th>Room Number</th>
                 <th>Guest</th>
+                <th>Room Type</th>
                 <th>Check-In</th>
                 <th>Check-Out</th>
                 <th>Total Price</th>
@@ -30,6 +31,7 @@
                 <tr>
                     <td>@booking.Room?.Number</td>
                     <td>@booking.GuestName</td>
+                    <td>@booking.RoomType.Name</td>
                     <td>@booking.CheckInDate.ToShortDateString()</td>
                     <td>@booking.CheckOutDate.ToShortDateString()</td>
                     <td>$@booking.TotalPrice</td>

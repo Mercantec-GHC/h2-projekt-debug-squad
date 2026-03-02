@@ -22,9 +22,10 @@ namespace Application.Bookings.Handlers
                 b.Id,
                 b.Room != null ? new RoomDto(b.Room.Id, b.Room.Number) : null,
                 b.Guest?.FullName ?? "Unknown",
+                b.RoomType != null ? new RoomTypeDto(b.RoomType.Id, b.RoomType.Name, b.RoomType.Capacity, b.RoomType.PricePerNight) : null,
                 b.CheckInDate,
                 b.CheckOutDate,
-                b.TotalPrice
+                b.TotalPrice    
             )).ToList();
         }
     }

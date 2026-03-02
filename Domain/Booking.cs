@@ -5,7 +5,7 @@
         public int Id { get; private set; }
         public Guest Guest { get; private set; } = null!;
         public Room? Room { get; private set; }
-        public RoomType RoomType { get; private set; } = null!;
+        public RoomType RoomType { get; set; } = null!;
         public DateTime CheckInDate { get; private set; }
         public DateTime CheckOutDate { get; private set; }
 
