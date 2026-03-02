@@ -36,6 +36,9 @@
                     <td>@booking.CheckOutDate.ToShortDateString()</td>
                     <td>$@booking.TotalPrice</td>
                     <td>
+                        <button class="btn btn-sm btn-primary" @onclick="() => AssignRoom(booking.Id)">
+                            Assign Room
+                        </button>
                         <button class="btn btn-sm btn-danger" @onclick="() => CancelBooking(booking.Id, booking.GuestId)">
                             Cancel
                         </button>
@@ -96,6 +99,52 @@ else
             {
                 var error = await response.Content.ReadAsStringAsync();
                 _message = $"Failed to cancel booking: {error}";
+            }
+        }
+        catch (Exception ex)
+        {
+            _message = $"Error: {ex.Message}";
+        }
+    }
+
+    private async Task AssignRoom(int bookingId)
+    {
+        try
+        {
+            // Fetch the booking details
+            var booking = bookings.FirstOrDefault(b => b.Id == bookingId);
+            if (booking == null)
+            {
+                _message = "Booking not found.";
+                return;
+            }
+
+            // Call API to get available rooms for the RoomType and dates
+            var availableRooms = await Http.GetFromJsonAsync<List<RoomDto>>(
+                $"api/rooms/available?roomTypeId={booking.RoomType.Id}&checkIn={booking.CheckInDate:yyyy-MM-dd}&checkOut={booking.CheckOutDate:yyyy-MM-dd}");
+
+            if (availableRooms == null || !availableRooms.Any())
+            {
+                _message = "No available rooms for the selected Room Type and dates.";
+                return;
+            }
+
+            // Assign the room with the lowest number
+            var roomToAssign = availableRooms.OrderBy(r => r.Number).First();
+
+            // Call API to update the booking with the assigned room
+            var assignRoomCommand = new { BookingId = bookingId, RoomId = roomToAssign.Id };
+            var response = await Http.PostAsJsonAsync("api/bookings/assign-room", assignRoomCommand);
+
+            if (response.IsSuccessStatusCode)
+            {
+                _message = $"Room {roomToAssign.Number} assigned successfully!";
+                await LoadBookings(); // Refresh the bookings list
+            }
+            else
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                _message = $"Failed to assign room: {error}";
             }
         }
         catch (Exception ex)
