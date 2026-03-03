@@ -6,7 +6,7 @@ namespace Application.Interfaces
     {
         Task SaveChangesAsync();
         void Add(RoomType roomType);
-        Task<List<RoomType>> GetAllAsync();
+        Task<List<RoomType>> GetAllAsync(bool includeRooms = false);
         Task<RoomType?> GetByIdAsync(int id);
         void Delete(RoomType roomType);
         Task<List<RoomType>> GetAvailableAsync(

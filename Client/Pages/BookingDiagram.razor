@@ -1,0 +1,41 @@
+﻿@page "/manage/bookings/diagram"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@using Shared
+
+<h3>BookingDiagram</h3>
+
+@code {
+    private List<BookingSummaryDto> bookings = new();
+    List<RoomTypeDto> roomTypes = new();
+    private string _message = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadBookings();
+    }
+
+    private async Task LoadBookings()
+    {
+        try
+        {
+            bookings = await Http.GetFromJsonAsync<List<BookingSummaryDto>>("api/bookings/summary") ?? new List<BookingSummaryDto>();
+        }
+        catch (Exception ex)
+        {
+            _message = $"Error loading bookings: {ex.Message}";
+        }
+    }
+
+    private async Task LoadRoomTypes()
+    {
+        try
+        {
+            roomTypes = await Http.GetFromJsonAsync<List<RoomTypeDto>>("api/roomtypes/include") ?? new List<RoomTypeDto>();
+        }
+        catch (Exception ex)
+        {
+            _message = $"Error loading room types: {ex.Message}";
+        }
+    }
+}
