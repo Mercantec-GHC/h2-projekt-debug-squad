@@ -1,25 +1,67 @@
-﻿@page "/manage/bookings/diagram"
+﻿@page "/diagram"
 @inject HttpClient Http
 @inject NavigationManager Navigation
 @using Shared
 
-<h3>BookingDiagram</h3>
+<h3 class="mb-4">Booking Diagram</h3>
+
+@if (!string.IsNullOrEmpty(_message))
+{
+    <div class="alert alert-info">@_message</div>
+}
+
+@if (roomTypes.Any())
+{
+    foreach (RoomTypeDto roomType in roomTypes)
+    {
+        <h4>@roomType.Name</h4>
+
+        <div class="table-responsive">
+            <table class="table table-bordered text-center align-middle">
+                <thead>
+                    <tr>
+                        <th>Room</th>
+                        @foreach (var day in GetDays())
+                        {
+                            <th>@day.DayOfWeek.ToString().Substring(0, 3)  @day.ToString("dd-MM")</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (RoomDto room in roomType.Rooms)
+                    {
+                            <tr>
+                            <td class="fw-bold">@room.Number</td>
+                            @foreach (var day in GetDays())
+                            {
+                                <th></th>
+                            }
+                            </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+}
+
 
 @code {
-    private List<BookingSummaryDto> bookings = new();
+    List<BookingDto> bookings = new();
     List<RoomTypeDto> roomTypes = new();
-    private string _message = string.Empty;
+    string _message = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
         await LoadBookings();
+        await LoadRoomTypes();
     }
 
     private async Task LoadBookings()
     {
         try
         {
-            bookings = await Http.GetFromJsonAsync<List<BookingSummaryDto>>("api/bookings/summary") ?? new List<BookingSummaryDto>();
+            bookings = await Http.GetFromJsonAsync<List<BookingDto>>("api/bookings") ?? new List<BookingDto>();
+            bookings = bookings.OrderBy(b => b.Id).ToList();
         }
         catch (Exception ex)
         {
@@ -37,5 +79,20 @@
         {
             _message = $"Error loading room types: {ex.Message}";
         }
+    }
+
+    private List<DateTime> GetDays()
+    {
+        var start = DateTime.Today;
+        var end = DateTime.Today.AddDays(6);
+
+        var days = new List<DateTime>();
+
+        for (var time = start; time <= end; time = time.AddDays(1))
+        {
+            days.Add(time);
+        }
+
+        return days;
     }
 }
