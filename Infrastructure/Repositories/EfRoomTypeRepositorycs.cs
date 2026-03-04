@@ -25,9 +25,16 @@ namespace Infrastructure.Repositories
             _dbContext.RoomTypes.Add(roomType);
         }
 
-        public async Task<List<RoomType>> GetAllAsync()
+        public async Task<List<RoomType>> GetAllAsync(bool includeRooms = false)
         {
-            return await _dbContext.RoomTypes.ToListAsync();
+            IQueryable<RoomType> query = _dbContext.RoomTypes;
+
+            if (includeRooms)
+            {
+                query = query.Include(rt => rt.Rooms);
+            }
+
+            return await query.ToListAsync();
         }
 
         public async Task<RoomType?> GetByIdAsync(int id)

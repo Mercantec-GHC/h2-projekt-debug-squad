@@ -4,7 +4,7 @@ namespace Shared
     {
         public int Id { get; set; }
         public string Number { get; set; } = string.Empty;
-        public RoomTypeDto RoomType { get; set; } = null!;
+        public RoomTypeDto? RoomType { get; set; }
         public RoomDto() { }
 
         public RoomDto(int id, string number, RoomTypeDto roomType)

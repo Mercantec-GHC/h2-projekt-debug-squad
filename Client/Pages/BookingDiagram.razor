@@ -1,0 +1,158 @@
+﻿@page "/diagram"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@using Shared
+
+<h3 class="mb-4">Booking Diagram</h3>
+
+@if (!string.IsNullOrEmpty(_message))
+{
+    <div class="alert alert-info">@_message</div>
+}
+
+@if (roomTypes.Any())
+{
+    foreach (RoomTypeDto roomType in roomTypes)
+    {
+        <h4>@roomType.Name</h4>
+
+        <div class="table-responsive">
+            <table class="table table-bordered text-center align-middle">
+                <thead>
+                    <tr>
+                        <th>Room</th>
+                        @foreach (var day in days)
+                        {
+                            <th>@day.DayOfWeek.ToString().Substring(0, 3)  @day.ToString("dd-MM")</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @* @(roomType.Rooms = roomType.Rooms.OrderBy(r => r.Number).ToList()) *@
+                    @foreach (RoomDto room in roomType.Rooms)
+                    {
+                            <tr>
+                            <td class="fw-bold">@room.Number</td>
+                            @foreach (var day in days)
+                            {
+                                @* Where bookings go *@
+
+                                <th>
+                                    @* @{
+                                        var bookingForDay = bookings.FirstOrDefault(b =>
+                                        b.Room?.Id == room.Id &&
+                                        day >= b.CheckInDate.Date &&
+                                        day < b.CheckOutDate.Date
+                                        );
+                                    }
+
+                                    @if (bookingForDay != null)
+                                    {
+                                        <div class="bg-primary text-white rounded">
+                                            @bookingForDay.Id
+                                        </div>
+                                    } *@
+                                </th>
+                            }
+                            </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+}
+
+
+@code {
+    List<BookingDto> bookings = new();
+    List<RoomTypeDto> roomTypes = new();
+    string _message = string.Empty;
+
+    List<DateTime> days = new List<DateTime>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadBookings();
+        await LoadRoomTypes();
+        SetDays();
+        // SimulateRoomAssignments();
+    }
+
+    private async Task LoadBookings()
+    {
+        try
+        {
+            bookings = await Http.GetFromJsonAsync<List<BookingDto>>("api/bookings") ?? new List<BookingDto>();
+            // bookings = bookings.OrderBy(b => b.Id).ToList();
+        }
+        catch (Exception ex)
+        {
+            _message = $"Error loading bookings: {ex.Message}";
+        }
+    }
+
+    private async Task LoadRoomTypes()
+    {
+        try
+        {
+            roomTypes = await Http.GetFromJsonAsync<List<RoomTypeDto>>("api/roomtypes/include") ?? new List<RoomTypeDto>();
+        }
+        catch (Exception ex)
+        {
+            _message = $"Error loading room types: {ex.Message}";
+        }
+    }
+
+    private List<DateTime> SetDays()
+    {
+        var start = DateTime.Today;
+        var end = DateTime.Today.AddDays(6);
+
+        days = new List<DateTime>();
+
+        for (var time = start; time <= end; time = time.AddDays(1))
+        {
+            days.Add(time);
+        }
+
+        return days;
+    }
+
+    private void SimulateRoomAssignments()
+    {
+        // Process bookings in check-in order
+        var orderedBookings = bookings
+            .OrderBy(b => b.CheckInDate)
+            .ToList();
+
+        foreach (var booking in orderedBookings)
+        {
+            var roomType = roomTypes.First(rt => rt.Id == booking.RoomType.Id);
+
+            // Ensure rooms sorted by lowest number
+            var orderedRooms = roomType.Rooms
+                .OrderBy(r => r.Number)
+                .ToList();
+
+            foreach (var room in orderedRooms)
+            {
+                // Get bookings already assigned to this room
+                var roomBookings = bookings
+                    .Where(b => b.Room?.Id == room.Id)
+                    .ToList();
+
+                bool overlaps = roomBookings.Any(existing =>
+                    booking.CheckInDate < existing.CheckOutDate &&
+                    booking.CheckOutDate > existing.CheckInDate
+                );
+
+                if (!overlaps)
+                {
+                    booking.Room = room;
+                    break;
+                }
+            }
+        }
+    }
+}

@@ -78,8 +78,8 @@
 
     private async Task ApplyFilters()
     {
-        var request = new GetAvailableRoomsCommand(CheckInDate.Date, CheckOutDate.Date, _filterCapacity, _filterMaxPrice);
-
+        var request = new GetAvailableRoomTypesCommand(CheckInDate.Date, CheckOutDate.Date, _filterCapacity, _filterMaxPrice);
+            
         var response = await Http.PostAsJsonAsync("api/roomtypes/available", request);
 
         if (response.IsSuccessStatusCode)

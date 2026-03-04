@@ -13,11 +13,23 @@ namespace Application.RoomTypes.Handlers
             _repository = repository;
         }
 
-        public async Task<List<RoomTypeDto>> Handle()
+        public async Task<List<RoomTypeDto>> Handle(bool includeRooms = false)
         {
-            List<RoomType> roomTypes = await _repository.GetAllAsync();
+            List<RoomType> roomTypes = await _repository.GetAllAsync(includeRooms: includeRooms);
 
-            return roomTypes.Select(rt => new RoomTypeDto(rt.Id, rt.Name, rt.Capacity, rt.PricePerNight)).ToList();
+
+            return roomTypes.Select(rt => new RoomTypeDto(
+                rt.Id,
+                rt.Name,
+                rt.Capacity,
+                rt.PricePerNight,
+                includeRooms && rt.Rooms != null
+                    ? rt.Rooms.Select(r => new RoomDto(
+                        r.Id,
+                        r.Number
+                      )).ToList()
+                    : null
+                    )).ToList();
         }
     }
 }

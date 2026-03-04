@@ -22,6 +22,20 @@ namespace Server.Controllers
             }
         }
 
+        [HttpGet("include")]
+        public async Task<IActionResult> GetAllInclude([FromServices] GetAllRoomTypesHandler handler)
+        {
+            try
+            {
+                var roomTypes = await handler.Handle(includeRooms: true);
+                return Ok(roomTypes);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetRoomTypeById([FromServices] GetRoomTypeByIdHandler handler, int id)
         {
