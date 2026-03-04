@@ -7,5 +7,6 @@ namespace Application.Interfaces
         Task SaveChangesAsync();
         Task<List<Booking>> GetAllAsync();
         Task<Booking?> GetByIdAsync(int id);
+        Task UpdateAsync(Booking booking);
     }
 }

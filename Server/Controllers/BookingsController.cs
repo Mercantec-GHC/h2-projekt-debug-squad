@@ -1,6 +1,7 @@
 ﻿using Application.Bookings.Handlers;
 using Microsoft.AspNetCore.Mvc;
 using Shared;
+using Shared.Commands.Booking;
 
 namespace Server.Controllers
 {
@@ -113,6 +114,43 @@ namespace Server.Controllers
             {
                 var bookings = await handler.Handle();
                 return Ok(bookings);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+
+
+        [HttpPost("assign-room")]
+        public async Task<IActionResult> AssignRoom([FromServices] AssignRoomHandler handler, [FromBody] AssignRoomCommand command)
+        {
+            if (command == null)
+            {
+                return BadRequest("Invalid payload: request body is missing or malformed.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                await handler.Handle(command);
+                return Ok("Room assigned successfully");
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
             catch (Exception)
             {

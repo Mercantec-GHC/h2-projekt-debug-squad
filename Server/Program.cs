@@ -60,6 +60,7 @@ namespace Server
             builder.Services.AddScoped<GetRoomTypeByIdHandler>();
             builder.Services.AddScoped<GetBookingSummariesHandler>();
             builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
+            builder.Services.AddScoped<AssignRoomHandler>();
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
