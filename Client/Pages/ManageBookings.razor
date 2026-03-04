@@ -3,6 +3,7 @@
 @inject NavigationManager Navigation
 @inject IJSRuntime JsRuntime
 @using Shared
+@using Shared.Commands.Booking
 
 <h3 class="mb-4">Manage Bookings</h3>
 
@@ -111,7 +112,6 @@ else
     {
         try
         {
-            // Fetch the booking details
             var booking = bookings.FirstOrDefault(b => b.Id == bookingId);
             if (booking == null)
             {
@@ -119,26 +119,20 @@ else
                 return;
             }
 
-            // Call API to get available rooms for the RoomType and dates
-            var availableRooms = await Http.GetFromJsonAsync<List<RoomDto>>(
-                $"api/rooms/available?roomTypeId={booking.RoomType.Id}&checkIn={booking.CheckInDate:yyyy-MM-dd}&checkOut={booking.CheckOutDate:yyyy-MM-dd}");
-
-            if (availableRooms == null || !availableRooms.Any())
+            if (booking.RoomType == null)
             {
-                _message = "No available rooms for the selected Room Type and dates.";
+                _message = "Cannot assign room: booking has no Room Type information.";
                 return;
             }
 
-            // Assign the room with the lowest number
-            var roomToAssign = availableRooms.OrderBy(r => r.Number).First();
+            // Send BookingId and RoomTypeId to let the server pick an available room
+            var command = new AssignRoomCommand { BookingId = bookingId, RoomTypeId = booking.RoomType.Id };
 
-            // Call API to update the booking with the assigned room
-            var assignRoomCommand = new { BookingId = bookingId, RoomId = roomToAssign.Id };
-            var response = await Http.PostAsJsonAsync("api/bookings/assign-room", assignRoomCommand);
+            var response = await Http.PostAsJsonAsync("api/bookings/assign-room", command);
 
             if (response.IsSuccessStatusCode)
             {
-                _message = $"Room {roomToAssign.Number} assigned successfully!";
+                _message = "Room assigned successfully!";
                 await LoadBookings(); // Refresh the bookings list
             }
             else

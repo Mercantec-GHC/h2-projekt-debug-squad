@@ -126,6 +126,15 @@ namespace Server.Controllers
         [HttpPost("assign-room")]
         public async Task<IActionResult> AssignRoom([FromServices] AssignRoomHandler handler, [FromBody] AssignRoomCommand command)
         {
+            if (command == null)
+            {
+                return BadRequest("Invalid payload: request body is missing or malformed.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             try
             {
                 await handler.Handle(command);

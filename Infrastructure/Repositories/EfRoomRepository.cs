@@ -46,7 +46,12 @@ namespace Infrastructure.Repositories
             requestedCheckIn = DateTime.SpecifyKind(requestedCheckIn, DateTimeKind.Utc);
             requestedCheckOut = DateTime.SpecifyKind(requestedCheckOut, DateTimeKind.Utc);
 
-            var bookedRoomIds = await _dbContext.Bookings.Where(b => b.CheckInDate < requestedCheckOut && b.CheckOutDate > requestedCheckIn).Select(b => b.Room.Id).Distinct().ToListAsync();
+            // Exclude bookings that don't have an assigned room to avoid nullable Room references
+            var bookedRoomIds = await _dbContext.Bookings
+                .Where(b => b.CheckInDate < requestedCheckOut && b.CheckOutDate > requestedCheckIn && b.Room != null)
+                .Select(b => b.Room!.Id)
+                .Distinct()
+                .ToListAsync();
             var availableRooms = await _dbContext.Rooms.Where(r => !bookedRoomIds.Contains(r.Id)).Include(r => r.RoomType).ToListAsync();
 
             if (capacity.HasValue && capacity.Value != 0) availableRooms = availableRooms.Where(r => r.RoomType.Capacity == capacity).ToList();
