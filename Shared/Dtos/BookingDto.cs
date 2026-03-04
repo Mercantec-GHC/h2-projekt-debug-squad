@@ -24,7 +24,7 @@ namespace Shared
         public BookingDto(int id, RoomTypeDto roomType, DateTime checkInDate, DateTime checkOutDate, decimal totalPrice)
         {
             Id = id;
-            RoomType = RoomType;
+            RoomType = roomType;
             CheckInDate = checkInDate;
             CheckOutDate = checkOutDate;
             TotalPrice = totalPrice;

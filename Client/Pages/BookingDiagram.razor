@@ -28,33 +28,32 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @* @(roomType.Rooms = roomType.Rooms.OrderBy(r => r.Number).ToList()) *@
                     @foreach (RoomDto room in roomType.Rooms)
                     {
-                            <tr>
-                            <td class="fw-bold">@room.Number</td>
-                            @foreach (var day in days)
-                            {
-                                @* Where bookings go *@
+                        <tr>
+                        <td class="fw-bold">@room.Number</td>
+                        @foreach (var day in days)
+                        {
+                            @* Where bookings go *@
 
-                                <th>
-                                    @* @{
-                                        var bookingForDay = bookings.FirstOrDefault(b =>
-                                        b.Room?.Id == room.Id &&
-                                        day >= b.CheckInDate.Date &&
-                                        day < b.CheckOutDate.Date
-                                        );
-                                    }
+                            <th>
+                                @{
+                                    var bookingForDay = bookings.FirstOrDefault(b =>
+                                    b.Room?.Id == room.Id &&
+                                    day >= b.CheckInDate.Date &&
+                                    day <= b.CheckOutDate.Date //might need to be < to better show real hotel logic
+                                    );
+                                }
 
-                                    @if (bookingForDay != null)
-                                    {
-                                        <div class="bg-primary text-white rounded">
-                                            @bookingForDay.Id
-                                        </div>
-                                    } *@
-                                </th>
-                            }
-                            </tr>
+                                @if (bookingForDay != null)
+                                {
+                                    <div class="bg-primary text-white rounded">
+                                        @bookingForDay.Id
+                                    </div>
+                                }
+                            </th>
+                        }
+                        </tr>
                     }
                 </tbody>
             </table>
@@ -76,7 +75,7 @@
         await LoadBookings();
         await LoadRoomTypes();
         SetDays();
-        // SimulateRoomAssignments();
+        SimulateRoomAssignments();
     }
 
     private async Task LoadBookings()
@@ -84,7 +83,7 @@
         try
         {
             bookings = await Http.GetFromJsonAsync<List<BookingDto>>("api/bookings") ?? new List<BookingDto>();
-            // bookings = bookings.OrderBy(b => b.Id).ToList();
+            bookings = bookings.OrderBy(b => b.Id).ToList();
         }
         catch (Exception ex)
         {
@@ -121,23 +120,29 @@
 
     private void SimulateRoomAssignments()
     {
-        // Process bookings in check-in order
+        // Sort bookings by check-in (important for deterministic results)
         var orderedBookings = bookings
             .OrderBy(b => b.CheckInDate)
+            .ThenBy(b => b.Id)
             .ToList();
 
         foreach (var booking in orderedBookings)
         {
-            var roomType = roomTypes.First(rt => rt.Id == booking.RoomType.Id);
+            // Skip bookings that already have a real room
+            if (booking.Room != null)
+                continue;
 
-            // Ensure rooms sorted by lowest number
+            var roomType = roomTypes
+                .First(rt => rt.Id == booking.RoomType.Id);
+
+            // Always try lowest room number first
             var orderedRooms = roomType.Rooms
-                .OrderBy(r => r.Number)
+                .OrderBy(r => int.Parse(r.Number))
                 .ToList();
 
             foreach (var room in orderedRooms)
             {
-                // Get bookings already assigned to this room
+                // Only consider bookings already assigned to this room
                 var roomBookings = bookings
                     .Where(b => b.Room?.Id == room.Id)
                     .ToList();
@@ -149,7 +154,7 @@
 
                 if (!overlaps)
                 {
-                    booking.Room = room;
+                    booking.Room = room; // assign lowest possible room
                     break;
                 }
             }
