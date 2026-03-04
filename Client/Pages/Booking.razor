@@ -1,22 +1,19 @@
 ﻿@page "/booking/{RoomTypeId:int}"
 @page "/booking/{RoomTypeId:int}/{CheckIn:datetime}/{CheckOut:datetime}"
+
 @using Shared
 @inject HttpClient Http
 @inject NavigationManager Navigation
 
-
 @if (SelectedRoomType != null)
 {
- 
     <h4>Booking Details</h4>
-
     <p><strong>RoomType:</strong> @SelectedRoomType?.Name</p>
     <p><strong>Price per night:</strong> $@SelectedRoomType?.PricePerNight</p>
     <p><strong>Check-in:</strong> @CheckInDate.ToShortDateString()</p>
     <p><strong>Check-out:</strong> @CheckOutDate.ToShortDateString()</p>
     <p><strong>Guests:</strong> @SelectedCapacity</p>
 
-    
     <input type="email" @bind="GuestEmail" placeholder="Enter your email" class="form-control mb-2" />
 
     <button class="btn btn-primary w-100" @onclick="CheckGuestAndConfirm"
@@ -43,6 +40,7 @@
     private int GuestId;
     private string Message = string.Empty;
     private string AlertClass = "alert-danger"; // dynamic alert styling
+    private bool IsProcessing = false;
 
     private int NumberOfNights => (CheckOutDate - CheckInDate).Days;
     private decimal TotalPrice => SelectedRoomType != null ? SelectedRoomType.PricePerNight * NumberOfNights : 0;
@@ -93,7 +91,12 @@
     {
         if (SelectedRoomType == null) return;
 
-        var bookingForm = new CreateBookingCommand(GuestId, SelectedRoomType.Id, CheckInDate.Date, CheckOutDate.Date);
+        var bookingForm = new CreateBookingCommand(
+            GuestId,
+            SelectedRoomType.Id,
+            CheckInDate.Date,
+            CheckOutDate.Date
+        );
 
         try
         {
@@ -103,7 +106,7 @@
             {
                 Message = "Booking completed successfully!";
                 AlertClass = "alert-success";
-
+                StateHasChanged();
                 await Task.Delay(3000);
                 Navigation.NavigateTo("/");
             }
