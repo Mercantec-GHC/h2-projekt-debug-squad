@@ -25,8 +25,7 @@ namespace Client
             });
 
             builder.Services.AddScoped<JwtAuthenticationStateProvider>();
-            builder.Services.AddScoped<AuthenticationStateProvider>(sp =>
-                sp.GetRequiredService<JwtAuthenticationStateProvider>());
+            builder.Services.AddScoped<AuthenticationStateProvider>(sp => sp.GetRequiredService<JwtAuthenticationStateProvider>());
             builder.Services.AddAuthorizationCore();
 
             await builder.Build().RunAsync();

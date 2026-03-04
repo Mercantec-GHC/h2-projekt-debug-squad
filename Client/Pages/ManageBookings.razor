@@ -91,7 +91,7 @@ else
 
         try
         {
-            DeleteBookingCommand command = new (guestId, bookingId);
+            var command = new DeleteBookingCommand (guestId, bookingId);
 
             var request = new HttpRequestMessage(HttpMethod.Delete, "api/bookings")
             {
