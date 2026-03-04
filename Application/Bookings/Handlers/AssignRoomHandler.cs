@@ -37,8 +37,11 @@ namespace Application.Bookings.Handlers
                 maxPrice: null
             );
 
-            // Filter rooms by RoomTypeId
-            var roomToAssign = availableRooms.FirstOrDefault(r => r.RoomType.Id == command.RoomTypeId);
+            // Filter rooms by RoomTypeId and pick the lowest-numbered room
+            var roomToAssign = availableRooms
+                .Where(r => r.RoomType.Id == command.RoomTypeId)
+                .OrderBy(r => int.TryParse(r.Number, out var n) ? n : int.MaxValue)
+                .FirstOrDefault();
 
             if (roomToAssign == null)
                 throw new InvalidOperationException("No available rooms for the selected room type on the given dates.");
