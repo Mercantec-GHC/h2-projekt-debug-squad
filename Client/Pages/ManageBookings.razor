@@ -135,11 +135,7 @@ else
                 return;
             }
 
-            var command = new AssignRoomCommand
-            {
-                BookingId = bookingId,
-                RoomTypeId = booking.RoomType.Id
-            };
+            var command = new AssignRoomCommand(bookingId, booking.RoomType.Id);
 
             var response = await Http.PostAsJsonAsync("api/bookings/assign-room", command);
 
