@@ -18,7 +18,7 @@
 
 @if (!string.IsNullOrEmpty(_message))
 {
-    <div class="alert alert-info">@_message</div>
+    <div class="alert alert-success">@_message</div>
 }
 
 @if (bookings != null && bookings.Any())
@@ -76,11 +76,12 @@ else
     {
         try
         {
-            bookings = await Http.GetFromJsonAsync<List<BookingSummaryDto>>("api/bookings/summary") ?? new List<BookingSummaryDto>();
+            bookings = await Http.GetFromJsonAsync<List<BookingSummaryDto>>("api/bookings/summary")
+                ?? new List<BookingSummaryDto>();
         }
         catch (Exception ex)
         {
-            _message = $"Error loading bookings: {ex.Message}";
+            ShowMessage($"Error loading bookings: {ex.Message}");
         }
     }
 
@@ -91,29 +92,29 @@ else
 
         try
         {
-            var command = new DeleteBookingCommand (guestId, bookingId);
+            var command = new DeleteBookingCommand(guestId, bookingId);
 
             var request = new HttpRequestMessage(HttpMethod.Delete, "api/bookings")
             {
-                Content = JsonContent.Create(command)   
+                Content = JsonContent.Create(command)
             };
 
             var response = await Http.SendAsync(request);
 
             if (response.IsSuccessStatusCode)
             {
-                _message = "Booking cancelled successfully!";
+                ShowMessage("Booking cancelled successfully!");
                 await LoadBookings();
             }
             else
             {
                 var error = await response.Content.ReadAsStringAsync();
-                _message = $"Failed to cancel booking: {error}";
+                ShowMessage($"Failed to cancel booking: {error}");
             }
         }
         catch (Exception ex)
         {
-            _message = $"Error: {ex.Message}";
+            ShowMessage($"Error: {ex.Message}");
         }
     }
 
@@ -124,40 +125,54 @@ else
             var booking = bookings.FirstOrDefault(b => b.Id == bookingId);
             if (booking == null)
             {
-                _message = "Booking not found.";
+                ShowMessage("Booking not found.");
                 return;
             }
 
             if (booking.RoomType == null)
             {
-                _message = "Cannot assign room: booking has no Room Type information.";
+                ShowMessage("Cannot assign room: booking has no Room Type information.");
                 return;
             }
 
-            // Send BookingId and RoomTypeId to let the server pick an available room
-            var command = new AssignRoomCommand { BookingId = bookingId, RoomTypeId = booking.RoomType.Id };
+            var command = new AssignRoomCommand(bookingId, booking.RoomType.Id);
 
             var response = await Http.PostAsJsonAsync("api/bookings/assign-room", command);
 
             if (response.IsSuccessStatusCode)
             {
-                _message = "Room assigned successfully!";
-                await LoadBookings(); // Refresh the bookings list
+                ShowMessage("Room assigned successfully!");
+                await LoadBookings();
             }
             else
             {
                 var error = await response.Content.ReadAsStringAsync();
-                _message = $"Failed to assign room: {error}";
+                ShowMessage($"Failed to assign room: {error}");
             }
         }
         catch (Exception ex)
         {
-            _message = $"Error: {ex.Message}";
+            ShowMessage($"Error: {ex.Message}");
         }
     }
 
     private void GoToDiagram()
     {
         Navigation.NavigateTo("/diagram");
+    }
+
+    private void ShowMessage(string message)
+    {
+        _message = message;
+        StateHasChanged();
+
+        _ = ClearMessageAfterDelay();
+    }
+
+    private async Task ClearMessageAfterDelay()
+    {
+        await Task.Delay(3000);
+        _message = string.Empty;
+        await InvokeAsync(StateHasChanged);
     }
 }

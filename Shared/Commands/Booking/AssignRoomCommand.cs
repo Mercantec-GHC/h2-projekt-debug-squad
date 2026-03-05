@@ -8,9 +8,12 @@ namespace Shared.Commands.Booking
     {
         public int BookingId { get; set; }
         public int RoomTypeId { get; set; }
-        // Optional: specific room id to assign. If provided, server will try to assign this room.
-        public int RoomId { get; set; }
 
+        public AssignRoomCommand(int bookingId, int roomTypeId)
+        {
+            BookingId = bookingId;
+            RoomTypeId = roomTypeId;
+        }
     }
 }
 
