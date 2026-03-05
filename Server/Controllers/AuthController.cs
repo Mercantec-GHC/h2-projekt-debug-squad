@@ -5,6 +5,7 @@ using Shared;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Application.Guests.Queries;
 
 namespace Server.Controllers
 {
@@ -24,7 +25,7 @@ namespace Server.Controllers
         // POST: api/auth/login
         // This method handles login requests
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromServices] GetAllGuestsHandler handler, [FromBody] LoginCommand command)
+        public async Task<IActionResult> Login([FromServices] GetGuestByEmailHandler handler, [FromBody] LoginCommand command)
         {
             try
             {
@@ -32,13 +33,8 @@ namespace Server.Controllers
                 if (string.IsNullOrWhiteSpace(command.Email))
                     return BadRequest("Email is required");
 
-                // Retrieve all guests from the handler
-                var guests = await handler.Handle();
+                var guest = await handler.Handle(new GuestByEmailQuery(command.Email));
 
-                // Look for a guest with matching email (case-insensitive)
-                var guest = guests.FirstOrDefault(g => g.Email.Equals(command.Email, StringComparison.OrdinalIgnoreCase));
-
-                // If no guest found → return 401 Unauthorized
                 if (guest == null)
                     return Unauthorized("Guest not found");
 
@@ -48,10 +44,10 @@ namespace Server.Controllers
                 // Return token and guest name in response DTO
                 return Ok(new LoginResponseDto(token, guest.FullName));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 // Return generic server error in case of unexpected exceptions
-                return StatusCode(500, "Internal server error");
+                return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
 

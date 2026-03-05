@@ -38,6 +38,7 @@ namespace Server
             builder.Services.AddScoped<AddGuestHandler>();
             builder.Services.AddScoped<GetAllGuestsHandler>();
             builder.Services.AddScoped<GetGuestByIdHandler>();
+            builder.Services.AddScoped<GetGuestByEmailHandler>();
             builder.Services.AddScoped<DeleteGuestHandler>();
             builder.Services.AddScoped<EditGuestHandler>();
             builder.Services.AddScoped<RegisterGuestHandler>();

@@ -120,9 +120,7 @@
     private async Task LoadClaims()
     {
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
-        _claims = authState.User.Claims
-            .Select(c => new ClaimInfo(c.Type, c.Value))
-            .ToList();
+        _claims = authState.User.Claims.Select(c => new ClaimInfo(c.Type, c.Value)).ToList();
     }
 
     private async Task LoadToken()
