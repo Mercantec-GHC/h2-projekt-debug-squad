@@ -25,6 +25,8 @@ namespace Infrastructure.Repositories
                 .Include(b => b.Room)
                 .Include(b => b.RoomType) // <-- use 'b' here
                 .Include(b => b.Guest)
+                .OrderBy(b => b.CheckInDate)
+                .ThenBy(b => b.Id)
                 .ToListAsync();
         }
 
