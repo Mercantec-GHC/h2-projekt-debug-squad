@@ -46,12 +46,16 @@
                     <td>@booking.CheckOutDate.ToShortDateString()</td>
                     <td>$@booking.TotalPrice</td>
                     <td>
-                        <button class="btn btn-sm btn-primary" @onclick="() => AssignRoom(booking.Id)">
-                            Assign Room
-                        </button>
-                        <button class="btn btn-sm btn-danger" @onclick="() => CancelBooking(booking.Id, booking.GuestId)">
-                            Cancel
-                        </button>
+                        @if (booking.Room == null)
+                        {
+                            <button class="btn btn-sm btn-primary" @onclick="() => AssignRoom(booking.Id)">Assign Room</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-sm btn-warning" @onclick="() => ReassignRoom(booking.Id)">Reassign Room</button>
+                        }
+                        <button class="btn btn-sm btn-danger" @onclick="() => CancelBooking(booking.Id, booking.GuestId)">Cancel</button>
+                    
                     </td>
                 </tr>
             }
@@ -179,4 +183,43 @@ else
         _message = string.Empty;
         await InvokeAsync(StateHasChanged);
     }
+
+    private async Task ReassignRoom(int bookingId)
+{
+    bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to reassign this room?");
+    if (!confirmed) return;
+
+    try
+    {
+        var booking = bookings.FirstOrDefault(b => b.Id == bookingId);
+        if (booking == null || booking.RoomType == null)
+        {
+            ShowMessage("Cannot reassign: Booking not found or has no Room Type.");
+            return;
+        }
+
+        var command = new ReassignRoomCommand
+        {
+            BookingId = bookingId,
+            RoomTypeId = booking.RoomType.Id
+        };
+
+        var response = await Http.PostAsJsonAsync("api/bookings/reassign-room", command);
+
+        if (response.IsSuccessStatusCode)
+        {
+            ShowMessage("Room reassigned successfully!");
+            await LoadBookings();
+        }
+        else
+        {
+            var error = await response.Content.ReadAsStringAsync();
+            ShowMessage($"Failed to reassign room: {error}");
+        }
+    }
+    catch (Exception ex)
+    {
+        ShowMessage($"Error: {ex.Message}");
+    }
+}
 }

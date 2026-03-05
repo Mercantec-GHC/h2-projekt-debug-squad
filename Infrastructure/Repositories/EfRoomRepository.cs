@@ -41,23 +41,51 @@ namespace Infrastructure.Repositories
             _dbContext.Rooms.Remove(room);
         }
 
-        public async Task<List<Room>> GetAvailableAsync(DateTime requestedCheckIn, DateTime requestedCheckOut, int? capacity, decimal? maxPrice)
+        public async Task<List<Room>> GetAvailableAsync(
+          DateTime requestedCheckIn,
+          DateTime requestedCheckOut,
+          int? capacity = null,
+          decimal? maxPrice = null,
+          int? excludeRoomId = null // new optional parameter
+         )
         {
+            // Make sure dates are treated as UTC
             requestedCheckIn = DateTime.SpecifyKind(requestedCheckIn, DateTimeKind.Utc);
             requestedCheckOut = DateTime.SpecifyKind(requestedCheckOut, DateTimeKind.Utc);
 
-            // Exclude bookings that don't have an assigned room to avoid nullable Room references
+            // Get IDs of rooms that are already booked during the requested period
             var bookedRoomIds = await _dbContext.Bookings
-                .Where(b => b.CheckInDate < requestedCheckOut && b.CheckOutDate > requestedCheckIn && b.Room != null)
+                .Where(b => b.CheckInDate < requestedCheckOut &&
+                            b.CheckOutDate > requestedCheckIn &&
+                            b.Room != null)
                 .Select(b => b.Room!.Id)
                 .Distinct()
                 .ToListAsync();
-            var availableRooms = await _dbContext.Rooms.Where(r => !bookedRoomIds.Contains(r.Id)).Include(r => r.RoomType).ToListAsync();
 
-            if (capacity.HasValue && capacity.Value != 0) availableRooms = availableRooms.Where(r => r.RoomType.Capacity == capacity).ToList();
-            if (maxPrice.HasValue && maxPrice.Value != 0) availableRooms = availableRooms.Where(r => r.RoomType.PricePerNight <= maxPrice).ToList();
+            // Start with all rooms that are not booked
+            var query = _dbContext.Rooms
+                .Include(r => r.RoomType)
+                .Where(r => !bookedRoomIds.Contains(r.Id));
 
-            return availableRooms;
+            // Exclude the currently assigned room (for reassignment)
+            if (excludeRoomId.HasValue)
+            {
+                query = query.Where(r => r.Id != excludeRoomId.Value);
+            }
+
+            // Apply capacity filter if provided
+            if (capacity.HasValue && capacity.Value != 0)
+            {
+                query = query.Where(r => r.RoomType.Capacity == capacity.Value);
+            }
+
+            // Apply max price filter if provided
+            if (maxPrice.HasValue && maxPrice.Value != 0)
+            {
+                query = query.Where(r => r.RoomType.PricePerNight <= maxPrice.Value);
+            }
+
+            return await query.ToListAsync();
         }
     }
 }

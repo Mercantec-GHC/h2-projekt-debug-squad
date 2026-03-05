@@ -157,5 +157,41 @@ namespace Server.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+        [HttpPost("reassign-room")]
+        public async Task<IActionResult> ReassignRoom([FromServices] ReassignRoomHandler handler, [FromBody] ReassignRoomCommand command)
+        {
+            if (command == null)
+            {
+                return BadRequest("Invalid payload: request body is missing or malformed.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                await handler.Handle(command);
+                return Ok("Room reassigned successfully");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                // For example: no available rooms to reassign
+                return Conflict(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+        }
     }
 }

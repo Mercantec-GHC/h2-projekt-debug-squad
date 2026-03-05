@@ -11,7 +11,7 @@ namespace Application.Interfaces
         Task<Room?> GetByIdAsync(int id);
         void Delete(Room room);
 
-        Task<List<Room>> GetAvailableAsync(DateTime requestedCheckIn, DateTime requestedCheckOut, int? capacity, decimal? maxPrice);
+        Task<List<Room>> GetAvailableAsync(DateTime requestedCheckIn, DateTime requestedCheckOut, int? capacity, decimal? maxPrice, int? excludeRoomId = null);
     
     }
 }
