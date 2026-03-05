@@ -22,7 +22,7 @@ namespace Infrastructure.Repositories
 
         public async Task<List<DayMultiplier>> GetAllAsync()
         {
-            return await _dbContext.DayMultipliers.ToListAsync();
+            return await _dbContext.DayMultipliers.OrderBy(d => d.Id).ToListAsync();
         }
 
         public async Task<DayMultiplier?> GetByIdAsync(int id)

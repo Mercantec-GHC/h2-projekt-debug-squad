@@ -5,14 +5,43 @@
 @inject HttpClient Http
 @inject NavigationManager Navigation
 
-@if (SelectedRoomType != null)
+@if (SelectedRoomType != null && dayMultipliers != null)
 {
     <h4>Booking Details</h4>
     <p><strong>RoomType:</strong> @SelectedRoomType?.Name</p>
-    <p><strong>Price per night:</strong> $@SelectedRoomType?.PricePerNight</p>
     <p><strong>Check-in:</strong> @CheckInDate.ToShortDateString()</p>
     <p><strong>Check-out:</strong> @CheckOutDate.ToShortDateString()</p>
     <p><strong>Guests:</strong> @SelectedCapacity</p>
+
+    <p><strong>Prices per night</strong></p>
+    <div class="table-responsive">
+        <table class="table table-bordered text-center align-middle">
+            <thead>
+                <tr>
+                    @for (DateTime date = CheckInDate.Date; date < CheckOutDate.Date; date = date.AddDays(1))
+                    {
+                        <th>@date.DayOfWeek.ToString().Substring(0, 3)</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    @for (DateTime date = CheckInDate.Date; date < CheckOutDate.Date; date = date.AddDays(1))
+                    {
+                        decimal dayMultiplier = dayMultipliers.Single(d => d.Day == date.DayOfWeek).Multiplier;
+                        dayMultiplier *= SelectedRoomType.PricePerNight;
+                        totalPrice += dayMultiplier;
+
+                        <th>
+                            @(dayMultiplier)
+                        </th>
+                    }
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p><strong>Total price:</strong> @totalPrice</p>
 
     <input type="email" @bind="GuestEmail" placeholder="Enter your email" class="form-control mb-2" />
 
@@ -42,6 +71,9 @@
     private string AlertClass = "alert-danger"; // dynamic alert styling
     private bool IsProcessing = false;
 
+    private List<DayMultiplierDto>? dayMultipliers;
+    private decimal totalPrice = 0;
+
     private int NumberOfNights => (CheckOutDate - CheckInDate).Days;
     private decimal TotalPrice => SelectedRoomType != null ? SelectedRoomType.PricePerNight * NumberOfNights : 0;
 
@@ -49,6 +81,8 @@
     {
         var roomTypeList = await Http.GetFromJsonAsync<List<RoomTypeDto>>("api/roomtypes");
         SelectedRoomType = roomTypeList?.FirstOrDefault(r => r.Id == RoomTypeId);
+        dayMultipliers = await Http.GetFromJsonAsync<List<DayMultiplierDto>>("api/daymultipliers");
+
 
         if (SelectedRoomType == null)
         {
