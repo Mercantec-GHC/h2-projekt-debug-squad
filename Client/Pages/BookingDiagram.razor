@@ -83,7 +83,6 @@
         try
         {
             bookings = await Http.GetFromJsonAsync<List<BookingDto>>("api/bookings") ?? new List<BookingDto>();
-            bookings = bookings.OrderBy(b => b.Id).ToList();
         }
         catch (Exception ex)
         {
@@ -120,13 +119,7 @@
 
     private void SimulateRoomAssignments()
     {
-        // Sort bookings by check-in (important for deterministic results)
-        var orderedBookings = bookings
-            .OrderBy(b => b.CheckInDate)
-            .ThenBy(b => b.Id)
-            .ToList();
-
-        foreach (var booking in orderedBookings)
+        foreach (var booking in bookings)
         {
             // Skip bookings that already have a real room
             if (booking.Room != null)
