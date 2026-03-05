@@ -48,7 +48,7 @@ namespace Server.Controllers
             }
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromServices] GetRoomByIdHandler handler, int id)
         {
             try
