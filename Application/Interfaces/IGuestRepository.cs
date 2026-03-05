@@ -10,5 +10,6 @@ namespace Application.Interfaces
         Task<Guest?> GetByIdAsync(int id);
         void Delete(Guest guest);
         Task<bool> ExistsByEmailAsync(string email);
+        Task<Guest?>GetByEmailAsync(string email);
     }
 }

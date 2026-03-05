@@ -8,8 +8,12 @@ namespace Shared.Commands.Booking
     {
         public int BookingId { get; set; }
         public int RoomTypeId { get; set; }
-       
 
+        public AssignRoomCommand(int bookingId, int roomTypeId)
+        {
+            BookingId = bookingId;
+            RoomTypeId = roomTypeId;
+        }
     }
 }
 

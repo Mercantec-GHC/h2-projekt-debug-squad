@@ -39,6 +39,19 @@ namespace Infrastructure.Repositories
         .SingleOrDefaultAsync(g => g.Id == id);
         }
 
+        public async Task<Guest?> GetByEmailAsync(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return null;
+
+            return await _dbContext.Guests
+                .Include(g => g.Bookings)
+                    .ThenInclude(b => b.Room)
+                .Include(g => g.Bookings)
+                    .ThenInclude(b => b.RoomType)
+              .SingleOrDefaultAsync(g => g.Email.ToLower() == email.ToLower());
+        }
+
         public void Delete(Guest guest)
         {
             _dbContext.Guests.Remove(guest);

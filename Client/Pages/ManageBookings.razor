@@ -96,7 +96,7 @@ else
 
         try
         {
-            var command = new DeleteBookingCommand (guestId, bookingId);
+            var command = new DeleteBookingCommand(guestId, bookingId);
 
             var request = new HttpRequestMessage(HttpMethod.Delete, "api/bookings")
             {
@@ -139,11 +139,7 @@ else
                 return;
             }
 
-            var command = new AssignRoomCommand
-            {
-                BookingId = bookingId,
-                RoomTypeId = booking.RoomType.Id
-            };
+            var command = new AssignRoomCommand(bookingId, booking.RoomType.Id);
 
             var response = await Http.PostAsJsonAsync("api/bookings/assign-room", command);
 

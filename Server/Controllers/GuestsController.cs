@@ -158,21 +158,19 @@ namespace Server.Controllers
         }
 
         [HttpGet("byemail")]
-        public async Task<IActionResult> GetByEmail([FromServices] GetAllGuestsHandler handler, [FromQuery] string email)
+        public async Task<IActionResult> GetByEmail([FromServices] GetGuestByEmailHandler handler, [FromQuery] string email)
         {
             try
             {
                 if (string.IsNullOrWhiteSpace(email))
                     return BadRequest("Email is required");
 
-                var guests = await handler.Handle();
-                var guest = guests.FirstOrDefault(g =>
-                    g.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+                var guest = await handler.Handle(new GuestByEmailQuery(email));
 
                 if (guest == null)
                     return NotFound("Guest not found");
 
-                return Ok(guest);
+                return Ok(guest);  
             }
             catch (Exception)
             {
