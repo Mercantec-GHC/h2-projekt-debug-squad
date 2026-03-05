@@ -41,7 +41,7 @@
                                     var bookingForDay = bookings.FirstOrDefault(b =>
                                     b.Room?.Id == room.Id &&
                                     day >= b.CheckInDate.Date &&
-                                    day <= b.CheckOutDate.Date //might need to be < to better show real hotel logic
+                                    day < b.CheckOutDate.Date
                                     );
                                 }
 
