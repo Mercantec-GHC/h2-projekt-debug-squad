@@ -28,6 +28,7 @@
                 <tr>
                     @for (DateTime date = CheckInDate.Date; date < CheckOutDate.Date; date = date.AddDays(1))
                     {
+                        totalPrice = 0;
                         decimal dayMultiplier = dayMultipliers.Single(d => d.Day == date.DayOfWeek).Multiplier;
                         dayMultiplier *= SelectedRoomType.PricePerNight;
                         totalPrice += dayMultiplier;
