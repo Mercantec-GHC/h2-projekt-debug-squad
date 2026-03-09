@@ -40,7 +40,7 @@ namespace Application.Bookings.Handlers
             // Filter rooms by RoomTypeId and pick the lowest-numbered room
             var roomToAssign = availableRooms
                 .Where(r => r.RoomType.Id == command.RoomTypeId)
-                .OrderBy(r => int.TryParse(r.Number, out var n) ? n : int.MaxValue)
+                .OrderBy(r => r.Number)
                 .FirstOrDefault();
 
             if (roomToAssign == null)
