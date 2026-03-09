@@ -14,32 +14,27 @@
     <p><strong>Guests:</strong> @SelectedCapacity</p>
 
     <p><strong>Prices per night</strong></p>
-    <div class="table-responsive">
-        <table class="table table-bordered text-center align-middle">
-            <thead>
-                <tr>
-                    @for (DateTime date = CheckInDate.Date; date < CheckOutDate.Date; date = date.AddDays(1))
-                    {
-                        <th>@date.DayOfWeek.ToString().Substring(0, 3)</th>
-                    }
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    @for (DateTime date = CheckInDate.Date; date < CheckOutDate.Date; date = date.AddDays(1))
-                    {
-                        totalPrice = 0;
-                        decimal dayMultiplier = dayMultipliers.Single(d => d.Day == date.DayOfWeek).Multiplier;
-                        dayMultiplier *= SelectedRoomType.PricePerNight;
-                        totalPrice += dayMultiplier;
 
-                        <th>
-                            @(dayMultiplier)
-                        </th>
-                    }
-                </tr>
-            </tbody>
-        </table>
+    
+
+    <div class="grid">
+        @{
+            totalPrice = 0;
+        }
+        @for (DateTime date = CheckInDate.Date; date < CheckOutDate.Date; date = date.AddDays(1))
+        {
+            <div class="cell">
+                <p>@date.DayOfWeek.ToString().Substring(0, 3)</p>
+
+                @{
+                    decimal dayMultiplier = dayMultipliers.Single(d => d.Day == date.DayOfWeek).Multiplier;
+                    dayMultiplier *= SelectedRoomType.PricePerNight;
+                    totalPrice += dayMultiplier;
+                }
+
+                <p>@dayMultiplier</p>
+            </div>
+        }
     </div>
 
     <p><strong>Total price:</strong> @totalPrice</p>
@@ -47,7 +42,7 @@
     <input type="email" @bind="GuestEmail" placeholder="Enter your email" class="form-control mb-2" />
 
     <button class="btn btn-primary w-100" @onclick="CheckGuestAndConfirm"
-            disabled="@string.IsNullOrWhiteSpace(GuestEmail)">
+            disabled="@(string.IsNullOrWhiteSpace(GuestEmail) || buttonDisabled)">
         Confirm Booking
     </button>
 
@@ -70,13 +65,11 @@
     private int GuestId;
     private string Message = string.Empty;
     private string AlertClass = "alert-danger"; // dynamic alert styling
-    //private bool IsProcessing = false;
 
     private List<DayMultiplierDto>? dayMultipliers;
     private decimal totalPrice = 0;
 
-    private int NumberOfNights => (CheckOutDate - CheckInDate).Days;
-    private decimal TotalPrice => SelectedRoomType != null ? SelectedRoomType.PricePerNight * NumberOfNights : 0;
+    private bool buttonDisabled = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -103,6 +96,8 @@
             AlertClass = "alert-danger";
             return;
         }
+
+        buttonDisabled = true;
 
         try
         {

@@ -1,0 +1,11 @@
+﻿.grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 6px;
+}
+
+.cell {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
