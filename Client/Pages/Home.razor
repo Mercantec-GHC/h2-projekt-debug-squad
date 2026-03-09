@@ -34,7 +34,7 @@
                             <p class="card-text">Price per night: $@roomType.PricePerNight</p>
 
                             <button class="btn btn-outline-primary w-100 mb-2"
-                                    @onclick="() => ViewRoomDetails(roomType.Id)">
+                                    @onclick="() => ViewRoomTypeDetails(roomType.Id)">
                                 Read More
                             </button>
 
@@ -92,7 +92,7 @@
         }
     }
 
-    private void ViewRoomDetails(int roomTypeId)
+    private void ViewRoomTypeDetails(int roomTypeId)
     {
         Navigation.NavigateTo($"/room-type-details/{roomTypeId}");
     }
