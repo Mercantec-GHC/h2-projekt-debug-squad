@@ -39,7 +39,7 @@ namespace Server.Controllers
                     return Unauthorized("Guest not found");
 
                 // Generate JWT token for the authenticated guest
-                var token = GenerateJwtToken(guest);
+                string token = GenerateJwtToken(guest);
 
                 // Return token and guest name in response DTO
                 return Ok(new LoginResponseDto(token, guest.FullName));

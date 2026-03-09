@@ -28,6 +28,7 @@
                 <tr>
                     @for (DateTime date = CheckInDate.Date; date < CheckOutDate.Date; date = date.AddDays(1))
                     {
+                        totalPrice = 0;
                         decimal dayMultiplier = dayMultipliers.Single(d => d.Day == date.DayOfWeek).Multiplier;
                         dayMultiplier *= SelectedRoomType.PricePerNight;
                         totalPrice += dayMultiplier;
@@ -69,7 +70,7 @@
     private int GuestId;
     private string Message = string.Empty;
     private string AlertClass = "alert-danger"; // dynamic alert styling
-    private bool IsProcessing = false;
+    //private bool IsProcessing = false;
 
     private List<DayMultiplierDto>? dayMultipliers;
     private decimal totalPrice = 0;

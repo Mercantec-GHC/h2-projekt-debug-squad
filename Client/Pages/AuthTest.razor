@@ -68,44 +68,13 @@
     }
 </div>
 
-<!-- Section 4: API Call Test -->
-<div class="card p-4 shadow-sm mb-4">
-    <h5>4. API Call Test</h5>
-    <p class="text-muted">Calls <code>GET api/guests</code> with the current Authorization header.</p>
-    <button class="btn btn-outline-success btn-sm" @onclick="TestApiCall">Test API Call</button>
-    @if (!string.IsNullOrEmpty(_apiResult))
-    {
-        <div class="alert @_apiAlertClass mt-3" style="word-break: break-all; font-size: 0.85rem;">
-            @_apiResult
-        </div>
-    }
-</div>
-
-<!-- Section 5: Quick Login / Logout -->
-<div class="card p-4 shadow-sm mb-4">
-    <h5>5. Quick Login / Logout</h5>
-    <div class="d-flex gap-2 align-items-end">
-        <div>
-            <label class="form-label">Email</label>
-            <input type="email" class="form-control" @bind="_testEmail" placeholder="Enter guest email" />
-        </div>
-        <button class="btn btn-primary" @onclick="QuickLogin">Login</button>
-        <button class="btn btn-danger" @onclick="QuickLogout">Logout</button>
-    </div>
-    @if (!string.IsNullOrEmpty(_loginMessage))
-    {
-        <div class="alert @_loginAlertClass mt-3">@_loginMessage</div>
-    }
-</div>
-
 @code {
+    private record ClaimInfo(string Type, string Value);
     private List<ClaimInfo> _claims = new();
     private string _rawToken = string.Empty;
-    private string _apiResult = string.Empty;
-    private string _apiAlertClass = "alert-info";
     private string _testEmail = string.Empty;
     private string _loginMessage = string.Empty;
-    private string _loginAlertClass = "alert-info";
+
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -128,30 +97,6 @@
         _rawToken = await JS.InvokeAsync<string?>("localStorage.getItem", "authToken") ?? string.Empty;
     }
 
-    private async Task TestApiCall()
-    {
-        try
-        {
-            var response = await Http.GetAsync("api/guests");
-            var content = await response.Content.ReadAsStringAsync();
-
-            if (response.IsSuccessStatusCode)
-            {
-                _apiAlertClass = "alert-success";
-                _apiResult = $"Status {(int)response.StatusCode} OK — Response: {(content.Length > 300 ? content[..300] + "..." : content)}";
-            }
-            else
-            {
-                _apiAlertClass = "alert-danger";
-                _apiResult = $"Status {(int)response.StatusCode} — {content}";
-            }
-        }
-        catch (Exception ex)
-        {
-            _apiAlertClass = "alert-danger";
-            _apiResult = $"Error: {ex.Message}";
-        }
-    }
 
     private async Task QuickLogin()
     {
@@ -167,7 +112,6 @@
                 if (result != null)
                 {
                     await AuthStateProvider.LoginAsync(result.Token);
-                    _loginAlertClass = "alert-success";
                     _loginMessage = $"Logged in as {result.FullName}";
                     await LoadClaims();
                     await LoadToken();
@@ -176,26 +120,12 @@
             else
             {
                 var error = await response.Content.ReadAsStringAsync();
-                _loginAlertClass = "alert-danger";
                 _loginMessage = error;
             }
         }
         catch (Exception ex)
         {
-            _loginAlertClass = "alert-danger";
             _loginMessage = $"Error: {ex.Message}";
         }
     }
-
-    private async Task QuickLogout()
-    {
-        await AuthStateProvider.LogoutAsync();
-        _claims = new();
-        _rawToken = string.Empty;
-        _apiResult = string.Empty;
-        _loginAlertClass = "alert-info";
-        _loginMessage = "Logged out.";
-    }
-
-    private record ClaimInfo(string Type, string Value);
 }
