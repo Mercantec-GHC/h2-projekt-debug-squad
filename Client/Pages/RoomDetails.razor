@@ -1,57 +1,43 @@
-﻿@using Shared;
+﻿@using Shared
 @inject HttpClient http
-@inject NavigationManager Navigation
 
-@page "/room-details/{Id:int}"
+@page "/room-type-details/{Id:int}"
 
-<h3>RoomDetails</h3>
+<h3>Room Type Details</h3>
 
-@if (room != null)
+@if (roomType != null)
 {
-    <div>
-        <h3>@room.Number</h3>
-
-        <p>Room ID: @room.Id</p>
-        <p>Type: @room.RoomType.Name</p>
-        <p>Capacity: @room.RoomType.Capacity</p>
-        <p>Price per Night: $@room.RoomType.PricePerNight</p>
-
-
-        <button class="btn btn-success w-100" @onclick="() => NavigateToBooking(room.Id)">
-            Book Now
-        </button>
-
+    <div class="mb-3">
+        <h4>@roomType.Name</h4>
+        <p>Room Type ID: @roomType.Id</p>
+        <p>Capacity: @roomType.Capacity</p>
+        <p>Price per Night: $@roomType.PricePerNight</p>
     </div>
 }
 else
 {
-    <p>Page is loading...</p>
+    <p>Loading room type details...</p>
 }
 
-<p>@message</p>
+<p class="text-danger">@message</p>
 
 @code {
     [Parameter]
     public int Id { get; set; }
 
-    private RoomDto? room;
+    private RoomTypeDto? roomType;
     private string message = string.Empty;
 
     protected override async Task OnParametersSetAsync()
     {
         try
         {
-            room = await http.GetFromJsonAsync<RoomDto>($"api/rooms/{Id}");
+            // Fetch room type details
+            roomType = await http.GetFromJsonAsync<RoomTypeDto>($"api/roomtypes/{Id}");
         }
         catch (Exception ex)
         {
-            message = $"Error: {ex.Message}";
+            message = $"Error loading room type: {ex.Message}";
         }
-    }
-
-    private void NavigateToBooking(int roomId)
-    {
-        // Go to booking page with roomId
-        Navigation.NavigateTo($"/booking/{roomId}");
     }
 }
