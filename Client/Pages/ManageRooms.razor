@@ -75,9 +75,7 @@
             @foreach (var room in rooms)
             {
                 <tr>
-                    <td>
-                        <a href="/room-details/@room.Id">@room.Number</a>
-                    </td>
+                    <td>@room.Number</td>
                     <td>@room.RoomType.Name</td>
                     <td>@room.RoomType.Capacity</td>
                     <td>@room.RoomType.PricePerNight</td>

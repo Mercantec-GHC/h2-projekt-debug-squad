@@ -1,0 +1,48 @@
+﻿@using Shared
+@inject HttpClient http
+
+@page "/booking-details/{Id:int}"
+
+<h3>Booking Details</h3>
+
+@if (booking != null)
+{
+    <div class="card p-3 mb-3 shadow-sm">
+        <h4>Booking: @booking.Id</h4>
+        <p>Owner: <a href="/guest-details/@booking.Guest.Id">@booking.Guest.FullName</a></p>
+        <p>Room Type: @booking.RoomType.Name</p>
+        <p>Check in date: @booking.CheckInDate.ToString("dd-MM-yy")</p>
+        <p>Check out date: @booking.CheckOutDate.ToString("dd-MM-yy")</p>
+
+        @if (booking.Room != null)
+        {
+            <p>Room number: @booking.Room.Number</p>
+        }
+    </div>
+}
+else
+{
+    <p>Loading room type details...</p>
+}
+
+<p class="text-danger">@message</p>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private BookingDto? booking;
+    private string message = string.Empty;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            booking = await http.GetFromJsonAsync<BookingDto>($"api/bookings/{Id}");
+        }
+        catch (Exception ex)
+        {
+            message = $"Error loading booking: {ex.Message}";
+        }
+    }
+}

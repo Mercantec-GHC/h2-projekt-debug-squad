@@ -20,7 +20,22 @@ namespace Application.Bookings.Handlers
             if (booking is null)
                 return null;
 
-            return new BookingDto(booking.Id, new RoomTypeDto(booking.RoomType.Id, booking.RoomType.Name, booking.RoomType.Capacity, booking.RoomType.PricePerNight), booking.CheckInDate, booking.CheckOutDate, booking.TotalPrice);
+            return new BookingDto(
+                booking.Id, 
+                booking.Room != null
+                    ? new RoomDto(booking.Room.Id, booking.Room.Number)
+                    : null,
+                new GuestDto(
+                    booking.Guest.Id,
+                    booking.Guest.FullName
+                    ),
+                new RoomTypeDto(
+                    booking.RoomType.Id, 
+                    booking.RoomType.Name, 
+                    booking.RoomType.Capacity, 
+                    booking.RoomType.PricePerNight), 
+                booking.CheckInDate, booking.CheckOutDate, 
+                booking.TotalPrice);
         }
     }
 }

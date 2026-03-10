@@ -26,6 +26,7 @@
     <table class="table table-striped table-hover">
         <thead class="table-dark">
             <tr>
+                <th>ID</th>
                 <th>Room Number</th>
                 <th>Guest</th>
                 <th>Room Type</th>
@@ -39,6 +40,7 @@
             @foreach (var booking in bookings)
             {
                 <tr>
+                    <th>@booking.Id</th>
                     <td>@booking.Room?.Number</td>
                     <td>@booking.GuestName</td>
                     <td>@(booking.RoomType?.Name ?? "N/A")</td>

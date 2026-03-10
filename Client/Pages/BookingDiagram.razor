@@ -47,9 +47,10 @@
 
                                 @if (bookingForDay != null)
                                 {
-                                    <div class="bg-primary text-white rounded">
+                                        <a href="/booking-details/@bookingForDay.Id"
+                                        class="bg-primary text-white rounded p-2 d-inline-block text-decoration-none">
                                         @bookingForDay.Id
-                                    </div>
+                                    </a>
                                 }
                             </th>
                         }
