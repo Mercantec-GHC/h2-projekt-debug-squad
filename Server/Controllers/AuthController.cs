@@ -64,8 +64,8 @@ namespace Server.Controllers
             var claims = new Claim[]
             {
                 new(ClaimTypes.NameIdentifier, guest.Id.ToString()), // User ID
-                new(ClaimTypes.Name, guest.FullName),               // Full name
-                new(ClaimTypes.Email, guest.Email)                  // Email
+                new(ClaimTypes.Name, guest.FullName),                // Full name
+                new(ClaimTypes.Email, guest.Email)                   // Email
             };
 
             // Create JWT token
@@ -74,7 +74,7 @@ namespace Server.Controllers
                 audience: _configuration["Jwt:Audience"],   // Intended audience
                 claims: claims,                             // Claims to include
                 expires: DateTime.UtcNow.AddHours(2),       // Expiration time
-                signingCredentials: credentials            // Signature
+                signingCredentials: credentials             // Signature
             );
 
             // Convert the token object to a string (JWT format: header.payload.signature)

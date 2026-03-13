@@ -96,36 +96,4 @@
     {
         _rawToken = await JS.InvokeAsync<string?>("localStorage.getItem", "authToken") ?? string.Empty;
     }
-
-
-    private async Task QuickLogin()
-    {
-        _loginMessage = string.Empty;
-        try
-        {
-            var command = new LoginCommand(_testEmail);
-            var response = await Http.PostAsJsonAsync("api/auth/login", command);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var result = await response.Content.ReadFromJsonAsync<LoginResponseDto>();
-                if (result != null)
-                {
-                    await AuthStateProvider.LoginAsync(result.Token);
-                    _loginMessage = $"Logged in as {result.FullName}";
-                    await LoadClaims();
-                    await LoadToken();
-                }
-            }
-            else
-            {
-                var error = await response.Content.ReadAsStringAsync();
-                _loginMessage = error;
-            }
-        }
-        catch (Exception ex)
-        {
-            _loginMessage = $"Error: {ex.Message}";
-        }
-    }
 }

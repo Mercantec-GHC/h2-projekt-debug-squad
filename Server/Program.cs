@@ -43,6 +43,8 @@ namespace Server
             builder.Services.AddScoped<EditGuestHandler>();
             builder.Services.AddScoped<RegisterGuestHandler>();
             builder.Services.AddScoped<IGuestRepository, EfGuestRepository>();
+          //builder.Services.AddScoped<IGuestRepository, HardDiskGuestRepository>();
+          //builder.Services.AddScoped<IGuestRepository, CloudGuestRepository>();
             builder.Services.AddScoped<GetBookingsByGuestIdHandler>();
             builder.Services.AddScoped<CreateBookingHandler>();
             builder.Services.AddScoped<DeleteBookingHandler>();

@@ -101,8 +101,7 @@ namespace Client.Auth
             var json = JsonDocument.Parse(jsonBytes);
 
             // Create Claim objects for each property in JWT payload
-            return json.RootElement.EnumerateObject()
-                .Select(prop => new Claim(prop.Name, prop.Value.ToString()));
+            return json.RootElement.EnumerateObject().Select(prop => new Claim(prop.Name, prop.Value.ToString()));
         }
 
         // Decode Base64 string (handling missing padding)
