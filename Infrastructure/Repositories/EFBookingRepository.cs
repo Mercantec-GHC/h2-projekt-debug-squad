@@ -23,7 +23,7 @@ namespace Infrastructure.Repositories
         {
             return await _dbContext.Bookings
                 .Include(b => b.Room)
-                .Include(b => b.RoomType) // <-- use 'b' here
+                .Include(b => b.RoomType)
                 .Include(b => b.Guest)
                 .OrderBy(b => b.CheckInDate)
                 .ThenBy(b => b.Id)
@@ -34,7 +34,7 @@ namespace Infrastructure.Repositories
         {
             return await _dbContext.Bookings
                 .Include(b => b.Room)
-                .Include(b => b.RoomType) // <-- use 'b' here
+                .Include(b => b.RoomType)
                 .Include(b => b.Guest)
                 .SingleOrDefaultAsync(b => b.Id == id);
         }

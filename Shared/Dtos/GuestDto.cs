@@ -18,5 +18,11 @@ namespace Shared
             Email = email;
             Bookings = bookings;
         }
+
+        public GuestDto(int id, string fullName)
+        {
+            Id = id;
+            FullName = fullName;
+        }
     }
 }
